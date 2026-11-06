@@ -55,3 +55,14 @@ desktop.ini
 # 로그 파일
 # =========================
 *.log
+
+# =========================
+# 데이터 / 모델 산출물 (용량 큼)
+# =========================
+bts_data/
+data/
+models/
+reference_data/
+outputs/
+outputs_*/
+_archive_before_2020/
