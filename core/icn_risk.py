@@ -1,4 +1,6 @@
 """인천 지연 위험 예보 시연. 저장된 평가 구간 예측으로 서비스 화면을 보여 준다. 실전 기록이 쌓이면 입력만 바꾼다."""
+import json
+
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -83,4 +85,17 @@ st.markdown("**2025년 11월 전후 비교**")
 percent = st.column_config.NumberColumn(format="percent")
 st.dataframe(periods, hide_index=True, column_config={"편수": st.column_config.NumberColumn(format="localized"), "모델 PR-AUC": st.column_config.NumberColumn(format="%.3f"), "단순 기준 PR-AUC": st.column_config.NumberColumn(format="%.3f"),
                                                      **{c: percent for c in ("실제 지연률", "평균 점수", "낮음 지연률", "보통 지연률", "높음 지연률", "높음 비중")}}, alt="2025년 11월 전후의 지연률, 모델 성능, 등급별 실제 지연률")
-st.caption("등급 기준은 점수 0.3과 0.5로 둔 제안값입니다. 이 평가 구간을 보고 정했으므로, 실전 전에 별도 기간으로 다시 확인하고 정기적으로 재보정해야 합니다.")
+st.caption("등급 기준은 점수 0.3과 0.5로 둔 제안값입니다. 고객이 놓친 지연과 잘못된 경보 중 무엇을 더 꺼리는지에 따라 조정합니다.")
+
+eval_path = store.dir / f"icn_eval_{direction}.json"
+if eval_path.exists():
+    folds = pd.DataFrame(json.loads(eval_path.read_text(encoding="utf-8"))["rows"])
+    picked_rows = folds[folds["모델"] == "LightGBM"].set_index("구간")
+    base = folds[folds["모델"] == "단순 기준"].set_index("구간")
+    table = pd.DataFrame({"실제 지연률": picked_rows["지연률"], "모델 PR-AUC": picked_rows["PR-AUC"], "단순 기준 PR-AUC": base["PR-AUC"], "낮음 지연률": picked_rows["원점수 낮음 지연률"], "보통 지연률": picked_rows["원점수 보통 지연률"],
+                          "높음 지연률": picked_rows["원점수 높음 지연률"], "높음 포착률": picked_rows["원점수 높음 포착률"], "보통 이상 포착률": picked_rows["원점수 보통 이상 포착률"]}).reset_index()
+    st.subheader("여러 시점 재평가")
+    st.write("각 구간은 그 이전 자료로만 학습했습니다. 모든 구간에서 단순 기준보다 낫고 등급 순서도 유지되지만, 낮음 등급에 든 지연이 많아 모든 지연을 미리 잡아 주지는 못합니다.")
+    st.dataframe(table, hide_index=True, column_config={"모델 PR-AUC": st.column_config.NumberColumn(format="%.3f"), "단순 기준 PR-AUC": st.column_config.NumberColumn(format="%.3f"),
+                                                        **{c: percent for c in ("실제 지연률", "낮음 지연률", "보통 지연률", "높음 지연률", "높음 포착률", "보통 이상 포착률")}}, alt="구간별 재평가 결과")
+    st.caption("포착률은 전체 지연편 중 해당 등급에 든 비율입니다. 첫 구간의 범주 코드표에는 이후 자료가 조금 반영되어 있습니다.")

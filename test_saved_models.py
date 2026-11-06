@@ -5,7 +5,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-from categories.korea_ops.models import recent_delays
+from categories.korea_ops.models import CONTEXT_GROUPS, recent_context, recent_delays, window_rate
 from core.models import MODELS, TEST, load_model
 from core.store import Store
 
@@ -24,6 +24,31 @@ def check_recent_delays():
     assert np.isnan(result[3, 0]) and result[3, 1] == 20 and result[3, 2] == 20 and result[3, 3] == 1, "예측 시점 이후에 끝난 운항은 쓰지 않음"
 
 
+def check_window_rate():
+    event_t, late = np.array([100, 200, 300]), np.array([1.0, 0.0, 1.0])
+    rate, count = window_rate(event_t, late, np.array([200, 99, 300]), 100)  # 기간은 (query - 100, query]
+    assert count.tolist() == [1, 0, 1] and np.isnan(rate[1]) and rate[0] == 0 and rate[2] == 1, "기간 경계와 이후 운항 제외"
+
+
+def check_context_no_leak():
+    """대상 편과 그 이후 운항의 결과를 바꿔도 대상 편의 입력은 그대로여야 한다."""
+    times = pd.date_range("2025-01-01", periods=40, freq="30min")
+    flights = pd.DataFrame({"sched": times, "delay": np.arange(40.0) % 30, "code": "NRT", "airline": "KE", "flight": "KE1", "direction": ["도착", "출발"] * 20})
+    part = flights[flights.direction == "도착"].reset_index(drop=True)
+    target = 15
+    before, names = recent_context(flights, part, "도착", {"도착": 0.0, "출발": 0.0}, CONTEXT_GROUPS)
+    changed = flights.copy()
+    changed.loc[changed.sched >= part.sched[target], "delay"] = 500.0  # 대상 편부터 그 이후가 모두 큰 지연이 된다
+    after, _ = recent_context(changed, part, "도착", {"도착": 0.0, "출발": 0.0}, CONTEXT_GROUPS)
+    for name, a, b in zip(names, before, after):
+        assert np.array_equal(a[target], b[target], equal_nan=True), f"{name}: 대상 편 이후 값이 입력에 들어감"
+    early = flights.copy()
+    early.loc[early.sched == part.sched[target], "delay"] = -200.0  # 일찍 끝난 기록은 자기 입력에 들어가면 안 된다
+    self_in, _ = recent_context(early, part, "도착", {"도착": 0.0, "출발": 0.0}, CONTEXT_GROUPS)
+    for name, a, b in zip(names, before, self_in):
+        assert np.array_equal(a[target], b[target], equal_nan=True), f"{name}: 자기 기록이 입력에 들어감"
+
+
 def check_saved(store, task, data, name):
     predict, meta = load_model(store, task, name)
     rows = np.flatnonzero(data.split == TEST)
@@ -39,6 +64,8 @@ def check_saved(store, task, data, name):
 
 if __name__ == "__main__":
     check_recent_delays()
+    check_window_rate()
+    check_context_no_leak()
     print("이력 입력 점검 통과")
     for slug in sys.argv[1:] or ["korea_ops"]:
         store = Store(slug)

@@ -1,6 +1,6 @@
 # 항공 데이터 출처 정리
 
-확인일: 2026-11-04. 내려받기는 `download_bts.py`, `download_refs.py`, `download_kosis.py`로 다시 실행할 수 있다.
+확인일: 2026-11-04. 내려받기는 `download_bts.py`, `download_refs.py`, `download_kosis.py`로 다시 실행할 수 있다. 폴더별 용도와 크기는 [DATA_GUIDE.md](DATA_GUIDE.md)를 본다.
 
 ## 1. 내려받은 데이터
 
@@ -8,7 +8,7 @@
 
 | 폴더 | 출처 | 내용 | 기간·규모 | 이용 조건 |
 |---|---|---|---|---|
-| `bts_data/` | [미국 교통통계국 BTS](https://www.transtats.bts.gov/) | 미국 항공편별 정시운항, 지연 원인 | 1987-10~2026-08, 347개 zip, 8.3GB | 조건 미확인 |
+| `bts_data/` | [미국 교통통계국 BTS](https://www.transtats.bts.gov/) | 미국 항공편별 정시운항, 지연 원인 | 1987-10~1989-12, 2000-01~2026-08 (**1990년대 없음**), 347개 zip, 8.3GB | 조건 미확인 |
 | `reference_data/ntsb/` | [NTSB](https://data.ntsb.gov/avdata) | 항공 사고 조사 DB와 코드 설명서 | 1962년~, 2026-11-01 갱신 | 조건 미확인 |
 | `reference_data/weather_asos/` | [Iowa State IEM](https://mesonet.agron.iastate.edu/request/download.phtml) | 공항 기상 관측(METAR) | 2024~2025, 14개 공항, 약 29만 행 | 조건 미확인 |
 | `reference_data/ourairports/` | [OurAirports](https://ourairports.com/data/) | 전 세계 공항, 활주로, 항행시설 | 공항 약 8.6만 곳, 매일 갱신 | 퍼블릭 도메인 |
