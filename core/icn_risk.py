@@ -35,7 +35,7 @@ def load(task, mtime):
     return d, pd.DataFrame(rows)
 
 
-st.info("아직 실전 수집을 시작하지 않아, 2025년 7월~2026년 6월 평가 구간의 저장된 예측으로 보여 줍니다. 실시간 예보가 아닙니다.", title="과거 자료 시연", icon=":material/history:")
+st.info("실전 수집은 시작했지만 아직 모델과 연결하지 않아, 2025년 7월~2026년 6월 평가 구간의 저장된 예측으로 보여 줍니다. 실시간 예보가 아닙니다.", title="과거 자료 시연", icon=":material/history:")
 direction = st.segmented_control("방향", list(TASKS), default="도착", required=True, help="기획안의 첫 대상은 도착편입니다.")
 path = store.table_path(f"pred_{TASKS[direction]}__{MODEL}")
 if not path.exists():
@@ -99,3 +99,14 @@ if eval_path.exists():
     st.dataframe(table, hide_index=True, column_config={"모델 PR-AUC": st.column_config.NumberColumn(format="%.3f"), "단순 기준 PR-AUC": st.column_config.NumberColumn(format="%.3f"),
                                                         **{c: percent for c in ("실제 지연률", "낮음 지연률", "보통 지연률", "높음 지연률", "높음 포착률", "보통 이상 포착률")}}, alt="구간별 재평가 결과")
     st.caption("포착률은 전체 지연편 중 해당 등급에 든 비율입니다. 첫 구간의 범주 코드표에는 이후 자료가 조금 반영되어 있습니다.")
+
+forecast_path = store.dir / "icn_monthly_forecast.json"
+if direction == "도착" and forecast_path.exists():
+    forecast = json.loads(forecast_path.read_text(encoding="utf-8"))
+    trial = forecast["시험"]
+    st.subheader("월별 도착 지연률 추정")
+    st.write(f"작년 같은 달 값에 최근 수준 변화({forecast['비율']:.2f}배)를 곱했습니다. 2025년 11월 이후의 달은 이미 낮아진 값이라 그대로 씁니다. 편별 모델의 결과가 아닌 단순 계산입니다.")
+    months = pd.DataFrame(forecast["달"]).assign(실제=lambda t: t["실제"].map(lambda v: "공개 전" if pd.isna(v) else f"{v:.2%}"))
+    st.dataframe(months, hide_index=True, column_config={c: percent for c in ("작년 같은 달", "추정")}, alt="2026년 7월부터 11월까지 월별 도착 지연률 추정과 실제 값")
+    st.caption(f"{forecast['만든 시각'][:10]}에 고정한 값입니다. 실제 값은 원본 파일이 공개되면 채웁니다. 2026년 3~6월로 시험한 평균 오차는 {trial['추정 평균 오차'] * 100:.1f}%포인트이며(작년 값 그대로 쓰면 {trial['작년 값 평균 오차'] * 100:.1f}%포인트), 4개월뿐인 시험입니다. "
+               "지연률이 낮아진 원인을 아직 모르며, 낮아진 수준이 이어진다고 가정합니다. 태풍이나 폭설 같은 사건은 반영하지 않습니다.")

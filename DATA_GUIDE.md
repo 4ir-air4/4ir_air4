@@ -77,8 +77,8 @@ reference_data/    ->  data/cache/            ->  outputs_2026/
 | 자료 받기 | `download_bts.py`, `download_refs.py`, `download_kosis.py`, `download_weather.py`, `collect_icn.py` |
 | 변환 | `prepare_data.py`, `preprocess.ipynb` |
 | 통계와 학습 | `run_all.py`, `run_models.py`, `trial_model.py`, `colab_run.ipynb` |
-| 평가 | `evaluate_icn.py`, `evaluate_icn_inputs.py` |
-| 점검 | `test_collect_icn.py`, `test_saved_models.py`, `test_download_kosis.py` |
+| 평가와 추정 | `evaluate_icn.py`, `evaluate_icn_inputs.py`, `forecast_icn_monthly.py` |
+| 점검 | `test_collect_icn.py`, `test_forecast_icn.py`, `test_saved_models.py`, `test_download_kosis.py` |
 | 드라이브와 진행 확인 | `upload_to_drive.ps1`, `watch_training.ps1` |
 | 예전 학습 | `train.py`, `train_enhanced.py` |
 | 문서 | `DATA_GUIDE.md`, `DATA_SOURCES.md`, `WORK_LOG.md` |
