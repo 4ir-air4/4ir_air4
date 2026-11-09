@@ -1,57 +1,43 @@
-# =========================
-# Python 가상환경
-# =========================
+# API secrets
+.streamlit/secrets.toml
+.env
+.env.*
+
+# Python virtual environment
 .venv/
 venv/
-env/
+ENV/
 
-# =========================
-# Python 캐시 파일
-# =========================
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
 
-# =========================
-# 환경변수 및 비밀정보
-# =========================
-.env
-.env.*
-!.env.example
-
-# =========================
 # Jupyter Notebook
-# =========================
 .ipynb_checkpoints/
 
-# =========================
-# 테스트 및 분석 도구
-# =========================
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
-
-# =========================
-# Streamlit
-# =========================
-.streamlit/secrets.toml
-
-# =========================
-# IDE 설정
-# =========================
+# IDE
 .idea/
 .vscode/
 
-# =========================
-# 운영체제 임시 파일
-# =========================
+# OS
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# =========================
-# 로그 파일
-# =========================
+# Logs
 *.log
+
+# Local data
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Trained models
+models/saved/*
+!models/saved/.gitkeep
+
+# Temporary files
+*.tmp
+*.bak
