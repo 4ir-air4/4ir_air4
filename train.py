@@ -2,7 +2,7 @@
 
 학습: TRAIN_YEARS 전체에서 파일(월)마다 SAMPLE_FRAC 표본 추출, 평가: TEST_YEAR 전체
 사용법: python train.py [task ...]   인자 없으면 TASKS 전부. 예) python train.py cancelled diverted
-결과: models/<task>.joblib, models/metrics/<task>.json
+결과: models/<task>.pkl, models/metrics/<task>.json
 """
 import json
 import sys
@@ -181,7 +181,7 @@ def run(name, train, test):
                "n_train": len(X_all), "n_test": len(X_te), "n_iter": int(model.n_iter_),
                "seconds": round(time.time() - start), **metrics}
     joblib.dump({"model": model, "cats": cats, "threshold": threshold, "title": title, "kind": kind},
-                MODEL_DIR / f"{name}.joblib")
+                MODEL_DIR / f"{name}.pkl")
     (METRIC_DIR / f"{name}.json").write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
     keys = {"binary": ["roc_auc", "pr_auc", "positive_rate"], "multiclass": ["accuracy", "macro_f1", "majority_rate"]}
     summary = {k: round(metrics[k], 4) for k in keys[kind]} if kind != "regression" else \

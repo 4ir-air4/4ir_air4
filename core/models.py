@@ -123,7 +123,7 @@ def fit_lightgbm(d, kind, tr, val, rf=False):
 
     def predict(rows):
         return model.predict(np.asarray(d.X[rows]))
-    predict.save = lambda folder: model.save_model(str(folder / "model.txt"))
+    predict.save = lambda folder: save_pkl(model, folder)
     return predict
 
 
@@ -146,7 +146,7 @@ def fit_xgboost(d, kind, tr, val):
 
     def predict(rows):
         return model.predict(xgb.DMatrix(np.asarray(d.X[rows]), feature_types=types, enable_categorical=True, nthread=THREADS), iteration_range=best)
-    predict.save = lambda folder: model.save_model(str(folder / "model.ubj"))
+    predict.save = lambda folder: save_pkl(model, folder)
     return predict
 
 
@@ -277,6 +277,24 @@ def fit_lstm(d, kind, tr, val):
     return predict
 
 
+def save_pkl(model, folder):
+    # 부스터는 피클 안에 자체 모델 문자열을 담으므로 라이브러리 버전이 조금 달라도 읽힌다
+    import joblib
+    joblib.dump(model, folder / "model.pkl")
+
+
+def load_tree(folder, name):
+    """model.pkl 을 읽는다. pkl 이전에 저장한 폴더는 model.txt / model.ubj 를 읽는다."""
+    if (folder / "model.pkl").exists():
+        import joblib
+        return joblib.load(folder / "model.pkl")
+    if name == "xgboost":
+        import xgboost as xgb
+        return xgb.Booster(model_file=str(folder / "model.ubj"))
+    import lightgbm as lgb
+    return lgb.Booster(model_file=str(folder / "model.txt"))
+
+
 def save_model(store, task, name, kind, d, predict, threshold):
     """모델과 예측에 필요한 값을 saved_models/<과제>__<모델>/ 에 저장한다."""
     folder = store.dir / "saved_models" / f"{task}__{name}"
@@ -292,7 +310,7 @@ def load_model(store, task, name):
     meta = json.loads((folder / "meta.json").read_text(encoding="utf-8"))
     if name == "xgboost":
         import xgboost as xgb
-        model = xgb.Booster(model_file=str(folder / "model.ubj"))
+        model = load_tree(folder, name)
         types = ["c" if i in meta["cat_idx"] else "q" for i in range(len(meta["columns"]))]
 
         def predict(d, rows):
@@ -306,8 +324,7 @@ def load_model(store, task, name):
         def predict(d, rows):
             return lstm_predict(model, norm, meta["kind"], d, rows)
     else:
-        import lightgbm as lgb
-        model = lgb.Booster(model_file=str(folder / "model.txt"))
+        model = load_tree(folder, name)
 
         def predict(d, rows):
             return model.predict(np.asarray(d.X[rows]))

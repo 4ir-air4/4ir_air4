@@ -3,6 +3,7 @@ import pandas as pd
 import pyarrow.parquet as pq
 import streamlit as st
 
+from core.model_explain import explain_section
 from core.models import MODEL_NAMES, collect_rows
 from core.registry import discover
 from core.store import OUTPUT_DIR, Store
@@ -113,6 +114,8 @@ if pred_path.exists():
     st.markdown(f"**{model}의 건별 예측값** (전체 {n:,}건 중 앞 {min(n, PREVIEW_ROWS):,}건)")
     st.dataframe(_preview(str(pred_path), pred_path.stat().st_mtime, PREVIEW_ROWS).round(3), hide_index=True, alt=f"{model}의 평가 구간 건별 실제값과 예측값")
     st.caption(f"전체 파일: `{store.dir.parent.name}/{slug}/pred_{name}.parquet`")
+
+explain_section(store, name, kind, model, KEYS[model])
 
 st.subheader("이 카테고리의 과제별 비교")
 summary = []

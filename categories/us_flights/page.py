@@ -65,9 +65,9 @@ else:
 
     @st.cache_resource
     def load_bundle(name):
-        return joblib.load(MODEL_DIR / f"{name}.joblib")
+        return joblib.load(MODEL_DIR / f"{name}.pkl")
 
-    trained = [n for n in TASKS if (MODEL_DIR / f"{n}.joblib").exists()]
+    trained = [n for n in TASKS if (MODEL_DIR / f"{n}.pkl").exists()]
     if not trained:
         st.info("학습된 모델이 없습니다. `python train.py` 를 실행하세요.")
         st.stop()

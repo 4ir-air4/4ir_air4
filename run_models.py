@@ -1,4 +1,4 @@
-"""모든 카테고리에서 LightGBM, XGBoost, RandomForest, LSTM 학습.  사용법: python run_models.py [slug ...] [--force] [--models=lstm,lightgbm] [--year=2026]
+"""모든 카테고리에서 LightGBM, XGBoost, RandomForest, LSTM 학습.  사용법: python run_models.py [slug ...] [--force | --resave] [--models=lstm,lightgbm] [--year=2026]
 
 각 카테고리의 models.py 가 tasks() 로 학습 대상을 알려 준다. 끝난 모델은 건너뛰므로 끊겨도 다시 실행하면 이어서 진행한다.
 --year: 그 해의 행으로만 학습해 outputs_<해>/ 에 따로 저장한다. 전체 학습 결과와 섞이지 않는다. 자료가 없는 과제는 건너뛴다.
@@ -34,6 +34,7 @@ if __name__ == "__main__":
     self_check()
     threading.Thread(target=heartbeat, daemon=True).start()
     force = "--force" in sys.argv
+    resave = "--resave" in sys.argv
     year = next((int(a.split("=", 1)[1]) for a in sys.argv[1:] if a.startswith("--year=")), None)
     chosen = next((a.split("=", 1)[1].split(",") for a in sys.argv[1:] if a.startswith("--models=")), MODELS)
     unknown = set(chosen) - set(MODELS)
@@ -58,7 +59,9 @@ if __name__ == "__main__":
         if year:
             store.dir = OUTPUT_DIR.parent / f"outputs_{year}" / slug
         names = chosen
-        todo = [m for m in names if force or not (store.dir / "model_results" / f"{t['task']}__{m}.json").exists()]
+        # --resave: 결과가 있어도 모델 파일이 없으면 다시 학습한다. --force 와 달리 끊긴 뒤 이어 갈 수 있다
+        marker = (lambda m: store.dir / "saved_models" / f"{t['task']}__{m}" / "meta.json") if resave else (lambda m: store.dir / "model_results" / f"{t['task']}__{m}.json")
+        todo = [m for m in names if force or not marker(m).exists()]
         done += len(names) - len(todo)
         if not todo:
             continue

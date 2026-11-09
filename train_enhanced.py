@@ -4,7 +4,7 @@
 학습 2023-01~2025-09(월별 표본), 임계값 검증 2025-10~12, 평가 2026 전체.
 준비: python prepare_data.py 2023 -> python download_weather.py
 사용법: python train_enhanced.py [task ...]   인자 없으면 ALL_TASKS 전부
-결과: models/enhanced/<task>.joblib, models/enhanced/metrics/<task>__<단계>.json
+결과: models/enhanced/<task>.pkl, models/enhanced/metrics/<task>__<단계>.json
 """
 import json
 import sys
@@ -159,7 +159,7 @@ def run(task, step, cols, train, val, test, save):
     (OUT_DIR / "metrics" / f"{task}__{step}.json").write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
     if save:
         joblib.dump({"model": model, "cats": cats, "columns": cols, "threshold": threshold, "title": title, "kind": kind,
-                     "cutoff_hours": metrics["cutoff_hours"]}, OUT_DIR / f"{task}.joblib")
+                     "cutoff_hours": metrics["cutoff_hours"]}, OUT_DIR / f"{task}.pkl")
     print(f"[{task}/{step}] train {len(X_tr):,} / test {len(X_te):,}  {seconds}s  {score}", flush=True)
 
 
