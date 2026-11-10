@@ -72,6 +72,49 @@ def route_demand(price_index):
     return summary, pd.DataFrame(heat), f"{last12[0]}~{last12[-1]}"
 
 
+# 설·추석 당일(손으로 넣은 값). 연휴가 두 달에 걸쳐도 당일이 있는 달로 본다
+SEOL = ["2020-01-25", "2021-02-12", "2022-02-01", "2023-01-22", "2024-02-10", "2025-01-29", "2026-02-17"]
+CHUSEOK = ["2020-10-01", "2021-09-21", "2022-09-10", "2023-09-29", "2024-09-17", "2025-10-06", "2026-09-25"]
+FARES = ["국내항공료", "국제항공료", "시외버스료", "여객선료", "택시료"]  # 교통요금_지수.csv 의 소비자물가 품목 (2020=100)
+
+
+def year_month(price):
+    """연도 × 월 항공료: 그해 평균 대비(%)와 전년 같은 달 대비(%)."""
+    s = price[price.index >= START]
+    t = pd.DataFrame({"연도": s.index.year.astype(str), "월": [f"{m:02d}월" for m in s.index.month], "지수": s.to_numpy()})
+    t["그해 평균 대비(%)"] = t.지수 / t.groupby("연도").지수.transform("mean") * 100 - 100
+    t["전년 같은 달 대비(%)"] = (s / price.shift(12).reindex(s.index) * 100 - 100).to_numpy()
+    return t
+
+
+def holiday_effect(ratio):
+    """설(1·2월)과 추석(9·10월) 달의 계절 비율(추세 대비 %)을 그 달에 명절이 든 해와 아닌 해로 나눈다."""
+    holiday = {pd.Period(day, "M"): name for name, days in (("설", SEOL), ("추석", CHUSEOK)) for day in days}
+    rows = []
+    for name, months in (("설", (1, 2)), ("추석", (9, 10))):
+        for m in months:
+            r = ratio[ratio.index.month == m]
+            has = np.array([holiday.get(p) == name for p in r.index])
+            rows.append({"명절": name, "월": f"{m}월", "명절 든 해(%)": (r[has].mean() - 1) * 100, "명절 없는 해(%)": (r[~has].mean() - 1) * 100,
+                         "명절 든 해": ", ".join(str(p.year) for p in r.index[has]), "명절 없는 해": ", ".join(str(p.year) for p in r.index[~has])})
+    return pd.DataFrame(rows)
+
+
+def fare_tables():
+    """국내항공료와 다른 교통 요금의 월별 지수(2020=100)와 최근 달 요약."""
+    d = read_csv_any(KOSIS / "교통요금_지수.csv", dtype={"PRD_DE": str})
+    t = d.pivot_table(index="PRD_DE", columns="C2_NM", values="DT")[FARES]
+    t.index = pd.PeriodIndex(t.index, freq="M")
+    last = t.index[-1]
+    swing = [month_index(usable(seasonal_ratio(t[c]))) for c in FARES]
+    summary = pd.DataFrame({"항목": FARES, "최근 지수": t.loc[last].to_numpy(), "2020년 대비(%)": (t.loc[last] - 100).to_numpy(),
+                            "전년 같은 달 대비(%)": (t.loc[last] / t.loc[last - 12] * 100 - 100).to_numpy(),
+                            "계절 변동 폭(포인트)": [s.max() - s.min() for s in swing], "가장 비싼 달": [f"{s.idxmax()}월" for s in swing]})
+    shown = t.loc[str(START):]
+    monthly = shown.set_axis(shown.index.astype(str)).rename_axis("월").reset_index().melt(id_vars="월", var_name="항목", value_name="지수")
+    return summary, monthly, str(last)
+
+
 FULL_SERVICE = {"KAL", "AAR"}  # 대한항공, 아시아나항공. 나머지는 저비용 항공사로 묶는다
 
 
@@ -199,6 +242,7 @@ def self_check():
         # 작년 같은 기간 값은 h < 12 이므로 예측 시점 이전이다
         assert not changed, f"예측 시점 이후 값이 특성에 들어감: {changed}"
 
+    assert all(pd.Period(d, "M").month in (1, 2) for d in SEOL) and all(pd.Period(d, "M").month in (9, 10) for d in CHUSEOK), "명절 날짜의 달"
     pattern = 100 + 10 * np.sin(np.arange(120) * 2 * np.pi / 12)
     got = month_index(seasonal_ratio(pd.Series(pattern, index=index)))
     assert abs(got.mean() - 100) < 1e-9 and got.idxmax() == index[3].month, "계절 지수의 최고 달이 입력과 다름"
@@ -239,6 +283,14 @@ def run(store):
 
     corr = lag_correlation(df)
     store.save_table("lag_corr", corr)
+
+    store.save_table("price_year_month", year_month(price))
+    holidays = holiday_effect(ratio)
+    store.save_table("holiday_effect", holidays)
+    fare_summary, fare_monthly, fare_last = fare_tables()
+    store.save_table("fare_compare", fare_summary)
+    store.save_table("fare_monthly", fare_monthly)
+    domestic = fare_summary.set_index("항목").loc["국내항공료"]
 
     routes, route_month, recent_period = route_demand(seasonal.set_index("월")["항공료 계절 지수"])
     store.save_table("route_summary", routes)
@@ -327,6 +379,8 @@ def run(store):
                "월별 여객은 달의 일수를 보정하지 않은 합계입니다.",
                f"노선별 수요: 운임은 노선별로 공개되지 않아 노선별 여객의 계절 지수로 보완했습니다. {len(routes)}개 노선이며, 노선별 자료가 2020-02부터라 코로나 구간을 빼면 계절 지수에 쓰는 달이 노선마다 {routes['계절 지수 자료(개월)'].min()}~{routes['계절 지수 자료(개월)'].max()}개월입니다.",
                f"{recent_period} 여객의 {jeju['여객 비중(%)'].sum():.0f}%가 제주 노선입니다. 노선별 계절 지수는 하루 평균 여객으로 만든 수요 지표이고 가격이 아니며, 항공료 계절 지수와의 상관은 12개 값으로 계산했습니다.",
+               "명절 효과: 설·추석이 든 달과 같은 달의 다른 해를 비교했습니다. 코로나 구간을 빼면 달마다 3~4개 해뿐이라 크기는 불확실합니다. 명절 날짜는 코드에 직접 넣었습니다.",
+               f"다른 교통 요금(소비자물가, 2020=100): {fare_last} 국내항공료는 2020년보다 {domestic['2020년 대비(%)']:.1f}%, 전년 같은 달보다 {domestic['전년 같은 달 대비(%)']:.1f}% 높습니다. 지수끼리 비교이며 금액 비교가 아닙니다.",
                f"항공사별: {airline_period} 국내선 여객의 {lcc:.0f}%가 저비용 항공사입니다(대한항공·아시아나항공 외 전부). 운임은 항공사별로도 공개되지 않아 여객과 운항만 봅니다. 좌석 수가 없어 탑승률 대신 편당 여객을 씁니다.",
                "원유는 달러 기준 수입물가지수, 제트유는 생산자물가지수입니다. 실제 유가(달러/배럴)가 아닙니다."],
         sources=["KOSIS 소비자물가조사", "KOSIS 국내선 노선별 통계", "KOSIS 생산자물가지수·수입물가지수(한국은행)", "KOSIS 국내 통화 환율(IMF)"],

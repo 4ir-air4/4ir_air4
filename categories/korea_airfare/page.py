@@ -21,6 +21,20 @@ right.caption("봄 3-5월, 여름 6-8월, 가을 9-11월, 겨울 12-2월")
 
 st.dataframe(seasonal.round(1), hide_index=True, alt="월별 계절 지수 상세 표")
 
+if store.table_path("price_year_month").exists():  # 파이프라인을 다시 돌리기 전에는 없다
+    st.markdown("**연도별로 보기**")
+    measure = st.segmented_control("기준", ["그해 평균 대비(%)", "전년 같은 달 대비(%)"], default="그해 평균 대비(%)") or "그해 평균 대비(%)"
+    grid = alt.Chart(load(store, "price_year_month").dropna(subset=[measure])).mark_rect().encode(
+        x=alt.X("월:O", title=None), y=alt.Y("연도:O", title=None),
+        color=alt.Color(f"{measure}:Q", scale=alt.Scale(scheme="blueorange", domainMid=0), title="%"),
+        tooltip=["연도", "월", alt.Tooltip("지수:Q", format=".1f"), alt.Tooltip(f"{measure}:Q", format="+.1f")])
+    st.altair_chart(grid, width="stretch")
+    st.caption("그해 평균 대비는 같은 해 안의 높낮이, 전년 같은 달 대비는 1년 사이 변화입니다. 2026년은 3월부터 제트유가 급등해 그해 평균 대비만 보면 상반기가 낮게 보입니다.")
+
+    st.markdown("**명절 효과** (추세 대비 %)")
+    st.dataframe(load(store, "holiday_effect").round(1), hide_index=True, alt="설과 추석이 든 해와 아닌 해의 같은 달 항공료 비교")
+    st.caption("설·추석은 해마다 달이 바뀝니다. 같은 달을 명절이 든 해와 아닌 해로 나눠 비교했습니다. 코로나 구간을 빼면 해가 3~4개뿐이라 참고용입니다.")
+
 st.subheader("추이")
 st.markdown("**항공료 지수**")
 st.line_chart(monthly, x="월", y=["항공료 지수", "실질 항공료", "국내항공여객 생산자물가"], y_label="2020=100", alt="항공료 지수, 실질 항공료, 생산자물가 추이")
@@ -31,6 +45,13 @@ right.markdown("**원/달러 환율**")
 right.line_chart(monthly, x="월", y="원/달러 환율", y_label="원", alt="원달러 환율 추이")
 st.markdown("**국내선 여객**")
 st.line_chart(monthly, x="월", y="여객(명)", y_label="명", alt="국내선 월별 여객 추이")
+
+if store.table_path("fare_compare").exists():
+    st.subheader("다른 교통 요금과 비교")
+    st.caption("모두 소비자물가 품목 지수(2020=100)라 2020년 이후 오른 정도를 바로 비교할 수 있습니다. 금액이 아니라 지수입니다.")
+    st.line_chart(load(store, "fare_monthly"), x="월", y="지수", color="항목", y_label="2020=100", alt="교통 요금별 소비자물가 지수 추이")
+    st.dataframe(load(store, "fare_compare").round(1), hide_index=True, alt="교통 요금별 최근 지수, 2020년 대비, 전년 대비, 계절 변동 폭")
+    st.caption("계절 변동 폭은 코로나 구간을 뺀 월별 계절 지수(연평균 100)의 최고와 최저 차이입니다.")
 
 st.subheader("노선별 수요 (운임 지수 보완)")
 st.caption("운임은 전국 지수 하나뿐이라 노선별 가격은 알 수 없습니다. 대신 노선별 하루 평균 여객의 계절 지수(연평균 100)로 어느 노선, 어느 달에 수요가 몰리는지 봅니다.")
