@@ -23,6 +23,15 @@ def label(kind, metric):
     return SECTIONS[kind][1][metric]
 
 
+def below_baseline(g):
+    """한 과제의 모든 모델이 기준선보다 나쁜가. 다중 분류는 같은 지표의 기준값이 없어 판단하지 않는다."""
+    k = g.kind.iloc[0]
+    if k == "multiclass":
+        return False
+    m, ref = METRICS[k][0], REFERENCE[k]
+    return g[m].min() > g[ref].min() if k == "regression" else g[m].max() <= g[ref].max()
+
+
 def results_of(root):
     """결과가 있는 카테고리: {slug: (이름, Store, 결과 행)}."""
     found = {}
@@ -67,8 +76,11 @@ with st.container(horizontal=True):
         delta = None if best is None or pd.isna(value) else float(value - best)
         st.metric(label(kind, metric), show(metric, value), delta=None if delta is None else f"{delta:+.1%}" if metric == "improve" else round(delta, 3),
                   delta_color="inverse" if low else "normal", border=True, help="화살표는 다른 모델 중 가장 좋은 값과의 차이입니다." if delta is not None else None)
-    st.metric(label(kind, REFERENCE[kind]), show(REFERENCE[kind], row.get(REFERENCE[kind])), border=True, help="모델 없이 얻을 수 있는 기준값입니다.")
+    st.metric(label(kind, REFERENCE[kind]), show(REFERENCE[kind], row.get(REFERENCE[kind])), border=True,
+              help="가장 흔한 값만 고를 때의 정확도입니다. 정확도와 비교하며 macro F1과는 직접 비교할 수 없습니다." if kind == "multiclass" else "모델 없이 얻을 수 있는 기준값입니다.")
 st.caption(f"학습 {row.train_period} ({row.n_train:,}건) · 평가 {row.test_period} ({row.n_test:,}건) · 구성 {row.group} · 걸린 시간 {row.seconds:,}초")
+if below_baseline(part):
+    st.warning("이 과제는 모든 모델이 기준선보다 나쁩니다. 예측값으로는 기준선을 쓰세요.", icon=":material/warning:")
 
 st.subheader("모델별 차이")
 if others.empty:
@@ -124,7 +136,8 @@ for t, g in frame.groupby("task", sort=False):
     metric = METRICS[k][0]
     low = metric == "mae"
     values = g.set_index("model")[metric]
-    summary.append({"예측 대상": g.title.iloc[0], "지표": label(k, metric), **values.to_dict(), "최고 모델": values.idxmin() if low else values.idxmax()})
-overview = pd.DataFrame(summary).reindex(columns=["예측 대상", "지표", *[m for m in MODEL_NAMES.values() if m in set(frame.model)], "최고 모델"])
-st.dataframe(overview.round(3), hide_index=True, alt="과제별 모델 기준 지표와 최고 모델")
-st.caption("빈칸은 아직 학습하지 않은 모델입니다. MAE는 낮을수록, 나머지 지표는 높을수록 좋습니다.")
+    summary.append({"예측 대상": g.title.iloc[0], "지표": label(k, metric), **values.to_dict(), "최고 모델": values.idxmin() if low else values.idxmax(),
+                    "기준": None if k == "multiclass" else g[REFERENCE[k]].iloc[0], "판단": "기준선 사용 권장" if below_baseline(g) else ""})
+overview = pd.DataFrame(summary).reindex(columns=["예측 대상", "지표", *[m for m in MODEL_NAMES.values() if m in set(frame.model)], "최고 모델", "기준", "판단"])
+st.dataframe(overview.round(3), hide_index=True, alt="과제별 모델 기준 지표, 최고 모델, 기준선 대비 판단")
+st.caption("빈칸은 아직 학습하지 않은 모델입니다. MAE는 낮을수록, 나머지 지표는 높을수록 좋습니다. 기준은 회귀는 기준선 MAE, 이진 분류는 무작위 PR-AUC이고, 다중 분류는 같은 지표의 기준이 없어 비웠습니다.")
