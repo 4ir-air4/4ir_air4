@@ -41,3 +41,8 @@ models/saved/*
 # Temporary files
 *.tmp
 *.bak
+# Airport demand raw inputs (large, re-downloadable; fetch_airports.py builds the CSVs from these)
+data/airport_demand/input/
+
+# Runtime cache (changes on every run)
+data/cache/*

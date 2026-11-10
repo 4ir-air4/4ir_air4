@@ -9,3 +9,7 @@ xgboost
 plotly
 folium
 streamlit-folium
+optuna
+openpyxl
+xlrd
+lxml
