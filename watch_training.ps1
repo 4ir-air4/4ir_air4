@@ -1,4 +1,4 @@
-# Shows training progress live. Read-only: closing this window does NOT stop training.
+﻿# Shows training progress live. Read-only: closing this window does NOT stop training.
 # Usage: powershell -NoProfile -ExecutionPolicy Bypass -File watch_training.ps1
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $host.UI.RawUI.WindowTitle = 'Training monitor'

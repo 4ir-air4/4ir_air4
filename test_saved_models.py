@@ -1,4 +1,4 @@
-"""저장한 모델의 예측이 학습 직후 저장한 예측과 같은지 확인한다.  사용법: python test_saved_models.py [slug ...] (기본 korea_ops)"""
+"""저장한 모델의 예측이 학습 직후 저장한 예측과 같은지 확인한다.  사용법: python test_saved_models.py [slug ...] [--year=2026] (기본 korea_ops)"""
 import importlib
 import sys
 
@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 
 from categories.korea_ops.models import CONTEXT_GROUPS, recent_context, recent_delays, window_rate
-from core.models import MODELS, TEST, load_model
-from core.store import Store
+from core.models import MODELS, TEST, load_model, only_year
+from core.store import OUTPUT_DIR, Store
 
 TOLERANCE = 1e-3
 
@@ -67,12 +67,17 @@ if __name__ == "__main__":
     check_window_rate()
     check_context_no_leak()
     print("이력 입력 점검 통과")
-    for slug in sys.argv[1:] or ["korea_ops"]:
+    year = next((int(a.split("=", 1)[1]) for a in sys.argv[1:] if a.startswith("--year=")), None)
+    for slug in [a for a in sys.argv[1:] if not a.startswith("--")] or ["korea_ops"]:
         store = Store(slug)
+        if year:  # run_models.py --year 와 같은 위치와 같은 행
+            store.dir = OUTPUT_DIR.parent / f"outputs_{year}" / slug
         for t in importlib.import_module(f"categories.{slug}.models").tasks():
             names = [m for m in MODELS if (store.dir / "saved_models" / f"{t['task']}__{m}" / "meta.json").exists()]
             if not names:
                 continue
             data = t["load"]()
+            if year:
+                data = only_year(data, year)
             for name in names:
                 print(f"통과 {t['task']}/{name}: 최대 차이 {check_saved(store, t['task'], data, name):.6f}", flush=True)
