@@ -309,3 +309,17 @@ LSTM의 이전 우위는 입력 차이였습니다. 첫 모델은 LightGBM으로
 ```powershell
 robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecast_*" "*.json" /S /XO /XF summary.json *.tmp /R:2 /W:5 /NP /NDL /NFL
 ```
+
+# develop 정리와 모델 파일 채우기 (2026-11-10, 학원 PC)
+
+- **Git:** 11-09 작업을 `develop`에 커밋했고(`e5a726d4`), 팀원 PR #1이 들어간 `main`을 `develop`에 합쳤습니다(`b05ffabc`). 팀원 앱은 `live_app.py`로 옮기고 메뉴의 `실시간 항공기`로 연결했으며, 지금은 첫 화면입니다. 전체 요약은 `/home`입니다.
+- **파이썬 환경:** 학습과 앱은 프로젝트의 `.venv`로 실행합니다(`.venv/Scripts/python.exe`). 시스템 파이썬에는 lightgbm·xgboost·tensorflow가 없습니다. 팀원 앱용 `folium`, `plotly`, `streamlit-folium`을 `.venv`에 설치했습니다.
+- **2026년 학습 모델 파일:** `run_models.py korea_demand safety --year=2026 --resave`로 8개를 다시 학습해 `outputs_2026/*/saved_models/`에 모델 파일을 남겼습니다. 실패 0개, 8개 모두 다시 불러오기 시험을 통과했습니다. `test_saved_models.py`에 `--year=` 옵션을 추가했습니다. 다시 학습해서 지표가 이전 결과(11-06)와 조금 다를 수 있습니다.
+  - ntsb_fatal PR-AUC: LightGBM 0.326, XGBoost 0.201, RandomForest 0.362, LSTM 0.251 (기준 0.171)
+  - icn_passengers MAE: LightGBM 1,020, XGBoost 1,326, RandomForest 1,053, LSTM 1,085 (기준 958, 네 모델 모두 기준보다 나쁨)
+- **미국 운항 44개 모델 파일:** 이 PC에서 `--resave`로 다시 학습 중입니다(10:57 시작, LightGBM·RandomForest·LSTM 33개 → XGBoost 11개 → 다시 불러오기 시험 → SHAP). 로그는 `run_models.log`이고 `watch_training.ps1`로 볼 수 있습니다.
+- **결과 보고서:** [RESULTS_REPORT.md](RESULTS_REPORT.md)에 32개 과제의 현재 4개 모델 결과, 해석, 발표 구성안을 모았습니다. 맨 위 LSTM 표(축소 전 값) 대신 이 문서를 보세요.
+- **인천 시각 차이 원인 (11-06~11-10 수집, 도착 1,509편):** `착륙` 상태가 처음 보일 때 API 예상 시각은 아직 5분 뒤이고(중앙값), 착륙 뒤에도 거의 바뀌지 않으며, `도착` 상태는 그 시각 무렵에 바뀝니다.
+  - 따라서 API 도착 시각은 게이트 도착이고, 착륙부터 약 10분 차이입니다. 앞서 본 13분 차이와 맞습니다.
+  - 출발은 API에 `이륙` 상태가 없어 직접 확인하지 못했습니다. `출발` 상태가 예상 시각 무렵에 바뀌어 게이트 출발 시각으로 보입니다.
+  - 분석 스크립트는 저장소에 넣지 않았습니다. 자세한 표는 보고서 4절에 있습니다.
