@@ -1,4 +1,5 @@
 """한국 국내선 항공료: 계절성, 비용·수요 지표, 월별 예측."""
+import altair as alt
 import streamlit as st
 
 from core.ui import header, load, model_tables, notes, store_for
@@ -30,6 +31,47 @@ right.markdown("**원/달러 환율**")
 right.line_chart(monthly, x="월", y="원/달러 환율", y_label="원", alt="원달러 환율 추이")
 st.markdown("**국내선 여객**")
 st.line_chart(monthly, x="월", y="여객(명)", y_label="명", alt="국내선 월별 여객 추이")
+
+st.subheader("노선별 수요 (운임 지수 보완)")
+st.caption("운임은 전국 지수 하나뿐이라 노선별 가격은 알 수 없습니다. 대신 노선별 하루 평균 여객의 계절 지수(연평균 100)로 어느 노선, 어느 달에 수요가 몰리는지 봅니다.")
+routes = load(store, "route_summary")
+heat = alt.Chart(load(store, "route_month")).mark_rect().encode(
+    x=alt.X("월:O", title=None), y=alt.Y("노선:N", sort=list(routes["노선"]), title=None),
+    color=alt.Color("여객 계절 지수:Q", scale=alt.Scale(scheme="blueorange", domainMid=100)),
+    tooltip=["노선", "월", alt.Tooltip("여객 계절 지수:Q", format=".1f")])
+st.altair_chart(heat, width="stretch")
+st.dataframe(routes.round(2), hide_index=True, alt="노선별 최근 12개월 여객, 편당 여객, 성수기와 비수기")
+st.caption("노선은 최근 12개월 여객이 많은 순입니다. 편당 여객은 최근 12개월 여객 ÷ 운항 편수이고, 항공료 계절 지수와 상관은 월별 12개 값으로 계산했습니다.")
+
+st.subheader("항공사별 국내선 여객")
+st.caption("운임은 항공사별로도 공개되지 않아 여객과 운항만 봅니다. 대형은 대한항공·아시아나항공이고 나머지는 저비용 항공사로 묶었습니다. 좌석 수가 없어 탑승률 대신 편당 여객을 씁니다.")
+left, right = st.columns(2)
+left.markdown("**최근 12개월 항공사별**")
+left.dataframe(load(store, "airline_recent").drop(columns="코드").round(1), hide_index=True, alt="항공사별 최근 12개월 국내선 여객, 운항, 편당 여객")
+right.markdown("**저비용 항공사 여객 비중**")
+right.line_chart(load(store, "airline_lcc_monthly"), x="월", y="저비용 비중(%)", y_label="%", alt="월별 국내선 저비용 항공사 여객 비중")
+share = load(store, "route_airline")
+top = list(routes["노선"].head(10))
+bars = alt.Chart(share[share["노선"].isin(top)]).mark_bar().encode(
+    x=alt.X("점유율(%):Q", stack="normalize", axis=alt.Axis(format="%"), title="최근 12개월 여객 점유율"), y=alt.Y("노선:N", sort=top, title=None),
+    color=alt.Color("항공사:N"), tooltip=["노선", "항공사", alt.Tooltip("여객:Q", format=","), alt.Tooltip("점유율(%):Q", format=".1f")])
+st.markdown("**노선별 항공사 점유율** (여객 상위 10개 노선)")
+st.altair_chart(bars, width="stretch")
+
+if store.table_path("route_airline_monthly").exists():  # 파이프라인을 다시 돌리기 전에는 없다
+    pick = st.selectbox("노선 자세히 보기", list(routes["노선"]))
+    one = load(store, "route_airline_monthly").query("노선 == @pick and 여객 > 0")
+    one = one.assign(월=one["월"].str[:4] + "-" + one["월"].str[4:])
+    area = alt.Chart(one).mark_area().encode(
+        x=alt.X("월:O", title=None), y=alt.Y("여객:Q", stack="normalize", axis=alt.Axis(format="%"), title="여객 점유율"),
+        color=alt.Color("항공사:N"), tooltip=["월", "항공사", alt.Tooltip("여객:Q", format=",")])
+    left, right = st.columns([2, 1])
+    left.markdown(f"**{pick} 항공사별 점유율 추이**")
+    left.altair_chart(area, width="stretch")
+    last = one[one["월"].isin(sorted(one["월"].unique())[-12:])].groupby("항공사", as_index=False)[["여객", "운항"]].sum()
+    last["편당 여객"] = last["여객"] / last["운항"]
+    right.markdown("**최근 12개월**")
+    right.dataframe(last.sort_values("여객", ascending=False).round(1), hide_index=True, alt=f"{pick} 항공사별 최근 12개월 여객, 운항, 편당 여객")
 
 st.subheader("지표가 항공료보다 얼마나 앞서는가")
 st.caption("전년 대비 변화율끼리의 상관계수입니다. 시차 2는 지표의 2개월 전 값과 비교한 것입니다.")

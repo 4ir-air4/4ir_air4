@@ -50,9 +50,9 @@ reference_data/    ->  data/cache/            ->  outputs_2026/
 |---|---|---|---|---|
 | 미국 운항 | `us_flights` | `bts_data`, `openflights` | `data/ontime_2020~`, `cache/bts_2020` | 8개 |
 | 미국 기상과 운항 | `us_weather` | `bts_data`, `weather_asos/all_*` | `cache/us_weather_full` | 6개 |
-| 한국 운항·지연 | `korea_ops` | `korea/인천공항_환승승객현황*`, `korea/한국공항공사_지연시간_학습데이터`, `weather_asos/asos_14airports` | 없음 | 12개 (저장 모델 8개) |
+| 한국 운항·지연 | `korea_ops` | `korea/인천공항_환승승객현황*`, `korea/한국공항공사_지연시간_학습데이터`, `weather_asos/asos_14airports`, 항공사 이름은 `data/icn_live`(최근 하루)와 `openflights` | 없음 | 12개 (저장 모델 8개) |
 | 한국 수요·수송 | `korea_demand` | `korea/`의 운송실적, 제주 여객, 수송실적 | 없음 | 12개 |
-| 한국 국내선 항공료 | `korea_airfare` | `kosis` | 없음 | 없음 |
+| 한국 국내선 항공료 | `korea_airfare` | `kosis`의 항공료 지수·물가·유가·환율, 국내선 노선별 여객·운항, 노선 × 항공사별 여객·운항 | 없음 | 없음 |
 | 유럽 공항 | `europe` | `eurocontrol` | `cache/euro_*` | 32개 |
 | 전 세계 항공 | `world_traffic` | `opensky_flightlist` 2020~, `opensky`, `ourairports`, `openflights`, `worldbank` | `cache/opensky_2020` | 없음 |
 | 항공 안전 | `safety` | `ntsb`, `korea/국토교통부_*사고*` | `cache/ntsb_*` | 4개 |

@@ -38,6 +38,76 @@ def load_monthly():
     }).asfreq("M").loc[str(START):]
 
 
+def load_routes():
+    """노선 × 월의 여객과 운항. 노선별 값은 2020-02부터 있고, 출발·도착 공항이 같은 노선(최근 값 없음)과 합계는 뺀다."""
+    out = []
+    for name in ("국내선_노선별_여객", "국내선_노선별_운항"):
+        d = read_csv_any(KOSIS / f"{name}.csv", dtype={"PRD_DE": str})
+        ends = d.C1_NM.str.split("-", n=1)
+        d = d[(d.C1_NM != "합계") & (ends.str[0] != ends.str[1])]
+        table = d.pivot_table(index="PRD_DE", columns="C1_NM", values="DT", aggfunc="sum")
+        table.index = pd.PeriodIndex(table.index, freq="M")
+        out.append(table.asfreq("M"))
+    return out
+
+
+def route_demand(price_index):
+    """노선별 여객 계절 지수와 최근 12개월 규모. price_index: 월(1~12) → 전국 항공료 계절 지수."""
+    pax, flights = load_routes()
+    last12 = pax.index[-12:]
+    recent = pax.loc[last12].sum()
+    rows, heat = [], []
+    daily = pax.div(pax.index.days_in_month, axis=0)  # 2월이 짧아 비수기로 보이지 않게 하루 평균으로
+    for route in recent.sort_values(ascending=False).index:
+        ratio = usable(seasonal_ratio(daily[route]))
+        if ratio.index.month.nunique() < 12:  # 달마다 한 번 이상 있어야 계절 지수를 만든다
+            continue
+        idx = month_index(ratio)
+        rows.append({"노선": route, "최근 12개월 여객": int(recent[route]), "여객 비중(%)": recent[route] / recent.sum() * 100,
+                     "편당 여객": recent[route] / flights.loc[last12, route].sum(), "성수기": f"{idx.idxmax()}월", "비수기": f"{idx.idxmin()}월",
+                     "성수기/비수기 배율": idx.max() / idx.min(), "항공료 계절 지수와 상관": idx.corr(price_index), "계절 지수 자료(개월)": len(ratio)})
+        heat += [{"노선": route, "월": f"{m:02d}월", "여객 계절 지수": v} for m, v in idx.items()]
+    summary = pd.DataFrame(rows)
+    assert abs(pd.DataFrame(heat).groupby("노선")["여객 계절 지수"].mean() - 100).max() < 1e-6, "노선별 계절 지수 평균이 100이 아님"
+    return summary, pd.DataFrame(heat), f"{last12[0]}~{last12[-1]}"
+
+
+FULL_SERVICE = {"KAL", "AAR"}  # 대한항공, 아시아나항공. 나머지는 저비용 항공사로 묶는다
+
+
+def load_route_airlines():
+    """노선 × 항공사 × 월의 여객과 운항(긴 표). 항공사는 코드로 묶는다(이름은 KOSIS가 최신 이름으로 준다)."""
+    parts = []
+    for name, col in (("국내선_노선별_항공사별_여객", "여객"), ("국내선_노선별_항공사별_운항", "운항")):
+        d = read_csv_any(KOSIS / f"{name}.csv", dtype={"PRD_DE": str})
+        ends = d.C1_NM.str.split("-", n=1)
+        d = d[(d.C1_NM != "합계") & (d.C3_NM != "계") & (ends.str[0] != ends.str[1])]
+        parts.append(d.assign(코드=d.C3_NM.str.split().str[0]).groupby(["C1_NM", "코드", "PRD_DE"]).DT.sum().rename(col))
+    d = pd.concat(parts, axis=1).fillna(0).reset_index().rename(columns={"C1_NM": "노선", "PRD_DE": "월"})
+    names = read_csv_any(KOSIS / "국내선_노선별_항공사별_여객.csv").C3_NM.drop_duplicates()
+    names = dict(zip(names.str.split().str[0], names.str.split(n=1).str[1]))
+    return d.assign(항공사=d.코드.map(names), 구분=np.where(d.코드.isin(FULL_SERVICE), "대형", "저비용"))
+
+
+def airline_tables():
+    """항공사별 최근 12개월 요약, 월별 저비용 비중, 노선별 항공사 점유율."""
+    d = load_route_airlines()
+    months = sorted(d.월.unique())
+    recent = d[d.월.isin(months[-12:])]
+    a = recent.groupby(["코드", "항공사", "구분"], as_index=False)[["여객", "운항"]].sum()
+    a = a[a.여객 > 0].sort_values("여객", ascending=False)
+    a["노선 수"] = a.코드.map(recent[recent.여객 > 0].groupby("코드").노선.nunique())
+    a["여객 비중(%)"] = a.여객 / a.여객.sum() * 100
+    a["편당 여객"] = a.여객 / a.운항
+    monthly = d.pivot_table(index="월", columns="구분", values="여객", aggfunc="sum")
+    monthly = pd.DataFrame({"월": [f"{m[:4]}-{m[4:]}" for m in monthly.index], "저비용 비중(%)": (monthly.저비용 / monthly.sum(axis=1) * 100).to_numpy()})
+    share = recent.groupby(["노선", "항공사"], as_index=False).여객.sum()
+    share = share[share.여객 > 0]
+    share["점유율(%)"] = share.여객 / share.groupby("노선").여객.transform("sum") * 100
+    assert abs(share.groupby("노선")["점유율(%)"].sum() - 100).max() < 1e-6, "노선별 점유율 합이 100이 아님"
+    return a, monthly, share, f"{months[-12][:4]}-{months[-12][4:]}~{months[-1][:4]}-{months[-1][4:]}"
+
+
 def in_covid(index, margin=0):
     return (index >= COVID[0] - margin) & (index <= COVID[1] + margin)
 
@@ -170,6 +240,17 @@ def run(store):
     corr = lag_correlation(df)
     store.save_table("lag_corr", corr)
 
+    routes, route_month, recent_period = route_demand(seasonal.set_index("월")["항공료 계절 지수"])
+    store.save_table("route_summary", routes)
+    store.save_table("route_month", route_month)
+    jeju = routes[routes.노선.str.contains("제주")]
+    airlines, lcc_monthly, route_airline, airline_period = airline_tables()
+    store.save_table("airline_recent", airlines)
+    store.save_table("airline_lcc_monthly", lcc_monthly)
+    store.save_table("route_airline", route_airline)
+    store.save_table("route_airline_monthly", load_route_airlines().drop(columns=["코드", "구분"]))
+    lcc = airlines[airlines.구분 == "저비용"]["여객 비중(%)"].sum()
+
     # 예측: 최근 24개월을 달마다 다시 학습하며 평가한다
     test_index = price.index[-TEST_MONTHS:]
     period = f"{test_index[0]}~{test_index[-1]}"
@@ -244,6 +325,9 @@ def run(store):
                "평가 구간의 제트유 급등은 학습 구간에 비슷한 사례가 드물어 오차를 키웁니다. 급등 전후 오차를 나눠 표시했습니다.",
                "표준화 계수는 서로 상관된 지표끼리 나뉘어 부호를 원인으로 해석하면 안 됩니다.",
                "월별 여객은 달의 일수를 보정하지 않은 합계입니다.",
+               f"노선별 수요: 운임은 노선별로 공개되지 않아 노선별 여객의 계절 지수로 보완했습니다. {len(routes)}개 노선이며, 노선별 자료가 2020-02부터라 코로나 구간을 빼면 계절 지수에 쓰는 달이 노선마다 {routes['계절 지수 자료(개월)'].min()}~{routes['계절 지수 자료(개월)'].max()}개월입니다.",
+               f"{recent_period} 여객의 {jeju['여객 비중(%)'].sum():.0f}%가 제주 노선입니다. 노선별 계절 지수는 하루 평균 여객으로 만든 수요 지표이고 가격이 아니며, 항공료 계절 지수와의 상관은 12개 값으로 계산했습니다.",
+               f"항공사별: {airline_period} 국내선 여객의 {lcc:.0f}%가 저비용 항공사입니다(대한항공·아시아나항공 외 전부). 운임은 항공사별로도 공개되지 않아 여객과 운항만 봅니다. 좌석 수가 없어 탑승률 대신 편당 여객을 씁니다.",
                "원유는 달러 기준 수입물가지수, 제트유는 생산자물가지수입니다. 실제 유가(달러/배럴)가 아닙니다."],
         sources=["KOSIS 소비자물가조사", "KOSIS 국내선 노선별 통계", "KOSIS 생산자물가지수·수입물가지수(한국은행)", "KOSIS 국내 통화 환율(IMF)"],
     )

@@ -83,11 +83,21 @@ def fetch(args):
     params = {f"objL{i}": code for i, code in enumerate(args.obj, 1)}
     if args.recent:
         params["newEstPrdCnt"] = args.recent
+    end = args.end or pd.Timestamp.now().strftime("%Y%m")
+    # 한 번에 4만 칸까지만 주므로 --years-per-call 이 있으면 연도 단위로 나눠 받는다
+    step = args.years_per_call or 0
+    if args.recent:
+        spans = [(None, None)]
+    elif step:  # 월 자료(YYYYMM)만. 첫 해는 --start 달부터, 마지막 해는 end 달까지
+        spans = [(max(args.start, f"{y}01"), min(end, f"{y + step - 1}12")) for y in range(int(args.start[:4]), int(end[:4]) + 1, step)]
     else:
-        params["startPrdDe"] = args.start
-        params["endPrdDe"] = args.end or pd.Timestamp.now().strftime("%Y%m")
-    rows = call("Param/statisticsParameterData.do", method="getList", orgId=args.org, tblId=args.tbl,
-                itmId=args.item, prdSe=args.prd, **params)
+        spans = [(args.start, end)]
+    rows = []
+    for start, stop in spans:
+        if start:
+            params.update(startPrdDe=start, endPrdDe=stop)
+        rows += call("Param/statisticsParameterData.do", method="getList", orgId=args.org, tblId=args.tbl,
+                     itmId=args.item, prdSe=args.prd, **params)
     if not rows:
         sys.exit("받은 행이 없어 저장하지 않았습니다. 코드와 기간을 확인하세요.")
 
@@ -128,6 +138,7 @@ def main():
     p.add_argument("--start", help="시작 시점, 예: 200001")
     p.add_argument("--end", help="종료 시점. 생략하면 이번 달")
     p.add_argument("--recent", type=int, help="최근 N개 시점만 받기. 지정하면 --start 무시")
+    p.add_argument("--years-per-call", type=int, help="4만 칸 제한을 넘을 때 이 연수씩 나눠 받기 (월 자료만)")
     p.add_argument("--name", required=True, help="저장할 파일 이름 (확장자 제외)")
     p.set_defaults(func=fetch)
 
