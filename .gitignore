@@ -61,8 +61,16 @@ desktop.ini
 # =========================
 bts_data/
 data/
-models/
+models/*
+!models/train.py
 reference_data/
 outputs/
 outputs_*/
 _archive_before_2020/
+
+# =========================
+# 팀원 앱(live_app.py) 쪽 추가 규칙
+# =========================
+ENV/
+*.tmp
+*.bak
