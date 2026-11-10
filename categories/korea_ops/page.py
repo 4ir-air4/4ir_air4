@@ -24,6 +24,17 @@ name, col = {"항공사 코드": ("icn_airline", "airline"), "국가": ("icn_cou
 st.dataframe(load(store, name).rename(columns={col: tab, "direction": "방향"}).round(3), hide_index=True,
              column_config={"지연률": PERCENT}, alt=f"인천 {tab}별 지연 통계")
 
+if store.table_path("icn_airline_monthly").exists():  # 파이프라인을 다시 돌리기 전에는 없다
+    st.markdown("**항공사별 월 지연률** (2025년 이후 편수 상위 12개 항공사)")
+    by_airline = load(store, "icn_airline_monthly")
+    choices = list(by_airline.groupby("항공사").편수.sum().sort_values(ascending=False).index)
+    left, right = st.columns([3, 1])
+    picked = left.multiselect("항공사", choices, default=choices[:4])
+    way = right.segmented_control("방향", ["도착", "출발"], default="도착") or "도착"
+    shown = by_airline[by_airline.항공사.isin(picked) & (by_airline.direction == way)]
+    st.line_chart(shown, x="ym", y="지연률", color="항공사", x_label="월", y_label="지연률", alt=f"항공사별 월 {way} 지연률")
+    st.caption("항공사 이름은 인천 실시간 수집 자료의 한글 이름이고, 없으면 OpenFlights 영문 이름입니다. 출발 지연은 중앙값을 뺀 뒤 15분 이상입니다. 편수가 적은 달은 지연률이 크게 흔들립니다.")
+
 st.subheader("한국공항공사 전체 공항 (월 집계)")
 trend = load(store, "kac_trend")
 left, right = st.columns(2)

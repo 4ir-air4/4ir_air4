@@ -1,5 +1,7 @@
 """인천공항 편별 계획·실제 시각, 한국공항공사 지연 데이터의 통계와 지연 예측."""
+import json
 import zipfile
+from pathlib import Path
 
 import pandas as pd
 
@@ -7,6 +9,7 @@ from core.data import REF, START_YEAR, read_csv_any, read_csv_bytes
 from core.ml import binary_result, encode, lag_regression, model_row, self_check
 
 KOREA = REF / "korea"
+LIVE = Path(__file__).resolve().parents[2] / "data" / "icn_live"  # collect_icn.py 가 쌓는 인천 실시간 자료
 CUTOFF = pd.Timedelta(hours=2)
 WEATHER_MAX_AGE = pd.Timedelta(hours=3)
 SKY = {"CLR": 0, "SKC": 0, "NSC": 0, "FEW": 1, "SCT": 2, "BKN": 3, "OVC": 4, "VV": 5}
@@ -98,6 +101,26 @@ def flight_models(d):
     return rows
 
 
+def airline_names():
+    """IATA 2글자 → 항공사 이름. 인천 실시간 수집 자료의 한글 이름을 먼저 쓰고, 없는 코드는 OpenFlights(2014년) 영문 이름."""
+    from categories.us_flights.pipeline import airline_names as openflights
+    names = openflights()
+    days = sorted(p for p in LIVE.glob("20*") if p.is_dir())
+    if days:  # 가장 최근 하루치면 인천 취항 항공사가 거의 다 나온다
+        rows = [json.loads(line)["data"] for f in ("arrivals", "departures") for line in open(days[-1] / f"{f}.jsonl", encoding="utf-8")]
+        live = pd.DataFrame(rows)[["flightId", "airline"]].dropna()
+        names = live.assign(code=live.flightId.str[:2]).groupby("code").airline.agg(lambda s: s.mode().iloc[0]).combine_first(names)
+    return names
+
+
+def airline_monthly(d, names, top=12):
+    """2025년 이후 편수 상위 항공사의 월별·방향별 지연률."""
+    keep = d[d.ym >= "2025-01"].airline.value_counts().head(top).index
+    t = d[d.airline.isin(keep)].groupby(["ym", "airline", "direction"]).agg(편수=("지연", "size"), 지연률=("지연", "mean")).reset_index()
+    t.insert(2, "항공사", t.airline.map(names).fillna(t.airline) + " (" + t.airline + ")")
+    return t
+
+
 def run(store):
     self_check()
     assert delay_minutes(pd.Series(["23:50"]), pd.Series(["00:10"]))[0] == 20, "자정 넘긴 지연"
@@ -112,10 +135,14 @@ def run(store):
     recent = d[d.ym >= "2025-01"]
     hour = recent.groupby(["hour", "direction"]).agg(지연률=("지연", "mean"), 편수=("지연", "size")).reset_index()
     store.save_table("icn_hour", hour)
+    names = airline_names()
     for name, col in (("icn_airline", "airline"), ("icn_country", "country")):
         t = recent.groupby([col, "direction"]).agg(편수=("지연", "size"), 지연률=("지연", "mean"), 평균지연=("delay", "mean")).reset_index()
+        if col == "airline":
+            t.insert(1, "항공사", t.airline.map(names))
         keep = recent[col].value_counts().head(30).index
         store.save_table(name, t[t[col].isin(keep)].sort_values("편수", ascending=False))
+    store.save_table("icn_airline_monthly", airline_monthly(d, names))
 
     kac = load_kac()
     kac["ym"] = kac["연도"].astype(str) + "-" + kac["월"].astype(str).str.zfill(2)
