@@ -317,7 +317,8 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
 - **2026년 학습 모델 파일:** `run_models.py korea_demand safety --year=2026 --resave`로 8개를 다시 학습해 `outputs_2026/*/saved_models/`에 모델 파일을 남겼습니다. 실패 0개, 8개 모두 다시 불러오기 시험을 통과했습니다. `test_saved_models.py`에 `--year=` 옵션을 추가했습니다. 다시 학습해서 지표가 이전 결과(11-06)와 조금 다를 수 있습니다.
   - ntsb_fatal PR-AUC: LightGBM 0.326, XGBoost 0.201, RandomForest 0.362, LSTM 0.251 (기준 0.171)
   - icn_passengers MAE: LightGBM 1,020, XGBoost 1,326, RandomForest 1,053, LSTM 1,085 (기준 958, 네 모델 모두 기준보다 나쁨)
-- **미국 운항 44개 모델 파일:** 이 PC에서 `--resave`로 다시 학습 중입니다(10:57 시작, LightGBM·RandomForest·LSTM 33개 → XGBoost 11개 → 다시 불러오기 시험 → SHAP). 로그는 `run_models.log`이고 `watch_training.ps1`로 볼 수 있습니다.
+- **미국 운항 44개 모델 파일:** 이 PC에서 `--resave`로 다시 학습했습니다(10:57~22:00, LightGBM·RandomForest·LSTM 33개 → XGBoost 11개 → 다시 불러오기 시험 → SHAP). 실패 0개, 44개 모두 다시 불러오기 시험 통과(최대 차이 0.00007), SHAP 33개 계산. 로그는 `run_models.log`입니다. 22:01부터 결과를 드라이브에 올립니다.
+  - XGBoost는 LightGBM과 거의 같습니다(11개 과제 중 가장 좋은 모델은 LightGBM 8, RandomForest 2, XGBoost 1). 출발 지연 MAE LightGBM 20.84 / XGBoost 20.85 / RandomForest 20.87 / LSTM 21.84(기준 25.53). XGBoost는 비행 시간 MAE 5.67(LightGBM 5.69)에서만 앞섰고, RandomForest는 결항 PR-AUC 0.051(LightGBM 0.036)과 결항 사유 macro F1 0.414(LightGBM 0.4135)에서 앞섰습니다.
 - **결과 보고서:** [RESULTS_REPORT.md](RESULTS_REPORT.md)에 32개 과제의 현재 4개 모델 결과, 해석, 발표 구성안을 모았습니다. 맨 위 LSTM 표(축소 전 값) 대신 이 문서를 보세요.
 - **인천 시각 차이 원인 (11-06~11-10 수집, 도착 1,509편):** `착륙` 상태가 처음 보일 때 API 예상 시각은 아직 5분 뒤이고(중앙값), 착륙 뒤에도 거의 바뀌지 않으며, `도착` 상태는 그 시각 무렵에 바뀝니다.
   - 따라서 API 도착 시각은 게이트 도착이고, 착륙부터 약 10분 차이입니다. 앞서 본 13분 차이와 맞습니다.
@@ -337,6 +338,13 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
 - **소규모 과제 튜닝 시작:** `tune_small.py`가 검증 구간만 보고 LightGBM 설정을 40회 무작위 탐색합니다. 결과는 `tuned_params.json`에 쓰고 `core/models.py`에는 아직 반영하지 않았습니다.
   - 기본 설정으로 다시 학습한 평가 값이 저장된 결과와 같은 것을 확인했습니다(제주 4,658.2269, NTSB 0.2674).
   - optuna는 학습 중인 `.venv`를 바꾸지 않으려고 쓰지 않았습니다.
+  - **결과 (22:06 끝, 15개):** 평가 구간 LightGBM 값이 12개에서 좋아졌고, 2개는 기본 설정이 그대로 뽑혀 같았으며, 1개는 나빠졌습니다.
+    - 많이 좋아진 과제: 제주 월 여객 MAE 4,658 → 3,921, 시간대별 지연 편수 MAE 26.93 → 23.59, 유럽 택시아웃 0.280 → 0.270, 택시인 0.144 → 0.138, NTSB PR-AUC 0.267 → 0.285
+    - 조금 좋아진 과제: 인천 도착·출발 지연 PR-AUC(0.454 → 0.459, 0.517 → 0.521)와 유럽 5개
+    - 같음: 기종별 월 여객, euro_traffic
+    - 나빠짐: 인천 월 여객 MAE 1,035 → 1,039
+    - 시간대별 지연 편수(기준선 22.0)와 유럽 택시인(기준선 0.1304)은 튜닝 뒤에도 기준선보다 나쁩니다.
+    - 값은 [tuned_params.json](tuned_params.json)에 있고, 아직 `core/models.py`에 반영하거나 다시 학습하지 않았습니다.
 - **국내선 운임 세분화:** KOSIS 국내항공료 지수는 시도별 값도 17곳 모두 전국 값과 같아서(최근 12개월 조회) 더 나눌 수 없습니다. 노선별 운임은 공개 자료에서 찾지 못했습니다.
 - **노선별 수요로 보완 (`categories/korea_airfare`):** 노선별 하루 평균 여객의 계절 지수(연평균 100)와 최근 12개월 규모를 `route_summary`, `route_month` 표로 만들고, 화면에 노선 × 월 히트맵과 표를 넣었습니다.
   - 대상은 19개 노선입니다. 나머지 24개는 단항 등으로 달마다 값이 없어 뺐습니다.
