@@ -519,3 +519,10 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
 | 시간대별 지연 편수 | −7.3% | 그대로 |
 
 - 저장 모델 다시 불러오기 점검(`test_saved_models korea_demand europe`) 모두 통과, 유럽 화면 오류 없음. LSTM 4개는 변화량 학습으로 한 번 다시 학습된 값입니다.
+
+# 원격 develop 병합: 팀원 파일은 JhonOh 배치로 (2026-11-11)
+
+- JhonOh PR #6이 팀원 파일을 `ojh/` 바로 아래(`ojh/live_app.py`, `ojh/fetch_*.py`, `ojh/data_collector.py`, `ojh/check_airport_data.py`)로 옮기고 실시간 지도를 개선해 develop에 먼저 들어왔습니다. 사용자 결정으로 팀원 파일은 JhonOh 배치를 따르고, 제가 만든 `ojh/collect/`, `ojh/tools/`, `ojh/app.py`는 버렸습니다(앞의 "팀원 앱 이름을 ojh/app.py로" 기록은 취소된 셈). 앞으로 팀원 파일은 옮기거나 이름을 바꾸지 않습니다.
+- 커밋: `70d8644a`(ldh/ 정리 전체), `68aa1154`(병합). develop 푸시, main 으로 PR #8 생성.
+- 확인: 앱 세 탭, 모델 비교 화면 오류 없음, `test_collect_icn` 통과.
+- 앙상블(작은 과제): 저장된 곳 9개, 검증에서 이점이 없어 저장 안 한 곳 5개. 평가 구간에서 단일 최고보다 나은 곳은 인천 월 여객, 인천 도착·출발 지연, 유럽 운항 편수, ATFM, 전체 사전 지연(차이 0.2~1.6%). 시간대별 지연 편수, 유럽 택시아웃, ATC 사전 지연, NTSB는 평가 구간에서 단일 최고보다 조금 나빴습니다(조합은 검증으로만 골랐으므로 그대로 둠).
