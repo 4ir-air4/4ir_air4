@@ -61,24 +61,31 @@ desktop.ini
 # =========================
 bts_data/
 data/
-models/*
-!models/train.py
 reference_data/
 outputs/
 outputs_*/
 _archive_before_2020/
 
 # =========================
-# 팀원 앱(live_app.py) 쪽 추가 규칙
+# 팀원 앱(ojh/live_app.py) 쪽 추가 규칙
 # =========================
 ENV/
 *.tmp
 *.bak
-# Airport demand raw inputs (large, re-downloadable; fetch_airports.py builds the CSVs from these)
-data/airport_demand/input/
-
-# Runtime cache (changes on every run)
-data/cache/*
 
 # 개인 PC 실행 설정
 .claude/launch.json
+
+# 정리한 데이터 폴더 (2026-11-11): 입력 자료와 결과. reference 에는 재배포 제한 자료가 있어 절대 올리지 않는다
+datasets/
+results/
+
+# =========================
+# ojh/ (JhonOh 작업 폴더)
+# =========================
+ojh/models/*
+!ojh/models/train.py
+!ojh/models/train2.py
+ojh/data/airport_demand/input/
+ojh/data/cache/*
+ojh/data/raw/
