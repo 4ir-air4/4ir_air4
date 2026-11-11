@@ -94,11 +94,6 @@ WORLDBANK_API = "https://api.worldbank.org/v2/country/{codes}/indicator/NY.GDP.M
 
 # Eurostat 국가코드 -> World Bank(ISO2) 국가코드
 COUNTRY_FIX = {"EL": "GR", "UK": "GB"}
-EUROPE = {
-    "AT", "BE", "BG", "CH", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GB", "GR", "HR", "HU",
-    "IE", "IS", "IT", "LT", "LU", "LV", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS", "SE",
-    "SI", "SK", "TR", "AL", "BA", "XK", "LI",
-}
 
 AIRPORT_NAMES = {
     # 미국 (IATA)

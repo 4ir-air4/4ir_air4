@@ -9,7 +9,7 @@ from core.registry import discover
 st.set_page_config(page_title="항공 데이터 대시보드", page_icon="✈️", layout="wide")
 
 categories, _ = discover()
-live = st.Page("live_app.py", title="실시간 항공기", icon=":material/radar:", url_path="live", default=True)
+live = st.Page("ojh/live_app.py", title="실시간 항공기", icon=":material/radar:", url_path="live", default=True)
 groups = {"": [live,
                st.Page("core/home.py", title="전체 요약", icon=":material/dashboard:", url_path="home"),
                st.Page("core/icn_risk.py", title="인천 지연 위험 예보", icon=":material/flight_takeoff:", url_path="icn_risk"),
@@ -20,6 +20,6 @@ for c in categories:
         st.Page(c["page"], title=c["title"], icon=c["icon"], url_path=c["slug"]))
 
 page = st.navigation(groups)
-if page.title != live.title:  # live_app.py 는 자기 제목을 직접 그린다. 기본 페이지는 url_path 가 비어 title 로 비교
+if page.title != live.title:  # ojh/live_app.py 는 자기 제목을 직접 그린다. 기본 페이지는 url_path 가 비어 title 로 비교
     st.title(page.title)
 page.run()

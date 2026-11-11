@@ -18,6 +18,11 @@ import streamlit as st
 from folium.plugins import Fullscreen, FastMarkerCluster
 from streamlit_folium import st_folium
 
+import sys
+
+# 팀 app.py 에서 페이지로 불려도 ojh/ 안의 탭 파일을 찾도록 이 폴더를 import 경로에 추가
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 from _2_traffic_tab import show_traffic_prediction_tab
 from _3_airport_tab import show_airport_demand
 
@@ -30,9 +35,6 @@ ROOT_DIR = Path(__file__).resolve().parent
 STATES_CACHE_PATH = ROOT_DIR / "data" / "cache" / "opensky_states_last.json"
 
 OPENSKY_BASE_URL = "https://opensky-network.org/api"
-
-# 항공기 클릭 위치와 실제 항공기 좌표의 최대 허용 거리
-CLICK_DISTANCE_LIMIT_KM = 3
 
 st.set_page_config(
     page_title="항공 교통 모니터링 및 수요 예측",
@@ -218,35 +220,96 @@ def load_aircraft_data():
 
 
 # =========================================================
-# 4. 항공기 이동경로 조회
+# 4. 궤적 조회용 로컬 프록시 (브라우저 CORS 차단 회피)
 # =========================================================
-
-@st.cache_data(ttl=600, show_spinner=False)
-def load_aircraft_track(icao24):
-
-    headers = get_opensky_headers()
-
-    response = requests.get(
-        f"{OPENSKY_BASE_URL}/tracks/all",
-        headers=headers,
-        params={
-            "icao24": icao24.lower(),
-            "time": 0,
-        },
-        timeout=30,
-    )
-
-    response.raise_for_status()
-
-    return response.json()
-
-
-# ---------------------------------------------------------
-# 4-1. 궤적 조회용 로컬 프록시 (브라우저 CORS 차단 회피)
-# ---------------------------------------------------------
 
 TRACK_PROXY_PORT = 8765
 TRACK_PROXY_CACHE_SEC = 120
+
+# OpenSky는 한 비행을 여러 조각(track)으로 나눠 저장하고, time=0 으로는 마지막 조각만 준다.
+# 그래서 마지막 조각이 공중에서 시작하면 바로 앞 조각을 더 받아 이륙 지점까지 이어 붙인다.
+TRACK_MAX_EXTRA_SEGMENTS = 3   # 앞 조각을 최대 몇 개까지 더 받을지
+TRACK_DEPARTURE_ALT_M = 1500    # 이 고도보다 낮거나 지상이면 이륙(출발) 지점으로 본다
+# 조각 안에는 몇 시간 전의 '다른 비행'이 섞여 있기도 하다 (사이에 지상 대기).
+# 20분 넘게 끊겼는데 그 사이 평균 속도가 300km/h 미만이면 지상 대기 = 비행 경계로 본다.
+# (바다 위 수신 공백은 끊겨도 평균 속도가 800km/h 안팎이라 같은 비행으로 이어진다)
+TRACK_BOUNDARY_MIN_GAP_SEC = 20 * 60
+TRACK_BOUNDARY_MAX_SPEED_KMH = 300
+
+
+def _km_between(lat1, lon1, lat2, lon2):
+    r = math.pi / 180
+    a = (
+        math.sin((lat2 - lat1) * r / 2) ** 2
+        + math.cos(lat1 * r) * math.cos(lat2 * r) * math.sin((lon2 - lon1) * r / 2) ** 2
+    )
+    return 12742 * math.asin(math.sqrt(a))
+
+
+def _is_departure_point(point):
+    """궤적 점 [time, lat, lon, baro_altitude, true_track, on_ground] 이 지상/저고도인지."""
+    altitude, on_ground = point[3], point[5]
+    return bool(on_ground) or (altitude is not None and altitude < TRACK_DEPARTURE_ALT_M)
+
+
+def _is_flight_boundary(a, b):
+    """두 점 사이가 지상 대기(다른 비행으로 넘어감)인지."""
+    gap = b[0] - a[0]
+    if gap < TRACK_BOUNDARY_MIN_GAP_SEC:
+        return False
+    speed = _km_between(a[1], a[2], b[1], b[2]) / (gap / 3600)
+    return speed < TRACK_BOUNDARY_MAX_SPEED_KMH
+
+
+def _trim_to_current_flight(path):
+    """뒤에서부터 보다가 비행 경계가 나오면 그 뒤(=지금 비행)만 남긴다."""
+    for i in range(len(path) - 1, 0, -1):
+        if _is_flight_boundary(path[i - 1], path[i]):
+            return path[i:], True
+    return path, False
+
+
+def merge_track_segments(fetch_segment, live):
+    """마지막 조각(live) 앞에 같은 비행의 이전 조각들을 이어 붙인다.
+
+    fetch_segment(time) -> 그 시각의 조각(dict) 또는 None.
+    이전 비행이 섞이지 않도록 비행 경계에서 자르고, 이륙 지점을 찾으면 거기서 멈춘다.
+    """
+    path = [p for p in (live.get("path") or []) if p[1] is not None and p[2] is not None]
+    path, cut = _trim_to_current_flight(path)
+
+    for _ in range(TRACK_MAX_EXTRA_SEGMENTS):
+        if cut or not path or _is_departure_point(path[0]):
+            break  # 비행 경계에 닿았거나, 이미 이륙 지점부터 있다
+
+        prev = fetch_segment(int(path[0][0]) - 60)
+        prev_path = [
+            p for p in ((prev or {}).get("path") or [])
+            if p[1] is not None and p[2] is not None and p[0] < path[0][0]
+        ]
+        if not prev_path:
+            break  # 앞 조각이 없다 (수신 기록 없음)
+
+        combined, cut = _trim_to_current_flight(prev_path + path)
+        added = len(combined) - len(path)
+        if added <= 0:
+            break  # 앞 조각은 전부 다른 비행이었다
+
+        # 새로 붙은 부분에서 가장 마지막 지상/저고도 점 = 이번 비행의 이륙 지점
+        takeoff = next(
+            (i for i in range(added - 1, -1, -1) if _is_departure_point(combined[i])),
+            None,
+        )
+        if takeoff is not None:
+            path = combined[takeoff:]
+            break
+        path = combined
+
+    merged = dict(live)
+    merged["path"] = path
+    if path:
+        merged["startTime"] = path[0][0]
+    return merged
 
 
 def _make_track_handler(client_id, client_secret):
@@ -293,14 +356,27 @@ def _make_track_handler(client_id, client_secret):
             if hit and time.time() - hit[0] < TRACK_PROXY_CACHE_SEC:
                 return self._send(hit[1], hit[2])
 
-            try:
-                r = requests.get(
+            def fetch(at):
+                return requests.get(
                     f"{OPENSKY_BASE_URL}/tracks/all",
                     headers={"Authorization": f"Bearer {get_token()}"},
-                    params={"icao24": icao24, "time": 0},
+                    params={"icao24": icao24, "time": at},
                     timeout=30,
                 )
+
+            def fetch_segment(at):
+                try:
+                    r = fetch(at)
+                    return r.json() if r.status_code == 200 else None
+                except Exception:
+                    return None
+
+            try:
+                r = fetch(0)
                 status, body = r.status_code, r.content
+                if status == 200:
+                    merged = merge_track_segments(fetch_segment, r.json())
+                    body = json.dumps(merged).encode("utf-8")
             except Exception:
                 status, body = 502, b"{}"
 
@@ -378,47 +454,8 @@ def get_altitude_color(altitude, on_ground=False):
     return ALT_ABOVE[0]
 
 
-def get_aircraft_name(row):
-
-    callsign = str(row.get("callsign", "")).strip()
-
-    if callsign:
-        return callsign
-
-    return "콜사인 없음"
-
-
 # =========================================================
-# 6. OpenSky 경로 데이터 가공
-# =========================================================
-
-def create_track_points(track_data):
-
-    path = track_data.get("path") or []
-
-    points = []
-
-    for point in path:
-
-        if len(point) < 3:
-            continue
-
-        latitude = point[1]
-        longitude = point[2]
-
-        if latitude is None or longitude is None:
-            continue
-
-        points.append([
-            latitude,
-            longitude,
-        ])
-
-    return points
-
-
-# =========================================================
-# 7. 항공기 마커 (기종 크기/방향/고도 색상 + 클릭 시 사진·경로·실제 궤적)
+# 6. 항공기 마커 (기종 크기/방향/고도 색상 + 클릭 시 사진·경로·실제 궤적)
 # =========================================================
 
 # OpenSky category 값 -> (표시 이름, 아이콘 크기(px), 아이콘 모양)
@@ -463,7 +500,8 @@ def build_alt_config():
 MARKER_CALLBACK = """
 function (row) {
     // row: 0 lat, 1 lon, 2 콜사인, 3 icao24, 4 색상, 5 국가, 6 기압고도, 7 기하고도,
-    //      8 속도, 9 상태, 10 진행방향(도), 11 아이콘 크기, 12 분류 이름, 13 아이콘 모양
+    //      8 속도, 9 상태, 10 진행방향(도), 11 아이콘 크기, 12 분류 이름, 13 아이콘 모양,
+    //      14 진행방향 값이 있는지(1/0)
     var S = row[11];
     var SHAPES = {
         plane: "<path d='M12 1.5 L14 9 L22.5 14.2 L22.5 16.4 L14 13.6 L13.6 19.2 L16.5 21.4 L16.5 22.6 L12 21.4 L7.5 22.6 L7.5 21.4 L10.4 19.2 L10 13.6 L1.5 16.4 L1.5 14.2 L10 9 Z'/>",
@@ -493,6 +531,7 @@ function (row) {
                        "<b>기종:</b> <span class='ac-type'>불러오는 중...</span><br>" +
                        "<b>출발지:</b> <span class='ac-origin'>불러오는 중...</span><br>" +
                        "<b>도착지:</b> <span class='ac-dest'>불러오는 중...</span><br>" +
+                       "<div class='ac-route-note' style='font-size:11px; color:#b26a00;'></div>" +
                        "<b>기압고도:</b> " + row[6] + "<br>" +
                        "<b>기하고도:</b> " + row[7] + "<br>" +
                        "<b>속도:</b> " + row[8] + "<br>" +
@@ -501,8 +540,16 @@ function (row) {
     marker.bindPopup(buildPopup);
     marker.bindTooltip(row[2] + " (" + row[3] + ")");
 
+    // 고도 범례(id=alt-legend)는 지도 위에 고정되어 팝업을 가리므로, 팝업이 열려 있는 동안 숨긴다
+    function setLegendVisible(show) {
+        var legend = document.getElementById('alt-legend');
+        if (legend) { legend.style.display = show ? '' : 'none'; }
+    }
+    marker.on('popupclose', function () { setLegendVisible(true); });
+
     // 팝업을 열 때만 브라우저에서 사진/경로/궤적을 조회한다 (수천 대를 한꺼번에 조회하지 않기 위해)
     marker.on('popupopen', function (e) {
+        setLegendVisible(false);
         var root = e.popup.getElement();
         if (!root) { return; }
         var photoEl = root.querySelector('.ac-photo');
@@ -510,16 +557,18 @@ function (row) {
         var destEl = root.querySelector('.ac-dest');
         var trackEl = root.querySelector('.ac-track');
         var typeEl = root.querySelector('.ac-type');
+        var noteEl = root.querySelector('.ac-route-note');
         var hex = String(row[3]).toLowerCase();
         var callsign = String(row[2]).trim();
         var map = e.popup._map || e.target._map;
         var cur = e.target.getLatLng();
+        var onGround = row[9] === '지상';
+        var heading = row[14] ? row[10] : null;
         var ALT = __ALT_CONFIG__;
-        var TOKEN = __TOKEN__;
 
         window.__acCache = window.__acCache || {photo: {}, route: {}, track: {}};
         var id = window.__acPopupId = (window.__acPopupId || 0) + 1;
-        var state = {route: undefined, track: undefined};
+        var state = {rawRoute: undefined, route: undefined, track: undefined, trackErr: null};
 
         function altColor(m, ground) {
             if (ground) { return ALT.ground; }
@@ -597,9 +646,13 @@ function (row) {
             var tr = state.track;
             var o = fr ? fr.origin : null;
             var dst = fr ? fr.destination : null;
+            var GAP_STYLE = {color: '#555', weight: 3, opacity: 0.85, dashArray: '4 7'};
+            var hasGap = false;
 
             if (tr && tr.length > 1) {
-                // 실제로 날아온 궤적: 고도 색상으로 구간별 표시
+                // 실제로 날아온 궤적: 고도 색상으로 구간별 표시.
+                // OpenSky 궤적은 직선 비행 구간의 점을 생략해서 주기 때문에, 점 사이가 멀어도
+                // 수신 공백이라고 단정할 수 없다. 그래서 궤적 안의 구간은 모두 실선으로 잇는다.
                 for (var i = 1; i < tr.length; i++) {
                     addLine(layer, [tr[i - 1], tr[i]], {
                         color: altColor(tr[i][2], tr[i][3]), weight: 4, opacity: 0.95
@@ -609,9 +662,8 @@ function (row) {
                     var oLon = o.longitude + 360 * Math.round((tr[0][1] - o.longitude) / 360);
                     // 출발 공항과 궤적 시작점이 멀면 OpenSky가 수신하지 못한 구간 -> 회색 점선으로 이어서 표시
                     if (kmBetween(o.latitude, oLon, tr[0][0], tr[0][1]) > 50) {
-                        addLine(layer, gcPath(o.latitude, oLon, tr[0][0], tr[0][1], 32),
-                                {color: '#888', weight: 2, opacity: 0.8, dashArray: '2 6'});
-                        trackEl.textContent = '실선: 실제 이동 궤적 (고도 색상) · 회색 점선: 수신 공백(추정)';
+                        hasGap = true;
+                        addLine(layer, gcPath(o.latitude, oLon, tr[0][0], tr[0][1], 32), GAP_STYLE);
                     }
                     addDot(layer, [o.latitude, oLon], '#2ca02c', '출발: ' + fmtAirport(o));
                 }
@@ -629,6 +681,21 @@ function (row) {
                 addLine(layer, left, {color: '#ff7f0e', weight: 3, opacity: 0.9, dashArray: '8 8'});
                 var dEnd = left[left.length - 1];
                 addDot(layer, dEnd, '#d62728', '도착: ' + fmtAirport(dst));
+            }
+
+            // 선 설명 (궤적·경로 응답이 모두 와야 정확하므로 여기서 한 번에 정한다)
+            if (tr && tr.length > 1) {
+                var since = '';
+                if (tr.since) {
+                    var mins = Math.max(0, Math.round((Date.now() / 1000 - tr.since) / 60));
+                    var span = mins >= 60 ? Math.floor(mins / 60) + '시간 ' + (mins % 60) + '분' : mins + '분';
+                    since = ' · 수신 기록: 최근 ' + span + '치';
+                }
+                trackEl.textContent = '실선: 실제 이동 궤적 (고도 색상)' + since +
+                    (hasGap ? ' · 회색 점선: 출발 공항~수신 시작 지점 (수신 기록 없음, 추정)' : '');
+            } else if (state.track !== undefined) {
+                var why = state.trackErr ? '궤적 조회 실패 (' + state.trackErr + ')' : '궤적 좌표가 부족합니다';
+                trackEl.textContent = why + (fr ? ' - 점선은 추정 경로입니다' : '');
             }
 
             layer.addTo(map);
@@ -704,11 +771,81 @@ function (row) {
         }
 
         // ---- 출발지/도착지 (adsbdb 콜사인 경로 DB) ----
-        function showRoute(fr) {
-            state.route = fr || null;
-            originEl.textContent = fr ? fmtAirport(fr.origin) : '정보 없음';
-            destEl.textContent = fr ? fmtAirport(fr.destination) : '정보 없음';
+        // adsbdb는 '이 편명은 보통 이 노선'이라는 정적 정보라서, 같은 편명을 다른 노선에
+        // 다시 쓰는 항공사(특히 저비용·전세기)는 출발·도착이 틀리게 나온다 (실측 20~30%).
+        // 확실한 근거가 있을 때만 바꾸거나 숨긴다.
+        //  - 근거 1: 실제 궤적이 이륙 지점부터 있으면, 그 위치가 어느 공항인지로 판단
+        //  - 근거 2: 현재 위치가 노선에서 아주 멀리(1000km 이상, 노선 길이의 절반 이상) 벗어남
+        // 진행방향은 항로 우회·선회 때문에 틀릴 수 있어서 안내 문구에만 쓴다.
+        function bearingTo(lat1, lon1, lat2, lon2) {
+            var r = Math.PI / 180;
+            var y = Math.sin((lon2 - lon1) * r) * Math.cos(lat2 * r);
+            var x = Math.cos(lat1 * r) * Math.sin(lat2 * r) -
+                    Math.sin(lat1 * r) * Math.cos(lat2 * r) * Math.cos((lon2 - lon1) * r);
+            return (Math.atan2(y, x) / r + 360) % 360;
+        }
+
+        var APT_NEAR_KM = 60;  // 궤적 시작점이 공항에서 이 거리 안이면 그 공항에서 이륙한 것으로 본다
+
+        // 결과: {route: 그릴 경로 또는 null, note: 팝업 안내 문구}
+        function checkRoute(fr, tr) {
+            if (!fr || !hasXY(fr.origin) || !hasXY(fr.destination)) { return {route: fr, note: ''}; }
+            var o = fr.origin, d = fr.destination;
+            var total = kmBetween(o.latitude, o.longitude, d.latitude, d.longitude);
+            var toO = kmBetween(cur.lat, cur.lng, o.latitude, o.longitude);
+            var toD = kmBetween(cur.lat, cur.lng, d.latitude, d.longitude);
+
+            // 근거 2: 노선에서 아주 멀리 벗어나 있음 (지상이면 두 공항 어디에도 없음)
+            var farOff = onGround
+                ? (toO > 30 && toD > 30)
+                : (toO + toD - total > Math.max(1000, total * 0.5));
+            if (farOff) {
+                return {route: null, note: '현재 위치가 이 노선과 동떨어져 있어 경로 DB 정보가 틀린 것 같습니다. 경로선은 그리지 않았습니다'};
+            }
+
+            // 근거 1: 실제 궤적이 이륙 지점부터 있으면 그 공항으로 판단
+            var swapped = false;
+            if (tr && tr.depart && tr.start) {
+                var sO = kmBetween(tr.start[0], tr.start[1], o.latitude, o.longitude);
+                var sD = kmBetween(tr.start[0], tr.start[1], d.latitude, d.longitude);
+                if (sO > APT_NEAR_KM && sD <= APT_NEAR_KM) {
+                    swapped = true;
+                } else if (sO > APT_NEAR_KM) {
+                    return {route: null, note: '실제 이륙 지점이 경로 DB의 출발 공항과 달라 경로 DB 정보가 틀린 것 같습니다. 경로선은 그리지 않았습니다 (실선 궤적은 실제 데이터입니다)'};
+                }
+            }
+            var route = swapped ? {origin: d, destination: o} : fr;
+            var note = swapped ? '실제 궤적이 ' + fmtAirport(d) + '에서 이륙해서, 경로 DB와 반대로 출발·도착을 바꿔 표시했습니다' : '';
+
+            // 진행방향은 참고용 안내만 (경로선은 그대로 그린다)
+            var dst = route.destination;
+            var toDst = kmBetween(cur.lat, cur.lng, dst.latitude, dst.longitude);
+            if (!onGround && heading !== null && toDst > 150 && kmBetween(cur.lat, cur.lng, route.origin.latitude, route.origin.longitude) > 150) {
+                var diff = Math.abs((heading - bearingTo(cur.lat, cur.lng, dst.latitude, dst.longitude) + 540) % 360 - 180);
+                if (diff > 135) {
+                    note = (note ? note + ' · ' : '') + '진행방향이 도착지와 반대입니다. 도착지 정보가 틀렸을 수 있습니다';
+                }
+            }
+            return {route: route, note: note};
+        }
+
+        // 경로 DB 응답과 궤적 응답이 각각 도착할 때마다 다시 판정한다
+        function applyRoute() {
+            if (state.rawRoute === undefined) { redraw(); return; }  // 경로 DB 응답 대기 중
+            var fr = state.rawRoute;
+            var checked = checkRoute(fr, state.track);
+            state.route = checked.route;
+            var shown = checked.route || fr;
+            var mark = (fr && !checked.route) ? ' (확인 안 됨)' : '';
+            originEl.textContent = shown ? fmtAirport(shown.origin) + mark : '정보 없음';
+            destEl.textContent = shown ? fmtAirport(shown.destination) + mark : '정보 없음';
+            noteEl.textContent = checked.note;
             redraw();
+        }
+
+        function showRoute(fr) {
+            state.rawRoute = fr || null;
+            applyRoute();
         }
 
         if (!callsign || callsign === '콜사인 없음') {
@@ -738,13 +875,17 @@ function (row) {
         function buildTrack(d) {
             var path = (d && d.path) || [];
             var pts = [];
+            var times = [];
             var prev = null;
+            var first = null;
             path.forEach(function (p) {
                 if (p[1] == null || p[2] == null) { return; }
+                if (first === null) { first = p; }
                 var lon = p[2];
                 if (prev !== null) { lon += 360 * Math.round((prev - lon) / 360); }
                 prev = lon;
                 pts.push([p[1], lon, p[3], p[5]]);
+                times.push(p[0]);
             });
             if (pts.length < 2) { return null; }
             var shift = 360 * Math.round((cur.lng - pts[pts.length - 1][1]) / 360);
@@ -752,8 +893,11 @@ function (row) {
 
             // 항공기 위치는 최대 10분 전 스냅샷이라 궤적이 아이콘보다 앞서 있을 수 있다.
             // 아이콘과 가장 가까운 점까지만 사용해서 선이 아이콘 앞으로 튀어나오지 않게 한다.
-            var nearest = 0, best = Infinity;
+            // 단, 최근 30분 안의 점에서만 찾는다 (예전에 같은 곳을 지난 점에서 잘리지 않도록).
+            var recent = times[times.length - 1] - 1800;
+            var nearest = pts.length - 1, best = Infinity;
             pts.forEach(function (p, i) {
+                if (times[i] < recent) { return; }
                 var dd = kmBetween(cur.lat, cur.lng, p[0], p[1]);
                 if (dd <= best) { best = dd; nearest = i; }
             });
@@ -761,19 +905,17 @@ function (row) {
 
             var last = pts[pts.length - 1];
             pts.push([cur.lat, cur.lng, last[2], last[3]]);
+            // 수신 기록이 몇 분치인지, 궤적이 이륙 지점(지상/저고도)부터 시작하는지
+            pts.since = first[0];
+            pts.start = [first[1], first[2]];
+            pts.depart = !!first[5] || (first[3] != null && first[3] < 1500);
             return pts;
         }
 
         function showTrack(pts, err) {
             state.track = pts || null;
-            if (pts) {
-                trackEl.textContent = '실선: 실제 이동 궤적 (고도 색상)';
-            } else if (err) {
-                trackEl.textContent = '궤적 조회 실패 (' + err + ') - 점선은 추정 경로입니다';
-            } else {
-                trackEl.textContent = '궤적 좌표가 부족합니다 - 점선은 추정 경로입니다';
-            }
-            redraw();
+            state.trackErr = err || null;
+            applyRoute();  // 궤적 시작점으로 출발 공항을 다시 판정
         }
 
         if (hex in window.__acCache.track) {
@@ -799,8 +941,8 @@ function (row) {
 # ---------------------------------------------------------
 
 # OpenSky 항공기 데이터베이스 CSV (https://opensky-network.org/datasets/metadata/ 에서 받은 파일)
-AIRCRAFT_DB_PATH = ROOT_DIR / "data" / "raw" / "aircraft_database.csv"
-AIRCRAFT_DB_CACHE = ROOT_DIR / "data" / "raw" / "aircraft_category_cache.pkl"
+AIRCRAFT_DB_PATH = ROOT_DIR / "data" / "aircraft_db" / "aircraft_database.csv"
+AIRCRAFT_DB_CACHE = ROOT_DIR / "data" / "aircraft_db" / "aircraft_category_cache.pkl"
 
 # 지도 좌우 반복 표시용 마커 복제 위치. 속도가 더 중요하면 () 로 바꾸면 데이터가 1/3로 줄어든다
 WRAP_COPIES = (-360, 360)
@@ -881,9 +1023,10 @@ def load_aircraft_categories():
     if not AIRCRAFT_DB_PATH.exists():
         return {}
 
+    # git으로 받으면 두 파일의 수정 시각이 몇 초씩 어긋날 수 있어 60초 여유를 둔다
     if (
         AIRCRAFT_DB_CACHE.exists()
-        and AIRCRAFT_DB_CACHE.stat().st_mtime >= AIRCRAFT_DB_PATH.stat().st_mtime
+        and AIRCRAFT_DB_CACHE.stat().st_mtime >= AIRCRAFT_DB_PATH.stat().st_mtime - 60
     ):
         try:
             return joblib.load(AIRCRAFT_DB_CACHE)
@@ -977,6 +1120,7 @@ def build_marker_rows(df):
         icao24 = escape(str(icao24_raw))
         country = escape(str(country_raw or ""))
 
+        heading_known = 0 if pd.isna(heading) else 1
         heading = 0.0 if pd.isna(heading) else round(float(heading), 1)
 
         live_category = 0 if pd.isna(category) else int(category)
@@ -1008,6 +1152,7 @@ def build_marker_rows(df):
             icon_size,
             category_label,
             icon_shape,
+            heading_known,
         ]
 
         rows.append(base_item)
@@ -1021,13 +1166,9 @@ def build_marker_rows(df):
     return rows
 
 
-def add_aircraft_markers(aircraft_map, df, token=""):
+def add_aircraft_markers(aircraft_map, df):
 
-    callback = (
-        MARKER_CALLBACK
-        .replace("__ALT_CONFIG__", build_alt_config())
-        .replace("__TOKEN__", json.dumps(token or ""))
-    )
+    callback = MARKER_CALLBACK.replace("__ALT_CONFIG__", build_alt_config())
 
     data = build_marker_rows(df)
 
@@ -1043,50 +1184,7 @@ def add_aircraft_markers(aircraft_map, df, token=""):
 
 
 # =========================================================
-# 8. 이동경로 지도 표시
-# =========================================================
-
-def add_aircraft_track(aircraft_map, track_data):
-
-    if not track_data:
-        return False
-
-    points = create_track_points(track_data)
-
-    if len(points) < 2:
-        return False
-
-    folium.PolyLine(
-        locations=points,
-        color="blue",
-        weight=4,
-        opacity=0.85,
-        tooltip="항공기 이동경로",
-    ).add_to(aircraft_map)
-
-    folium.Marker(
-        location=points[0],
-        tooltip="경로 시작 지점",
-        icon=folium.Icon(
-            color="green",
-            icon="play",
-        ),
-    ).add_to(aircraft_map)
-
-    folium.Marker(
-        location=points[-1],
-        tooltip="마지막 경로 지점",
-        icon=folium.Icon(
-            color="red",
-            icon="flag",
-        ),
-    ).add_to(aircraft_map)
-
-    return True
-
-
-# =========================================================
-# 9. 실시간 항공기 지도
+# 7. 실시간 항공기 지도
 # =========================================================
 
 def show_live_map():
@@ -1097,7 +1195,6 @@ def show_live_map():
     with col_btn1:
         if st.button("🔄 데이터 새로고침"):
             load_aircraft_data.clear()
-            load_aircraft_track.clear()
             get_access_token.clear()
             st.rerun()
 
@@ -1231,7 +1328,7 @@ def show_live_map():
     )
 
     legend_html = f"""
-    <div style="
+    <div id="alt-legend" style="
         position:fixed;
         bottom:25px;
         left:25px;
@@ -1255,13 +1352,9 @@ def show_live_map():
         folium.Element(legend_html)
     )
 
-    # 실제 이동 궤적(OpenSky tracks)을 브라우저에서 조회할 때 쓸 토큰.
-    # 로컬에서 쓰는 앱이라 지도 HTML에 포함해도 되지만, 외부에 배포한다면 별도 프록시가 필요하다.
-    try:
-        token = get_opensky_headers()["Authorization"].replace("Bearer ", "")
-    except Exception:
-        token = ""
-
+    # 실제 이동 궤적(OpenSky tracks)은 브라우저가 이 로컬 프록시(127.0.0.1)를 거쳐 조회한다.
+    # 인증 토큰은 프록시(서버)에만 있고 지도 HTML에는 넣지 않는다.
+    # 프록시가 127.0.0.1이라 앱을 실행한 PC의 브라우저에서만 궤적이 보인다.
     start_track_proxy(
         get_secret("OPENSKY_CLIENT_ID"),
         get_secret("OPENSKY_CLIENT_SECRET"),
@@ -1270,7 +1363,6 @@ def show_live_map():
     add_aircraft_markers(
         aircraft_map,
         df,
-        token=token,
     )
 
     st_folium(
@@ -1305,9 +1397,8 @@ def show_live_map():
         )
 
 
-
 # =========================================================
-# 13. 메인 실행
+# 8. 메인 실행
 # =========================================================
 
 def main():
