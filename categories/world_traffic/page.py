@@ -2,14 +2,14 @@
 import streamlit as st
 
 from core.data import START_YEAR
-from core.ui import header, load, model_tables, notes, prediction_section, store_for
+from core.ui import header, load, model_tables, notes, prediction_section, store_for, time_chart
 
 store = store_for(__file__)
 summary = header(store)
 
 st.subheader(f"OpenSky 관측 항공편 ({START_YEAR}~2022)")
 monthly = load(store, "monthly")
-st.line_chart(monthly, x="월", y="관측 편수", y_label="편", alt="월별 관측 항공편")
+time_chart(st, monthly, x="월", y="관측 편수", y_label="편", alt="월별 관측 항공편")
 left, right = st.columns(2)
 left.markdown("**출발 국가별 (2022년 상위 15개국)**")
 left.dataframe(load(store, "country").rename(columns={"country": "국가"}), hide_index=True, alt="국가별 연간 관측 항공편")
@@ -24,9 +24,9 @@ metric = st.segmented_control("지표", sorted(wb.지표.unique()), default="여
 part = wb[wb.지표 == metric]
 left, right = st.columns(2)
 left.markdown("**세계**")
-left.line_chart(part[part.국가 == "세계"], x="연도", y="값", y_label=metric, alt=f"세계 {metric}")
+time_chart(left, part[part.국가 == "세계"], x="연도", y="값", y_label=metric, alt=f"세계 {metric}")
 right.markdown("**주요 국가**")
-right.line_chart(part[part.국가 != "세계"], x="연도", y="값", color="국가", y_label=metric, alt=f"주요 국가 {metric}")
+time_chart(right, part[part.국가 != "세계"], x="연도", y="값", color="국가", y_label=metric, alt=f"주요 국가 {metric}")
 
 st.subheader("참조 자료")
 a, b, c, d = st.columns(4)

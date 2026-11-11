@@ -6,7 +6,7 @@ import joblib
 import pandas as pd
 import streamlit as st
 
-from core.ui import header, load, model_tables, notes, prediction_section, store_for
+from core.ui import header, load, model_tables, notes, prediction_section, store_for, time_chart
 
 store = store_for(__file__)
 summary = header(store)
@@ -19,11 +19,11 @@ if view == "통계":
     st.subheader("연도별 추이")
     left, right = st.columns(2)
     left.markdown("**운항 편수**")
-    left.line_chart(yearly, x="Year", y="flights", x_label="연도", y_label="편", alt="연도별 운항 편수")
+    time_chart(left, yearly, x="Year", y="flights", x_label="연도", y_label="편", alt="연도별 운항 편수")
     right.markdown("**도착 지연률**")
-    right.line_chart(yearly, x="Year", y="delay_rate", x_label="연도", y_label="비율", alt="연도별 도착 지연률")
+    time_chart(right, yearly, x="Year", y="delay_rate", x_label="연도", y_label="비율", alt="연도별 도착 지연률")
     st.markdown("**결항률**")
-    st.line_chart(yearly, x="Year", y="cancel_rate", x_label="연도", y_label="비율", height=240, alt="연도별 결항률")
+    time_chart(st, yearly, x="Year", y="cancel_rate", x_label="연도", y_label="비율", height=240, alt="연도별 결항률")
 
     st.subheader("언제 늦는가 (2023년 이후)")
     a, b, c = st.columns(3)
@@ -49,9 +49,9 @@ if view == "통계":
     st.subheader("왜 늦고, 왜 결항하는가")
     left, right = st.columns(2)
     left.markdown("**지연 시간 원인 비중**")
-    left.area_chart(load(store, "cause"), x="Year", y="비중", color="원인", x_label="연도", y_label="비중", alt="연도별 지연 원인 비중")
+    time_chart(left, load(store, "cause"), x="Year", y="비중", color="원인", x_label="연도", y_label="비중", alt="연도별 지연 원인 비중", kind="area")
     right.markdown("**결항 사유 비중**")
-    right.area_chart(load(store, "cancel_code"), x="Year", y="비중", color="사유", x_label="연도", y_label="비중", alt="연도별 결항 사유 비중")
+    time_chart(right, load(store, "cancel_code"), x="Year", y="비중", color="사유", x_label="연도", y_label="비중", alt="연도별 결항 사유 비중", kind="area")
 
 elif view == "모델 성능":
     st.write("같은 대상을 특성 구성별로 비교합니다. 2026년 1~8월이 평가 구간입니다.")

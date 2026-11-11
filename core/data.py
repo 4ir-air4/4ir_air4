@@ -9,6 +9,7 @@ from core.registry import ROOT
 REF = ROOT / "reference_data"
 CACHE = ROOT / "data" / "cache"
 START_YEAR = 2020  # 통계·학습·예측에 쓰는 첫 해. 큰 데이터 캐시는 폴더 이름에 이 값이 들어가 값을 바꾸면 새로 만든다
+COVID = (pd.Period("2020-02", "M"), pd.Period("2022-04", "M"))  # 코로나 시기. 국내선 항공료가 계산에서 빼고, 모든 화면이 차트에 표시한다
 
 
 def read_csv_bytes(raw, **kw):

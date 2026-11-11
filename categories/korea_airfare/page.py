@@ -2,7 +2,7 @@
 import altair as alt
 import streamlit as st
 
-from core.ui import header, load, model_tables, notes, store_for
+from core.ui import COVID_NOTE, header, in_covid, load, model_tables, notes, store_for, time_chart
 
 store = store_for(__file__)
 summary = header(store)
@@ -24,12 +24,15 @@ st.dataframe(seasonal.round(1), hide_index=True, alt="월별 계절 지수 상�
 if store.table_path("price_year_month").exists():  # 파이프라인을 다시 돌리기 전에는 없다
     st.markdown("**연도별로 보기**")
     measure = st.segmented_control("기준", ["그해 평균 대비(%)", "전년 같은 달 대비(%)"], default="그해 평균 대비(%)") or "그해 평균 대비(%)"
-    grid = alt.Chart(load(store, "price_year_month").dropna(subset=[measure])).mark_rect().encode(
+    cells = load(store, "price_year_month").dropna(subset=[measure])
+    grid = alt.Chart(cells).mark_rect().encode(
         x=alt.X("월:O", title=None), y=alt.Y("연도:O", title=None),
         color=alt.Color(f"{measure}:Q", scale=alt.Scale(scheme="blueorange", domainMid=0), title="%"),
         tooltip=["연도", "월", alt.Tooltip("지수:Q", format=".1f"), alt.Tooltip(f"{measure}:Q", format="+.1f")])
-    st.altair_chart(grid, width="stretch")
-    st.caption("그해 평균 대비는 같은 해 안의 높낮이, 전년 같은 달 대비는 1년 사이 변화입니다. 2026년은 3월부터 제트유가 급등해 그해 평균 대비만 보면 상반기가 낮게 보입니다.")
+    covid = cells[in_covid(cells["연도"] + "-" + cells["월"].str[:2]).values]  # 월은 '01월' 형식
+    outline = alt.Chart(covid).mark_rect(filled=False, stroke="black", strokeWidth=1.5).encode(x="월:O", y="연도:O")
+    st.altair_chart(grid + outline, width="stretch")
+    st.caption(f"그해 평균 대비는 같은 해 안의 높낮이, 전년 같은 달 대비는 1년 사이 변화입니다. 2026년은 3월부터 제트유가 급등해 그해 평균 대비만 보면 상반기가 낮게 보입니다. 검은 테두리는 {COVID_NOTE}입니다.")
 
     st.markdown("**명절 효과** (추세 대비 %)")
     st.dataframe(load(store, "holiday_effect").round(1), hide_index=True, alt="설과 추석이 든 해와 아닌 해의 같은 달 항공료 비교")
@@ -37,19 +40,19 @@ if store.table_path("price_year_month").exists():  # 파이프라인을 다시 �
 
 st.subheader("추이")
 st.markdown("**항공료 지수**")
-st.line_chart(monthly, x="월", y=["항공료 지수", "실질 항공료", "국내항공여객 생산자물가"], y_label="2020=100", alt="항공료 지수, 실질 항공료, 생산자물가 추이")
+time_chart(st, monthly, x="월", y=["항공료 지수", "실질 항공료", "국내항공여객 생산자물가"], y_label="2020=100", alt="항공료 지수, 실질 항공료, 생산자물가 추이")
 left, right = st.columns(2)
 left.markdown("**제트유·원유**")
-left.line_chart(monthly, x="월", y=["제트유", "원유(달러)"], y_label="2020=100", alt="제트유와 원유 지수 추이")
+time_chart(left, monthly, x="월", y=["제트유", "원유(달러)"], y_label="2020=100", alt="제트유와 원유 지수 추이")
 right.markdown("**원/달러 환율**")
-right.line_chart(monthly, x="월", y="원/달러 환율", y_label="원", alt="원달러 환율 추이")
+time_chart(right, monthly, x="월", y="원/달러 환율", y_label="원", alt="원달러 환율 추이")
 st.markdown("**국내선 여객**")
-st.line_chart(monthly, x="월", y="여객(명)", y_label="명", alt="국내선 월별 여객 추이")
+time_chart(st, monthly, x="월", y="여객(명)", y_label="명", alt="국내선 월별 여객 추이")
 
 if store.table_path("fare_compare").exists():
     st.subheader("다른 교통 요금과 비교")
     st.caption("모두 소비자물가 품목 지수(2020=100)라 2020년 이후 오른 정도를 바로 비교할 수 있습니다. 금액이 아니라 지수입니다.")
-    st.line_chart(load(store, "fare_monthly"), x="월", y="지수", color="항목", y_label="2020=100", alt="교통 요금별 소비자물가 지수 추이")
+    time_chart(st, load(store, "fare_monthly"), x="월", y="지수", color="항목", y_label="2020=100", alt="교통 요금별 소비자물가 지수 추이")
     st.dataframe(load(store, "fare_compare").round(1), hide_index=True, alt="교통 요금별 최근 지수, 2020년 대비, 전년 대비, 계절 변동 폭")
     st.caption("계절 변동 폭은 코로나 구간을 뺀 월별 계절 지수(연평균 100)의 최고와 최저 차이입니다.")
 
@@ -70,7 +73,7 @@ left, right = st.columns(2)
 left.markdown("**최근 12개월 항공사별**")
 left.dataframe(load(store, "airline_recent").drop(columns="코드").round(1), hide_index=True, alt="항공사별 최근 12개월 국내선 여객, 운항, 편당 여객")
 right.markdown("**저비용 항공사 여객 비중**")
-right.line_chart(load(store, "airline_lcc_monthly"), x="월", y="저비용 비중(%)", y_label="%", alt="월별 국내선 저비용 항공사 여객 비중")
+time_chart(right, load(store, "airline_lcc_monthly"), x="월", y="저비용 비중(%)", y_label="%", alt="월별 국내선 저비용 항공사 여객 비중")
 share = load(store, "route_airline")
 top = list(routes["노선"].head(10))
 bars = alt.Chart(share[share["노선"].isin(top)]).mark_bar().encode(
@@ -83,12 +86,9 @@ if store.table_path("route_airline_monthly").exists():  # 파이프라인을 다
     pick = st.selectbox("노선 자세히 보기", list(routes["노선"]))
     one = load(store, "route_airline_monthly").query("노선 == @pick and 여객 > 0")
     one = one.assign(월=one["월"].str[:4] + "-" + one["월"].str[4:])
-    area = alt.Chart(one).mark_area().encode(
-        x=alt.X("월:O", title=None), y=alt.Y("여객:Q", stack="normalize", axis=alt.Axis(format="%"), title="여객 점유율"),
-        color=alt.Color("항공사:N"), tooltip=["월", "항공사", alt.Tooltip("여객:Q", format=",")])
     left, right = st.columns([2, 1])
     left.markdown(f"**{pick} 항공사별 점유율 추이**")
-    left.altair_chart(area, width="stretch")
+    time_chart(left, one, x="월", y="여객", color="항공사", kind="area", stack="normalize", y_label="여객 점유율", alt=f"{pick} 항공사별 여객 점유율 추이")
     last = one[one["월"].isin(sorted(one["월"].unique())[-12:])].groupby("항공사", as_index=False)[["여객", "운항"]].sum()
     last["편당 여객"] = last["여객"] / last["운항"]
     right.markdown("**최근 12개월**")
@@ -103,7 +103,7 @@ predictions = load(store, "predictions")
 horizon = st.segmented_control("예측 시점", ["1개월 전", "3개월 전"], default="1개월 전") or "1개월 전"
 shown = ["전체", "직전 값 그대로", "작년 같은 달 값"]  # 8개 모델을 모두 그리면 선을 구분할 수 없다. 전체 비교는 아래 표에 있다
 chart = predictions[["월", "실제"]].join(predictions[[f"{horizon}: {name}" for name in shown]].set_axis(shown, axis=1))
-st.line_chart(chart, x="월", y=["실제", *shown], y_label="지수", alt=f"{horizon} 예측과 실제 항공료 지수")
+time_chart(st, chart, x="월", y=["실제", *shown], y_label="지수", alt=f"{horizon} 예측과 실제 항공료 지수")
 compare = load(store, "model_compare")
 st.dataframe(compare[compare["예측 시점"] == horizon].round(2), hide_index=True, alt="모델별 오차 비교 표")
 with st.expander("1개월 뒤 모델의 표준화 계수"):

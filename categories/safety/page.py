@@ -2,7 +2,7 @@
 import streamlit as st
 
 from core.data import START_YEAR
-from core.ui import header, load, model_tables, notes, prediction_section, store_for
+from core.ui import header, load, model_tables, notes, prediction_section, store_for, time_chart
 
 store = store_for(__file__)
 summary = header(store)
@@ -13,9 +13,9 @@ yearly = load(store, "yearly")
 left, right = st.columns(2)
 left.markdown("**연간 사고와 사망 사고**")
 long = yearly.melt("연도", ["사고", "사망 사고"], var_name="구분", value_name="건수")
-left.line_chart(long, x="연도", y="건수", color="구분", y_label="건", alt="연간 사고와 사망 사고")
+time_chart(left, long, x="연도", y="건수", color="구분", y_label="건", alt="연간 사고와 사망 사고")
 right.markdown("**사고 중 사망 사고 비율**")
-right.line_chart(yearly, x="연도", y="사망 사고 비율", y_label="비율", alt="연간 사망 사고 비율")
+time_chart(right, yearly, x="연도", y="사망 사고 비율", y_label="비율", alt="연간 사망 사고 비율")
 
 st.subheader(f"어떤 조건에서 사망 사고 비율이 높은가 ({START_YEAR}년 이후)")
 a, b, c, d = st.columns(4)
@@ -30,7 +30,7 @@ st.subheader("국내·전 세계 사고 (국토교통부)")
 korea = load(store, "korea_yearly")
 st.markdown("**국내 연간 발생 건수**")
 long = korea.melt("연도", ["사고발생건수", "준사고발생건수", "경량사고발생건수", "초경량사고발생건수"], var_name="구분", value_name="건수")
-st.bar_chart(long, x="연도", y="건수", color="구분", y_label="건", alt="국내 연간 사고 발생 건수")
+time_chart(st, long, x="연도", y="건수", color="구분", kind="bar", y_label="건", alt="국내 연간 사고 발생 건수")
 a, b, c = st.columns(3)
 a.markdown("**국내 사고 구분**")
 a.dataframe(load(store, "korea_type"), hide_index=True, alt="국내 사고 구분별 건수")

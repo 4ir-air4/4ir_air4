@@ -8,12 +8,11 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from core.data import REF, START_YEAR, read_csv_any
+from core.data import COVID, REF, START_YEAR, read_csv_any
 from core.ml import model_row, regression_scores
 
 KOSIS = REF / "kosis"
 START = pd.Period(f"{START_YEAR}-01", "M")
-COVID = (pd.Period("2020-02", "M"), pd.Period("2022-04", "M"))
 SHOCK = pd.Period("2026-03", "M")  # 제트유 급등이 시작된 달. 평가 오차를 이 전후로 나눠 본다
 TEST_MONTHS = 24
 HORIZONS = (1, 3)

@@ -8,6 +8,7 @@ from sklearn.metrics import average_precision_score
 
 from core.models import prev_indices
 from core.store import Store
+from core.ui import time_chart
 
 TASKS = {"도착": "icn_arr_delay", "출발": "icn_dep_delay"}
 GRADES = ["낮음", "보통", "높음"]
@@ -79,7 +80,7 @@ left.markdown("**등급별 실제 지연률**")
 left.bar_chart(graded, x="등급", y="지연률", sort=False, horizontal=True, height=220, x_label="위험 등급", y_label="실제 지연률", alt="위험 등급별 실제 지연률")
 monthly = data.groupby("기간", as_index=False).agg(실제=("실제", "mean"), 예측=("예측 점수", "mean")).melt("기간", var_name="구분", value_name="비율")
 right.markdown("**월별 실제 지연률과 평균 점수**")
-right.line_chart(monthly, x="기간", y="비율", color="구분", height=220, x_label="월", y_label="비율", alt="월별 실제 지연률과 평균 위험 점수")
+time_chart(right, monthly, x="기간", y="비율", color="구분", height=220, x_label="월", y_label="비율", alt="월별 실제 지연률과 평균 위험 점수")
 
 st.markdown("**2025년 11월 전후 비교**")
 percent = st.column_config.NumberColumn(format="percent")

@@ -1,12 +1,16 @@
 """카테고리 화면 공통 요소. page.py 는 이 함수들과 Streamlit 기본 차트만으로 작성한다."""
 from pathlib import Path
 
+import altair
 import pandas as pd
 import pyarrow.parquet as pq
 import streamlit as st
 
+from core.data import COVID
 from core.models import MODEL_NAMES, collect_rows
 from core.store import Store
+
+COVID_NOTE = f"코로나 시기 {COVID[0]}~{COVID[1]}"
 
 BINARY = {"roc_auc": "ROC-AUC", "pr_auc": "PR-AUC", "baseline_pr_auc": "무작위 PR-AUC", "lift": "무작위 대비 배수",
           "precision": "정밀도", "recall": "재현율"}
@@ -111,10 +115,10 @@ def prediction_section(store):
         if kind == "multiclass":
             top = agg[agg.구분 == "예측"].groupby("클래스").비율.mean().nlargest(1).index[0]
             pick = st.selectbox("클래스", sorted(agg.클래스.unique()), index=sorted(agg.클래스.unique()).index(top), key=f"{name}_class")
-            st.line_chart(agg[agg.클래스 == pick], x="기간", y="비율", color="구분", y_label="비율", alt=f"{pick} 실제 비율과 예측 비율")
+            time_chart(st, agg[agg.클래스 == pick], x="기간", y="비율", color="구분", y_label="비율", alt=f"{pick} 실제 비율과 예측 비율")
         else:
             long = agg.melt("기간", ["실제", "예측"], var_name="구분", value_name="값")
-            st.line_chart(long, x="기간", y="값", color="구분", y_label="평균", alt="기간별 실제 평균과 예측 평균")
+            time_chart(st, long, x="기간", y="값", color="구분", y_label="평균", alt="기간별 실제 평균과 예측 평균")
             st.caption("이진 분류는 실제 양성 비율과 평균 예측 점수입니다." + (" 가중치 학습 모델의 점수는 실제 확률이 아닙니다." if kind == "binary" else ""))
 
     forecast_path = store.table_path(f"forecast_{name}")
@@ -135,3 +139,38 @@ def prediction_section(store):
 
 def rate(n, d):
     return (n / d.where(d > 0)).astype("float64")
+
+
+def in_covid(values):
+    """연도(정수), 'YYYY-MM', 'YYYYMM', 'YYYY-MM-DD' 값이 코로나 시기에 걸치는지. 연도는 일부만 걸쳐도 넣는다(2020~2022)."""
+    v = pd.Series(values)
+    if pd.api.types.is_integer_dtype(v):
+        return v.between(COVID[0].year, COVID[1].year)
+    t = pd.to_datetime(v.astype(str).str.replace(r"^(\d{4})(\d{2})$", r"\1-\2", regex=True), errors="coerce")
+    return t.between(COVID[0].start_time, COVID[1].end_time)
+
+
+def time_chart(where, data, x, y, color=None, kind="line", x_label=None, y_label=None, stack=None, height=None, alt=None):
+    """st.line_chart·area_chart·bar_chart 대신 쓴다. 코로나 시기가 들어 있으면 그 구간에 회색 띠를 깔고, 없으면 기본 차트 그대로다."""
+    covid = in_covid(data[x])
+    if not covid.any():
+        kw = {k: v for k, v in {"height": height, "stack": stack if kind != "line" else None}.items() if v is not None}  # None을 넘기면 오류
+        return getattr(where, f"{kind}_chart")(data, x=x, y=y, color=color, x_label=x_label, y_label=y_label, alt=alt, **kw)
+    covid_x = sorted(data.loc[covid.values, x].unique())
+    if isinstance(y, list):
+        data, y, color = data.melt(x, y, var_name="구분", value_name="값"), "값", "구분"
+    title = lambda t: altair.Undefined if t is None else t  # noqa: E731
+    scale = altair.Scale(paddingInner=0, paddingOuter=0)  # 띠가 달마다 끊기지 않게
+    xenc = altair.X(f"{x}:O", title=title(x_label), scale=scale, axis=altair.Axis(labelOverlap=True))
+    yenc = altair.Y(f"{y}:Q", title=title(y_label), stack=altair.Undefined if stack is None else {True: "zero", False: None}.get(stack, stack),
+                    axis=altair.Axis(format="%") if stack == "normalize" else altair.Undefined)
+    base = altair.Chart(data).encode(x=xenc, y=yenc, color=altair.Color(f"{color}:N") if color else altair.Undefined,
+                                     tooltip=[x, y] + ([color] if color else []))
+    marks = {"line": base.mark_line(), "area": base.mark_area(), "bar": base.mark_bar(width=altair.RelativeBandSize(0.8))}
+    band = altair.Chart(pd.DataFrame({x: covid_x})).mark_rect(color="gray", opacity=0.15).encode(
+        x=altair.X(f"{x}:O", scale=scale), tooltip=altair.value(COVID_NOTE))
+    label = altair.Chart(pd.DataFrame({x: covid_x[:1], "글": ["코로나 시기"]})).mark_text(
+        align="left", baseline="bottom", y=altair.ExprRef("height - 2"), color="gray", fontSize=11  # 선은 대개 위쪽에 있어 아래에 쓴다
+    ).encode(x=altair.X(f"{x}:O", scale=scale), text="글:N")
+    chart = altair.layer(band, marks[kind], label)
+    where.altair_chart(chart.properties(height=height) if height else chart, width="stretch", alt=alt)

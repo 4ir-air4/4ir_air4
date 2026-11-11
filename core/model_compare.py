@@ -7,7 +7,7 @@ from core.model_explain import explain_section
 from core.models import MODEL_NAMES, collect_rows
 from core.registry import discover
 from core.store import OUTPUT_DIR, Store
-from core.ui import COMMON, PREVIEW_ROWS, SECTIONS, _preview, load
+from core.ui import COMMON, PREVIEW_ROWS, SECTIONS, _preview, load, time_chart
 
 SOURCES = {"전체 학습": OUTPUT_DIR, "2026년 학습": OUTPUT_DIR.parent / "outputs_2026"}
 METRICS = {"binary": ["pr_auc", "roc_auc", "precision", "recall"], "regression": ["mae", "r2", "improve"], "multiclass": ["macro_f1", "accuracy"]}  # 첫 값이 기준 지표
@@ -105,12 +105,12 @@ if kind == "multiclass" and model in agg_tables:
     agg = agg_tables[model]
     pick = st.selectbox("클래스", sorted(agg.클래스.unique()), key=f"{name}_class")
     st.markdown(f"**기간별 실제 대 {model} 예측 비율**")
-    st.line_chart(agg[agg.클래스 == pick], x="기간", y="비율", color="구분", x_label="기간", y_label="비율", alt=f"{pick} 실제 비율과 예측 비율")
+    time_chart(st, agg[agg.클래스 == pick], x="기간", y="비율", color="구분", x_label="기간", y_label="비율", alt=f"{pick} 실제 비율과 예측 비율")
 elif agg_tables:
     first = next(iter(agg_tables.values()))
     long = pd.concat([first[["기간", "실제"]].rename(columns={"실제": "값"}).assign(구분="실제")] + [t[["기간", "예측"]].rename(columns={"예측": "값"}).assign(구분=m) for m, t in agg_tables.items()])
     st.markdown("**기간별 실제와 모델별 예측** (평가 구간 평균)")
-    st.line_chart(long, x="기간", y="값", color="구분", x_label="기간", y_label="평균", alt="기간별 실제 평균과 모델별 예측 평균")
+    time_chart(st, long, x="기간", y="값", color="구분", x_label="기간", y_label="평균", alt="기간별 실제 평균과 모델별 예측 평균")
     if kind == "binary":
         st.caption("이진 분류는 실제 양성 비율과 평균 예측 점수입니다. 가중치 학습 모델의 점수는 실제 확률이 아닙니다.")
 
