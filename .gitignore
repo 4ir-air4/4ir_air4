@@ -82,3 +82,13 @@ data/cache/*
 
 # 개인 PC 실행 설정
 .claude/launch.json
+
+# =========================
+# ojh/ (JhonOh 작업 폴더)
+# =========================
+ojh/models/*
+!ojh/models/train.py
+!ojh/models/train2.py
+ojh/data/airport_demand/input/
+ojh/data/cache/*
+ojh/data/raw/
