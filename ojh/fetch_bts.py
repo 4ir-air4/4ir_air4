@@ -1,5 +1,4 @@
 import io
-import os
 import sys
 import zipfile
 import time
@@ -13,7 +12,7 @@ import requests
 # ---------------------------------------------------------
 # 프로젝트 경로 설정
 # ---------------------------------------------------------
-BASE_DIR = Path(__file__).resolve().parents[1]  # ojh/collect -> ojh (data/, models/ 가 있는 곳)
+BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data" / "raw"
 EXTERNAL_DATA_PATH = DATA_DIR / "btstranstats_counts.csv"  # train.py 연동용 저장 경로
 

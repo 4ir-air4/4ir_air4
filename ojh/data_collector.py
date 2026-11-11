@@ -10,10 +10,10 @@ try:
 except ImportError:
     import pip._vendor.tomli as tomllib
 
-BASE_DIR = Path(__file__).resolve().parents[1]  # ojh/collect -> ojh (data/, models/ 가 있는 곳)
+BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data" / "raw"
 LOCAL_DATA_PATH = DATA_DIR / "aircraftlive_counts.csv"
-SECRETS_PATH = BASE_DIR.parent / ".streamlit" / "secrets.toml"  # 프로젝트 루트 (streamlit 과 같은 위치)
+SECRETS_PATH = BASE_DIR / ".streamlit" / "secrets.toml"
 
 OPENSKY_API_URL = "https://opensky-network.org/api/states/all"
 OPENSKY_AUTH_URL = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token"

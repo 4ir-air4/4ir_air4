@@ -11,7 +11,7 @@ import pandas as pd
 import requests
 
 # 프로젝트 경로
-BASE_DIR = Path(__file__).resolve().parents[1]  # ojh/collect -> ojh (data/, models/ 가 있는 곳)
+BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data" / "raw"
 EXTERNAL_DATA_PATH = DATA_DIR / "opensky_counts.csv"
 

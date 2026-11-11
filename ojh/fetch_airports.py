@@ -17,8 +17,8 @@
                               직접 받은 시계열 엑셀(.xlsx/.xls)을 넣어도 함께 읽음
 
 사용법
-    python ojh/collect/fetch_airports.py              # 전체 수집 (예전 위치의 파일은 자동으로 옮겨줍니다)
-    python ojh/collect/fetch_airports.py --gdp-only   # GDP만 다시 받기
+    python fetch_airports.py              # 전체 수집 (예전 위치의 파일은 자동으로 옮겨줍니다)
+    python fetch_airports.py --gdp-only   # GDP만 다시 받기
 """
 
 import gzip
@@ -34,7 +34,7 @@ import numpy as np
 import pandas as pd
 import requests
 
-BASE_DIR = Path(__file__).resolve().parents[1]  # ojh/collect -> ojh (data/, models/ 가 있는 곳)
+BASE_DIR = Path(__file__).resolve().parent
 RAW_DIR = BASE_DIR / "data" / "raw"
 # 공항 이용객 탭 전용 폴더: 기존 항공기 수 CSV(btstranstats_counts.csv 등)와 섞이지 않도록 따로 둔다.
 AIRPORT_DIR = BASE_DIR / "data" / "airport_demand"
@@ -94,11 +94,6 @@ WORLDBANK_API = "https://api.worldbank.org/v2/country/{codes}/indicator/NY.GDP.M
 
 # Eurostat 국가코드 -> World Bank(ISO2) 국가코드
 COUNTRY_FIX = {"EL": "GR", "UK": "GB"}
-EUROPE = {
-    "AT", "BE", "BG", "CH", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GB", "GR", "HR", "HU",
-    "IE", "IS", "IT", "LT", "LU", "LV", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS", "SE",
-    "SI", "SK", "TR", "AL", "BA", "XK", "LI",
-}
 
 AIRPORT_NAMES = {
     # 미국 (IATA)
@@ -818,7 +813,7 @@ def main():
         gdp.to_csv(OUT_GDP, index=False, encoding="utf-8-sig")
         print(f"저장: {OUT_GDP}")
     elif not OUT_GDP.exists():
-        print("[GDP] 파일이 없어 GDP 피처는 평균값으로 대체됩니다. 인터넷 연결 후 `python ojh/collect/fetch_airports.py --gdp-only` 로 다시 받으세요.")
+        print("[GDP] 파일이 없어 GDP 피처는 평균값으로 대체됩니다. 인터넷 연결 후 `python fetch_airports.py --gdp-only` 로 다시 받으세요.")
 
 
 if __name__ == "__main__":
