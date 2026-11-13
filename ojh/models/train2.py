@@ -1,8 +1,8 @@
 """공항 월간 이용객 수요 예측 모델 학습 (미국 · 유럽 · 한국 공항).
 
 사용법
-    python models/train2.py              # Optuna 튜닝 포함 전체 학습
-    python models/train2.py --no-tune    # 튜닝 없이 (직전 최적 파라미터가 있으면 재사용)
+    python ojh/models/train2.py              # Optuna 튜닝 포함 전체 학습
+    python ojh/models/train2.py --no-tune    # 튜닝 없이 (직전 최적 파라미터가 있으면 재사용)
 
 입력   data/airport_demand/airport_demand_passengers_monthly.csv, airport_demand_gdp_growth.csv   (fetch_airports.py가 생성)
 출력   models/saved/airport/
@@ -110,7 +110,7 @@ def load_inputs(raw_dir=RAW_DIR):
         passengers_path = LEGACY_RAW_DIR / "airport_passengers_monthly.csv"
         gdp_path = LEGACY_RAW_DIR / "gdp_growth.csv"
     if not passengers_path.exists():
-        raise FileNotFoundError(f"{passengers_path} 이 없습니다. 먼저 `python fetch_airports.py` 를 실행해주세요.")
+        raise FileNotFoundError(f"{passengers_path} 이 없습니다. 먼저 `python ojh/fetch_airports.py` 를 실행해주세요.")
     data = pd.read_csv(passengers_path, parse_dates=["date"])
     data["passengers"] = pd.to_numeric(data["passengers"], errors="coerce")
     data["date"] = data["date"].dt.to_period("M").dt.to_timestamp()

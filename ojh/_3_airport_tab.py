@@ -715,8 +715,8 @@ def show_airport_demand():
     if not (CONTEXT_FILE.exists() and COMPARISON_FILE.exists() and TRAIN2_SCRIPT.exists()):
         st.warning(
             "학습된 공항 모델이 없습니다. 터미널에서 순서대로 실행해주세요.\n\n"
-            "1. `python fetch_airports.py`  (공항별 월 승객 수 + GDP 수집)\n"
-            "2. `python models/train2.py`  (학습, 평가, .pkl 저장)"
+            "1. `python ojh/fetch_airports.py`  (공항별 월 승객 수 + GDP 수집)\n"
+            "2. `python ojh/models/train2.py`  (학습, 평가, .pkl 저장)"
         )
         return
 
