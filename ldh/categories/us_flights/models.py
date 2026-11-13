@@ -18,6 +18,7 @@ ROOT = CACHE / f"bts_{START_YEAR}"
 SOURCE = Path("ldh/datasets/processed/bts_parquet")
 SEQ = 5
 CUTOFF_MIN = 120
+MIN_TURNAROUND = 30  # 분. ldh/scripts/train_enhanced.py 와 같은 값
 EPOCH = pd.Timestamp("1980-01-01")
 CAT = ["Reporting_Airline", "Origin", "Dest"]
 BASE = CAT + ["Year", "Month", "DayOfWeek", "dep_hour", "arr_hour", "CRSElapsedTime", "Distance", "origin_sched_hour", "dest_sched_hour"]
@@ -154,7 +155,8 @@ def build(files=None, root=ROOT):
         pred = pred_all[start:end]
         X[start:end, COLUMNS.index("prev_dep_delay")] = np.where(has & (k[:, 0] <= pred), s[:, 0], np.nan)
         X[start:end, COLUMNS.index("prev_arr_delay")] = np.where(has & (k[:, 1] <= pred), s[:, 1], np.nan)
-        X[start:end, COLUMNS.index("turnaround")] = np.where(has, sched[start:end] - a, np.nan)
+        # 30분 미만 연결은 당일 기체 교체 흔적(예측 시점에 모름)이라 자른다. 미국 기상과 같은 처리 (WORK_LOG 2026-11-12)
+        X[start:end, COLUMNS.index("turnaround")] = np.where(has, np.maximum(sched[start:end] - a, MIN_TURNAROUND), np.nan)
     X.flush()
     meta = {"n": n, "codes": codes}
     bigdata.save_meta(root, meta)
