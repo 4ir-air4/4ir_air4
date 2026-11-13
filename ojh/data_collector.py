@@ -13,7 +13,12 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data" / "raw"
 LOCAL_DATA_PATH = DATA_DIR / "aircraftlive_counts.csv"
-SECRETS_PATH = BASE_DIR / ".streamlit" / "secrets.toml"
+# 비밀키는 저장소 최상위 .streamlit/secrets.toml 에 있다 (streamlit run app.py 를 최상위에서 실행하므로).
+# ojh/ 안에 따로 둔 경우도 찾는다.
+SECRETS_PATH = next(
+    (p for p in (BASE_DIR / ".streamlit" / "secrets.toml", BASE_DIR.parent / ".streamlit" / "secrets.toml") if p.exists()),
+    BASE_DIR.parent / ".streamlit" / "secrets.toml",
+)
 
 OPENSKY_API_URL = "https://opensky-network.org/api/states/all"
 OPENSKY_AUTH_URL = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token"

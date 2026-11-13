@@ -1,10 +1,10 @@
 """항공 교통량(5분 뒤 항공기 수) 예측 모델 학습.
 
 사용법
-    python models/train.py                     # current + historical 모두 학습 (Optuna 튜닝 포함)
-    python models/train.py current             # 실시간(current)만 학습
-    python models/train.py --no-tune           # 튜닝 없이, 직전에 저장된 최적 파라미터(없으면 기본값)로 학습
-    python models/train.py historical --no-tune
+    python ojh/models/train.py                     # current + historical 모두 학습 (Optuna 튜닝 포함)
+    python ojh/models/train.py current             # 실시간(current)만 학습
+    python ojh/models/train.py --no-tune           # 튜닝 없이, 직전에 저장된 최적 파라미터(없으면 기본값)로 학습
+    python ojh/models/train.py historical --no-tune
 
 app.py의 [재학습] 버튼도 이 파일의 train_dataset()을 직접 호출합니다.
 (버튼을 빠르게 하고 싶으면 train_dataset(key, config, tune=False)로 호출하세요.)

@@ -822,7 +822,7 @@ def show_model_prediction(dataset_key):
 
         st.warning(
             f"모델 파일이 없습니다.\n\n{model_path}\n\n"
-            "먼저 models/train.py를 실행해주세요."
+            "먼저 `python ojh/models/train.py`를 실행해주세요."
         )
 
         return
@@ -936,8 +936,8 @@ def show_model_prediction(dataset_key):
             if age_minutes > LIVE_STALE_MINUTES:
 
                 st.warning(
-                    "수집이 멈춘 것 같습니다. data_collector.py가 "
-                    "실행 중인지 확인해주세요."
+                    "수집이 멈춘 것 같습니다. 수집기가 실행 중인지 확인해주세요. "
+                    "(저장소 최상위에서 `python ojh/data_collector.py`)"
                 )
 
         render_live_section(model_path, bundle, feature_columns, is_legacy_model)
@@ -1062,7 +1062,7 @@ def show_model_comparison(dataset_key):
 
         st.warning(
             "모델 비교 파일이 없습니다. "
-            "먼저 models/train.py를 실행해주세요."
+            "먼저 `python ojh/models/train.py`를 실행해주세요."
         )
 
         return

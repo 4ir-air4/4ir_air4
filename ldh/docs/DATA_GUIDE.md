@@ -37,7 +37,7 @@ icn_live/ (인천 API)         (live_flights 로 학습 기준 지연으로 변�
 |---|---|---|
 | `korea/` | 공공데이터포털 파일 25종. 파일명 끝에 날짜가 있으면 과거 판 (133개) | 37MB |
 | `kosis/` | 국내 항공료, 노선별 운항과 여객, 환율, 유가, 물가 | 1MB |
-| `weather_asos/` | 공항 기상. `all_2023~2026`은 미국 분석용, `asos_14airports`는 인천 등 14개 공항 | 827MB |
+| `weather_asos/` | 공항 기상(parquet, 2026-11-12 CSV에서 변환, `ldh.core.data.read_asos`로 읽음). `all_2023~2026`은 미국 분석용, `asos_14airports`는 인천 등 14개 공항 | 79MB |
 | `eurocontrol/` | 유럽 공항 교통량과 지연. **비상업 한정** | 355MB |
 | `opensky_flightlist/` | 전 세계 항공편 목록 2020~2022 (2019년은 2026-11-11 삭제). **공유 범위 제한** | 5.6GB |
 | `opensky/` | 항공기 등록 정보. **OpenSky 약관 적용으로 간주** | 90MB |

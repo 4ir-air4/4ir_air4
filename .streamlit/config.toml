@@ -1,0 +1,12 @@
+[theme]
+base = "light"
+primaryColor = "#2563EB"
+backgroundColor = "#FFFFFF"  # 차트·표 바탕색. 페이지 배경 그라데이션은 app.py CSS 가 칠한다
+secondaryBackgroundColor = "#EAF0F9"
+textColor = "#13213D"
+borderColor = "#DCE4F0"
+baseRadius = "0.6rem"
+
+[theme.sidebar]
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F1F5FC"

@@ -17,8 +17,8 @@
                               직접 받은 시계열 엑셀(.xlsx/.xls)을 넣어도 함께 읽음
 
 사용법
-    python fetch_airports.py              # 전체 수집 (예전 위치의 파일은 자동으로 옮겨줍니다)
-    python fetch_airports.py --gdp-only   # GDP만 다시 받기
+    python ojh/fetch_airports.py              # 전체 수집 (예전 위치의 파일은 자동으로 옮겨줍니다)
+    python ojh/fetch_airports.py --gdp-only   # GDP만 다시 받기
 """
 
 import gzip
@@ -813,7 +813,7 @@ def main():
         gdp.to_csv(OUT_GDP, index=False, encoding="utf-8-sig")
         print(f"저장: {OUT_GDP}")
     elif not OUT_GDP.exists():
-        print("[GDP] 파일이 없어 GDP 피처는 평균값으로 대체됩니다. 인터넷 연결 후 `python fetch_airports.py --gdp-only` 로 다시 받으세요.")
+        print("[GDP] 파일이 없어 GDP 피처는 평균값으로 대체됩니다. 인터넷 연결 후 `python ojh/fetch_airports.py --gdp-only` 로 다시 받으세요.")
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ EXTERNAL_DATA_PATH = DATA_DIR / "opensky_counts.csv"
 # False: 5분 구간 내 상태 레코드 수 (기존 방식)
 COUNT_UNIQUE_AIRCRAFT = True
 
-# 수집 기간 (명령행 인자로 덮어쓸 수 있음: python fetch_opensky.py 2017-01-01 2022-12-31)
+# 수집 기간 (명령행 인자로 덮어쓸 수 있음: python ojh/fetch_opensky.py 2017-01-01 2022-12-31)
 START_DATE = "2017-01-01"
 END_DATE = "2022-12-31"
 
