@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ldh.core.data import REF
+from ldh.core.data import REF, read_asos
 from ldh.core.ml import model_row
 from ldh.core.airports import airport_timezones, stations
 from ldh.scripts.train_enhanced import SKY, WX, add_times, add_weather
@@ -18,15 +18,12 @@ BINS = {"vsby": ("시정", [-1, 1, 3, 5, 100], ["1마일 이하", "1~3마일", "
         "sknt": ("풍속", [-1, 10, 20, 30, 200], ["10노트 이하", "10~20노트", "20~30노트", "30노트 초과"]),
         "tmpf": ("기온", [-100, 32, 60, 85, 150], ["영하(32°F 이하)", "32~60°F", "60~85°F", "85°F 초과"])}
 ADVERSE = ["ts", "sn", "fz", "fg"]
-READ = {"station": "string", "valid": "string", "tmpf": "float32", "sknt": "float32", "gust": "float32", "vsby": "float32",
-        "p01i": "float32", "skyc1": "string", "skyl1": "float32", "wxcodes": "string"}
 
 
 def read_year(year):
-    wx = pd.read_csv(REF / f"weather_asos/all_{year}.csv", usecols=list(READ), dtype=READ, na_values=["M", "T"])
-    djt = REF / f"weather_asos/all_{year}_djt.csv"
-    if djt.exists():
-        wx = pd.concat([wx, pd.read_csv(djt, usecols=list(READ), dtype=READ, na_values=["M", "T"])])
+    wx = read_asos(f"all_{year}")
+    if (REF / f"weather_asos/all_{year}_djt.parquet").exists():
+        wx = pd.concat([wx, read_asos(f"all_{year}_djt")])
     wx["valid"] = pd.to_datetime(wx.valid, format="%Y-%m-%d %H:%M").astype("datetime64[ns]")
     wx["sky_cover"] = wx.skyc1.map(SKY).astype("float32")
     for flag, pattern in {"ts": "TS", "sn": "SN", "fz": "FZ", "fg": "FG|BR", "ra": "RA|DZ"}.items():

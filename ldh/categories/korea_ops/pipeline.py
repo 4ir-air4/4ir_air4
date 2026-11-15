@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ldh.core.data import REF, START_YEAR, read_csv_any, read_csv_bytes
+from ldh.core.data import REF, START_YEAR, read_asos, read_csv_any, read_csv_bytes
 from ldh.core.ml import binary_result, encode, lag_regression, model_row, self_check
 
 KOREA = REF / "korea"
@@ -87,9 +87,7 @@ def load_kac():
 
 
 def rksi_weather():
-    cols = {"station": "string", "valid": "string", "tmpf": "float32", "sknt": "float32", "gust": "float32",
-            "vsby": "float32", "p01i": "float32", "skyc1": "string", "skyl1": "float32", "wxcodes": "string"}
-    wx = pd.read_csv(REF / "weather_asos/asos_14airports_2024_2025.csv", usecols=list(cols), dtype=cols, na_values=["M", "T"])
+    wx = read_asos("asos_14airports_2024_2025")
     wx = wx[wx.station == "RKSI"].copy()
     wx["valid"] = pd.to_datetime(wx.valid, format="%Y-%m-%d %H:%M")
     wx["sky_cover"] = wx.skyc1.map(SKY).astype("float32")

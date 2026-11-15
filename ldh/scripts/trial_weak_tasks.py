@@ -98,6 +98,24 @@ def lgbm(f, keys, delta):
     return p + f.lag1.to_numpy() if delta else p
 
 
+COUNT_TASKS = {"kac_delay_hour"}  # 값이 건수인 과제
+
+
+def glm(f, keys, family):
+    """건수 GLM (로그 연결): log 기대 건수 = 직전 달·작년 같은 달(로그) + 월 + 대상 범주. 학습 구간으로만 맞춤."""
+    import statsmodels.api as sm
+    X = pd.DataFrame({"l1": np.log1p(f.lag1.clip(lower=0)), "l12": np.log1p(f.lag12.fillna(f.lag1).clip(lower=0)),
+                      "l2": np.log1p(f.lag2.fillna(f.lag1).clip(lower=0))})
+    X = pd.concat([X, pd.get_dummies((f.t - 1) % 12 + 1, prefix="m", drop_first=True, dtype=float),
+                   pd.get_dummies(f[keys].astype("string").agg("|".join, axis=1), prefix="k", drop_first=True, dtype=float)], axis=1)
+    X = sm.add_constant(X, has_constant="add")
+    tr = ((f.split == TRAIN) & f.lag1.notna() & f.y.notna()).to_numpy()
+    fam = sm.families.Poisson() if family == "poisson" else sm.families.NegativeBinomial(alpha=1.0)
+    res = sm.GLM(f.y[tr].clip(lower=0), X[tr], family=fam).fit()
+    pred = np.asarray(res.predict(X.fillna(0)), dtype=float)
+    return np.where(f.lag1.notna(), pred, np.nan)
+
+
 def evaluate(f, preds):
     rows = {}
     for name, p in preds.items():
@@ -131,6 +149,9 @@ def run(task):
     preds["arima011"] = arima011(f)
     preds["lgbm_level"] = lgbm(f, keys, delta=False)
     preds["lgbm_delta"] = lgbm(f, keys, delta=True)
+    if task in COUNT_TASKS:
+        for family in ("poisson", "negbin"):
+            preds[f"glm_{family}"] = glm(f, keys, family)
     rows = evaluate(f, preds)
     best = min(rows, key=lambda k: rows[k]["val_mae"])
     return {"methods": rows, "chosen": best, "seconds": round(time.time() - start)}

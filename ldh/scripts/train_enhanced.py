@@ -17,7 +17,7 @@ import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier, HistGradientBoostingRegressor
 
 from ldh.core.airports import airport_idents, airport_timezones, stations
-from ldh.core.data import REF
+from ldh.core.data import REF, read_asos
 from ldh.scripts.train import CAT, MAX_CATS, MODEL_DIR, TASKS, binary_metrics, features, load, regression_metrics
 
 CUTOFF = pd.Timedelta(hours=2)
@@ -88,10 +88,7 @@ def add_congestion(df):
 
 
 def load_weather():
-    cols = {"station": "string", "valid": "string", "tmpf": "float32", "sknt": "float32", "gust": "float32",
-            "vsby": "float32", "p01i": "float32", "skyc1": "string", "skyl1": "float32", "wxcodes": "string"}
-    wx = pd.concat(pd.read_csv(f, usecols=list(cols), dtype=cols, na_values=["M", "T"])
-                   for f in sorted((REF / "weather_asos").glob("all_*.csv")))
+    wx = pd.concat(read_asos(f.stem) for f in sorted((REF / "weather_asos").glob("all_*.parquet")))
     wx["valid"] = pd.to_datetime(wx.valid, format="%Y-%m-%d %H:%M").astype("datetime64[ns]")
     wx["sky_cover"] = wx.skyc1.map(SKY).astype("float32")
     for flag, pattern in {"ts": "TS", "sn": "SN", "fz": "FZ", "fg": "FG|BR", "ra": "RA|DZ"}.items():
