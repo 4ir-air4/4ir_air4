@@ -596,3 +596,11 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
   - 지금 있는 모델에는 이 파일이 없으니, 효과는 다음 재학습부터입니다.
   - 미국 운항처럼 큰 카테고리는 이 파일만 수 GB가 될 수 있습니다(행 수 × 4바이트, 다중 분류는 × 클래스 수).
   - 확인: 작은 합성 자료로 RandomForest·LightGBM을 학습해 저장 파일 값과 다시 불러온 모델의 예측 차이가 1e-7 이하인 것을 봤습니다. `ensemble.check()`(새 파일 사용, 행 수 불일치, 오래된 파일)도 통과했고, 파일이 없는 safety 카테고리 앙상블도 예전과 같은 0.2822가 나왔습니다.
+
+# PR #9 병합과 main 반영 (2026-11-16)
+
+- 사용자 요청: "app.py를 ojh가 수정을 하면서 streamlit을 수정 했는데, 그걸 기준으로 해서 merge를 진행 해줘. 그 후에 pull도 같이 진행 해줘."
+- PR #9(JhonOh, 통합 앱 AERO INSIGHT)를 develop에 합쳤습니다(`dccc5f59`). `app.py`, `.streamlit/config.toml`, `ojh/`는 PR 쪽을 그대로 받았습니다.
+- PR의 `ldh/` 파일은 드라이브에 올라간 `a3046b70` 시점과 같은 내용이었습니다. 그래서 충돌한 `ldh/scripts/ensemble.py`는 develop 쪽(앙상블 예측 재사용이 들어간 판)을 남겼습니다.
+- 확인: 페이지별 AppTest가 모두 통과했습니다(홈은 `app.py`를 통해 실행). 브라우저에서 실시간 지도와 인천 예보 화면도 봤습니다.
+- develop → main은 PR #10(`bdc8b21f`, 병합 커밋)으로 반영했고, PC의 main·develop도 원격과 맞췄습니다.
