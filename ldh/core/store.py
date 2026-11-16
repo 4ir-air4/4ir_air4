@@ -28,6 +28,11 @@ class Store:
     def table_path(self, name):
         return self.dir / f"{name}.parquet"
 
+    def pred_path(self, name):
+        """건별 예측 파일. 큰 과제는 git에 표본(pred_sample_, ldh/scripts/sample_preds.py)만 있으니 원본이 없으면 표본을 준다."""
+        full, sample = self.table_path(f"pred_{name}"), self.table_path(f"pred_sample_{name}")
+        return sample if not full.exists() and sample.exists() else full
+
     def table(self, name):
         return pd.read_parquet(self.table_path(name))
 

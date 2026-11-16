@@ -1,0 +1,31 @@
+{
+  "task": "bts_taxi_out",
+  "title": "택시아웃 시간 (분)",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 30590198,
+  "n_val": 6898743,
+  "n_test": 4624807,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "XGBoost",
+    "LSTM",
+    "RandomForest"
+  ],
+  "val_score": -5.531154506989396,
+  "val_score_single": -5.543135984830897,
+  "seconds": 4028,
+  "fit_seconds": 3674,
+  "tuned": false,
+  "mae": 5.714909372418316,
+  "rmse": 9.849243947860003,
+  "medae": 3.7671833278429894,
+  "r2": 0.19445482094096656,
+  "mean_mae": 6.672765254974365,
+  "baseline_mae": 6.672765254974365,
+  "improve": 0.14354706721355037
+}

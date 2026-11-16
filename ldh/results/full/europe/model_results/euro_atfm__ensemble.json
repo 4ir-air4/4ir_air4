@@ -1,0 +1,30 @@
+{
+  "task": "euro_atfm",
+  "title": "공항별 도착 ATFM 지연 발생 여부 (일 단위)",
+  "group": "과거 값, 요일",
+  "train_period": "2020-01~2025-09",
+  "test_period": "2026-04~2026-09",
+  "note": "",
+  "kind": "binary",
+  "n_train": 779323,
+  "n_val": 69043,
+  "n_test": 70120,
+  "model": "앙상블",
+  "members": [
+    "LSTM",
+    "LightGBM"
+  ],
+  "val_score": 0.692741707227111,
+  "val_score_single": 0.6883802382808727,
+  "seconds": 654,
+  "fit_seconds": 643,
+  "tuned": false,
+  "roc_auc": 0.9616392763885565,
+  "pr_auc": 0.8028022911701812,
+  "baseline_pr_auc": 0.09345407783985138,
+  "lift": 8.590339873086247,
+  "precision": 0.7505383468610237,
+  "recall": 0.6914390355562338,
+  "f1": 0.7197776012708499,
+  "threshold": 0.3499035550452787
+}

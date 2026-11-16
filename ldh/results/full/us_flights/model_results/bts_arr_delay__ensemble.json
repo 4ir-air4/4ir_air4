@@ -1,0 +1,31 @@
+{
+  "task": "bts_arr_delay",
+  "title": "도착 지연 시간 (분)",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 30518456,
+  "n_val": 6879484,
+  "n_test": 4608866,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "XGBoost",
+    "RandomForest",
+    "LSTM"
+  ],
+  "val_score": -23.095869267896294,
+  "val_score_single": -23.288243639058493,
+  "seconds": 6647,
+  "fit_seconds": 6018,
+  "tuned": false,
+  "mae": 24.828061661375948,
+  "rmse": 57.2008511646856,
+  "medae": 14.811197093089666,
+  "r2": 0.1857183560747686,
+  "mean_mae": 28.860916137695312,
+  "baseline_mae": 28.860916137695312,
+  "improve": 0.1397341115950247
+}

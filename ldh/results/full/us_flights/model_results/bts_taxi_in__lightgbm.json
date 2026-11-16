@@ -1,0 +1,23 @@
+{
+  "task": "bts_taxi_in",
+  "title": "택시인 시간 (분)",
+  "model": "LightGBM",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 30518456,
+  "n_val": 6879484,
+  "n_test": 4608866,
+  "seconds": 2926,
+  "fit_seconds": 2261,
+  "tuned": true,
+  "mae": 3.4595166724902486,
+  "rmse": 6.760313045693673,
+  "medae": 1.9787436709854158,
+  "r2": 0.2647598828622445,
+  "mean_mae": 4.521291732788086,
+  "baseline_mae": 4.521291732788086,
+  "improve": 0.23483887416463756
+}

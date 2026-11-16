@@ -1,0 +1,30 @@
+{
+  "task": "icn_dep_delay",
+  "title": "인천 출발 지연 여부",
+  "group": "일정·혼잡·같은 편명 이력",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2025-07~2026-06",
+  "note": "",
+  "kind": "binary",
+  "n_train": 302685,
+  "n_val": 91683,
+  "n_test": 190122,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "LSTM"
+  ],
+  "val_score": 0.6373465475386103,
+  "val_score_single": 0.6345783357864901,
+  "seconds": 98,
+  "fit_seconds": 87,
+  "tuned": false,
+  "roc_auc": 0.7923583125122198,
+  "pr_auc": 0.5220079098584911,
+  "baseline_pr_auc": 0.20300649106502533,
+  "lift": 2.5713853144296057,
+  "precision": 0.4823164655076957,
+  "recall": 0.5642812726707431,
+  "f1": 0.5200893123664195,
+  "threshold": 0.2958351254246504
+}

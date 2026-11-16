@@ -1,0 +1,25 @@
+{
+  "task": "bts_delay_cause",
+  "title": "주요 지연 원인 (15분 이상 지연된 경우)",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "multiclass",
+  "n_train": 5655710,
+  "n_val": 1534624,
+  "n_test": 1085685,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "XGBoost"
+  ],
+  "val_score": 0.37737767065088434,
+  "val_score_single": 0.37723077439679675,
+  "seconds": 889,
+  "fit_seconds": 852,
+  "tuned": false,
+  "accuracy": 0.521422880485592,
+  "macro_f1": 0.365531879494379,
+  "majority_rate": 0.4008298908062652
+}

@@ -1,0 +1,23 @@
+{
+  "task": "icn_passengers",
+  "title": "인천 항공사·공항별 월 여객",
+  "model": "RandomForest",
+  "group": "과거 12개월 값",
+  "train_period": "2026-01~2026-03",
+  "test_period": "2026-05~2026-06",
+  "note": "",
+  "kind": "regression",
+  "n_train": 2557,
+  "n_val": 810,
+  "n_test": 1662,
+  "seconds": 1,
+  "fit_seconds": 1,
+  "mae": 1053.1306059882422,
+  "rmse": 1700.692778513944,
+  "medae": 626.506955755895,
+  "r2": 0.9166848364087548,
+  "mean_mae": 4254.9150390625,
+  "persistence_mae": 958.3339233398438,
+  "baseline_mae": 958.3339233398438,
+  "improve": -0.09891821664626788
+}

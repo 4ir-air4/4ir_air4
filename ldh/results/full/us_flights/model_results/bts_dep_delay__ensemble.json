@@ -1,0 +1,29 @@
+{
+  "task": "bts_dep_delay",
+  "title": "출발 지연 시간 (분)",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 30590198,
+  "n_val": 6898743,
+  "n_test": 4624807,
+  "model": "앙상블",
+  "members": [
+    "LSTM",
+    "LightGBM"
+  ],
+  "val_score": -18.718086748033972,
+  "val_score_single": -19.144384481515413,
+  "seconds": 2631,
+  "fit_seconds": 2210,
+  "tuned": false,
+  "mae": 20.34401469280139,
+  "rmse": 54.77779356279054,
+  "medae": 9.657105988680032,
+  "r2": 0.19847214452288853,
+  "mean_mae": 25.534603118896484,
+  "baseline_mae": 25.534603118896484,
+  "improve": 0.20327664393005107
+}

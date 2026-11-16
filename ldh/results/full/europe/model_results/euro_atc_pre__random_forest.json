@@ -1,0 +1,23 @@
+{
+  "task": "euro_atc_pre",
+  "title": "공항별 출발편당 ATC 사전 지연(분)",
+  "model": "RandomForest",
+  "group": "과거 값, 요일",
+  "train_period": "2020-01~2025-08",
+  "test_period": "2026-03~2026-08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 121836,
+  "n_val": 13373,
+  "n_test": 13239,
+  "seconds": 2,
+  "fit_seconds": 2,
+  "mae": 0.20354567107836694,
+  "rmse": 0.788683824310571,
+  "medae": 0.08953160910858741,
+  "r2": 0.3536170756227064,
+  "mean_mae": 0.43587571382522583,
+  "persistence_mae": 0.2559128403663635,
+  "baseline_mae": 0.2559128403663635,
+  "improve": 0.20462892449252645
+}

@@ -1,0 +1,30 @@
+{
+  "task": "bts_air_time",
+  "title": "실제 비행 시간 (분)",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 30518456,
+  "n_val": 6879484,
+  "n_test": 4608866,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "XGBoost",
+    "LSTM"
+  ],
+  "val_score": -5.387711218305877,
+  "val_score_single": -5.413402717960321,
+  "seconds": 5199,
+  "fit_seconds": 4584,
+  "tuned": false,
+  "mae": 5.5930037393500465,
+  "rmse": 8.367880478547333,
+  "medae": 3.8382329879195787,
+  "r2": 0.9863582154369802,
+  "mean_mae": 53.913818359375,
+  "baseline_mae": 53.913818359375,
+  "improve": 0.8962602926383624
+}

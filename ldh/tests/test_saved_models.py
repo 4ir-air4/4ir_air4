@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from ldh.categories.korea_ops.models import CONTEXT_GROUPS, recent_context, recent_delays, window_rate
-from ldh.core.models import MODELS, TEST, load_model, only_year
+from ldh.core.models import EXTRA_MODELS, MODELS, TEST, load_model, only_year
 from ldh.core.store import OUTPUT_DIR, Store
 
 TOLERANCE = 1e-3
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         if year:  # ldh/scripts/run_models.py --year 와 같은 위치와 같은 행
             store.dir = OUTPUT_DIR.parent / str(year) / slug
         for t in importlib.import_module(f"ldh.categories.{slug}.models").tasks():
-            names = [m for m in MODELS if (store.dir / "saved_models" / f"{t['task']}__{m}" / "meta.json").exists()]
+            names = [m for m in MODELS + EXTRA_MODELS if (store.dir / "saved_models" / f"{t['task']}__{m}" / "meta.json").exists()]
             if not names:
                 continue
             data = t["load"]()

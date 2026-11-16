@@ -120,12 +120,13 @@ if forecast_path.exists():
     st.markdown(f"**{model}의 다음 기간 예측값 ({forecast['기간'].iloc[0]})**")
     st.dataframe(forecast.sort_values("예측", ascending=False).round(2), hide_index=True, alt=f"{model}의 다음 기간 예측값")
 
-pred_path = store.table_path(f"pred_{name}")
+pred_path = store.pred_path(name)
 if pred_path.exists():
     n = pq.ParquetFile(pred_path).metadata.num_rows
-    st.markdown(f"**{model}의 건별 예측값** (전체 {n:,}건 중 앞 {min(n, PREVIEW_ROWS):,}건)")
+    sample = pred_path.name.startswith("pred_sample_")
+    st.markdown(f"**{model}의 건별 예측값** ({'무작위 표본' if sample else '전체'} {n:,}건 중 앞 {min(n, PREVIEW_ROWS):,}건)")
     st.dataframe(_preview(str(pred_path), pred_path.stat().st_mtime, PREVIEW_ROWS).round(3), hide_index=True, alt=f"{model}의 평가 구간 건별 실제값과 예측값")
-    st.caption(f"전체 파일: `{store.dir.parent.name}/{slug}/pred_{name}.parquet`")
+    st.caption(f"전체 파일: `{store.dir.parent.name}/{slug}/pred_{name}.parquet`" + (" (git에는 표본만 있고 전체 파일은 드라이브에 있습니다)" if sample else ""))
 
 explain_section(store, name, kind, model, KEYS[model])
 

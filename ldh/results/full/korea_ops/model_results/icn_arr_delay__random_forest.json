@@ -1,0 +1,23 @@
+{
+  "task": "icn_arr_delay",
+  "title": "인천 도착 지연 여부",
+  "model": "RandomForest",
+  "group": "일정·혼잡·같은 편명 이력",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2025-07~2026-06",
+  "note": "",
+  "kind": "binary",
+  "n_train": 303206,
+  "n_val": 91778,
+  "n_test": 190273,
+  "seconds": 8,
+  "fit_seconds": 6,
+  "roc_auc": 0.7998394436399725,
+  "pr_auc": 0.4543479705631164,
+  "baseline_pr_auc": 0.13960467278957367,
+  "lift": 3.2545326849335177,
+  "precision": 0.4576335157576901,
+  "recall": 0.4564619960094869,
+  "f1": 0.45704700516415997,
+  "threshold": 0.30550464617631223
+}

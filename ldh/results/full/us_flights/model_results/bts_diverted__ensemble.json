@@ -1,0 +1,31 @@
+{
+  "task": "bts_diverted",
+  "title": "회항 여부",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "binary",
+  "n_train": 30590198,
+  "n_val": 6898743,
+  "n_test": 4624807,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "XGBoost",
+    "RandomForest"
+  ],
+  "val_score": 0.01200537438806155,
+  "val_score_single": 0.01189792623305614,
+  "seconds": 860,
+  "fit_seconds": 723,
+  "tuned": false,
+  "roc_auc": 0.749569962258705,
+  "pr_auc": 0.014407200688618883,
+  "baseline_pr_auc": 0.003446846501901746,
+  "lift": 4.179820795811454,
+  "precision": 0.03269169777257313,
+  "recall": 0.084059971143592,
+  "f1": 0.04707535569998243,
+  "threshold": 0.8100038256315196
+}

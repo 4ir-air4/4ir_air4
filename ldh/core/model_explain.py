@@ -116,8 +116,10 @@ def _trees(store, name, kind, model):
 def explain_section(store, name, kind, model, key):
     """name: <과제>__<모델 키>. pred_<name>.parquet 과 ldh/scripts/explain_models.py 결과를 읽는다."""
     st.subheader("모델 설명")
-    pred_path = store.table_path(f"pred_{name}")
+    pred_path = store.pred_path(name)
     if pred_path.exists():
+        if pred_path.name.startswith("pred_sample_"):
+            st.caption("평가 구간 전체가 아니라 무작위 표본으로 그린 곡선입니다(전체 파일은 드라이브).")
         mtime = pred_path.stat().st_mtime
         if kind == "regression":
             _regression(str(pred_path), mtime, model)

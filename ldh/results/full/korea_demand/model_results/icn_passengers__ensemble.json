@@ -1,0 +1,30 @@
+{
+  "task": "icn_passengers",
+  "title": "인천 항공사·공항별 월 여객",
+  "group": "과거 12개월 값 (직전 달 대비 변화 학습)",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2025-07~2026-06",
+  "note": "",
+  "kind": "regression",
+  "n_train": 29118,
+  "n_val": 4919,
+  "n_test": 9993,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "LSTM"
+  ],
+  "val_score": -852.2374108079661,
+  "val_score_single": -863.6580792625241,
+  "seconds": 78,
+  "fit_seconds": 76,
+  "tuned": false,
+  "mae": 946.6453834504812,
+  "rmse": 1542.617903204502,
+  "medae": 530.4116930599521,
+  "r2": 0.9315174060335258,
+  "mean_mae": 3860.905029296875,
+  "persistence_mae": 1049.2264404296875,
+  "baseline_mae": 1049.2264404296875,
+  "improve": 0.09776827291656554
+}

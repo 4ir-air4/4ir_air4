@@ -1,0 +1,30 @@
+{
+  "task": "ntsb_fatal",
+  "title": "NTSB 사고의 사망 발생 여부 (사후 분석)",
+  "group": "사고 환경, 기체 정보",
+  "train_period": "2020~2022",
+  "test_period": "2024~2026-10",
+  "note": "사고가 난 뒤의 분류이며 사고 발생 예측이 아닙니다",
+  "kind": "binary",
+  "n_train": 3592,
+  "n_val": 1194,
+  "n_test": 3283,
+  "model": "앙상블",
+  "members": [
+    "LSTM",
+    "LightGBM"
+  ],
+  "val_score": 0.4172076276159908,
+  "val_score_single": 0.41046785377675576,
+  "seconds": 25,
+  "fit_seconds": 24,
+  "tuned": false,
+  "roc_auc": 0.6189027810995072,
+  "pr_auc": 0.2822499123228781,
+  "baseline_pr_auc": 0.14742612838745117,
+  "lift": 1.9145175648993238,
+  "precision": 0.25149700598802394,
+  "recall": 0.34710743801652894,
+  "f1": 0.2916666666666667,
+  "threshold": 0.52861683916011
+}

@@ -1,0 +1,30 @@
+{
+  "task": "euro_traffic",
+  "title": "공항별 일 운항 편수",
+  "group": "과거 값, 요일",
+  "train_period": "2020-01~2025-09",
+  "test_period": "2026-04~2026-09",
+  "note": "",
+  "kind": "regression",
+  "n_train": 729182,
+  "n_val": 65011,
+  "n_test": 65958,
+  "model": "앙상블",
+  "members": [
+    "LSTM",
+    "LightGBM"
+  ],
+  "val_score": -7.823030894432573,
+  "val_score_single": -8.001908699015896,
+  "seconds": 933,
+  "fit_seconds": 929,
+  "tuned": false,
+  "mae": 7.0686028675417045,
+  "rmse": 13.657827204863503,
+  "medae": 3.9227413913664444,
+  "r2": 0.9971515300078251,
+  "mean_mae": 149.45762634277344,
+  "persistence_mae": 8.589101791381836,
+  "baseline_mae": 8.589101791381836,
+  "improve": 0.1770265344119888
+}

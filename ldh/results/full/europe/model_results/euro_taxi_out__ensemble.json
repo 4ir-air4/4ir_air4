@@ -1,0 +1,30 @@
+{
+  "task": "euro_taxi_out",
+  "title": "공항별 월 택시아웃 추가 시간(분/편)",
+  "group": "과거 값 (직전 달 대비 변화 학습)",
+  "train_period": "2020-01~2025-09",
+  "test_period": "2026-04~2026-09",
+  "note": "",
+  "kind": "regression",
+  "n_train": 5750,
+  "n_val": 534,
+  "n_test": 448,
+  "model": "앙상블",
+  "members": [
+    "LSTM",
+    "LightGBM"
+  ],
+  "val_score": -0.3213751362237178,
+  "val_score_single": -0.3259645627229217,
+  "seconds": 129,
+  "fit_seconds": 128,
+  "tuned": false,
+  "mae": 0.24187929285292475,
+  "rmse": 0.341758726631572,
+  "medae": 0.1719692448265151,
+  "r2": 0.9199186825690064,
+  "mean_mae": 0.8480714559555054,
+  "persistence_mae": 0.273622065782547,
+  "baseline_mae": 0.273622065782547,
+  "improve": 0.11600955076060593
+}

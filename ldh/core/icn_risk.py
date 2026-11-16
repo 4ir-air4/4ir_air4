@@ -87,7 +87,7 @@ if not path.exists():
     st.stop()
 data, periods = load(TASKS[direction], path.stat().st_mtime)
 if direction == "출발":
-    st.warning("2025년 11월 1일 전후로 출발 지연 분포 전체가 약 6분 이동했습니다. 원인은 확인 중이며, 단절 후에는 점수가 실제 지연을 높게 잡습니다.", title="출발 자료 단절", icon=":material/warning:")
+    st.warning("2025년 11월 1일 전후로 출발 지연 분포 전체가 약 6분 이동했습니다. 원인은 확인하지 못했고, 단절 후에는 점수가 실제 지연을 높게 잡습니다.", title="출발 자료 단절", icon=":material/warning:")
 
 recent = periods.iloc[-1]
 st.caption(f"성능 지표는 최근 구간인 {recent['구간']} 기준입니다.")
@@ -113,7 +113,7 @@ st.dataframe(shown[["계획", "편명", "공항", "등급", "예측 점수", "�
              column_config={"계획": st.column_config.TextColumn("예정 시각", **small), "편명": st.column_config.TextColumn(**small), "공항": st.column_config.TextColumn(**small), "등급": st.column_config.TextColumn("위험 등급", **small),
                             "예측 점수": st.column_config.ProgressColumn("위험 점수", format="percent", min_value=0, max_value=1), "결과": st.column_config.TextColumn(**small)},
              alt=f"{day} 인천 {direction}편별 위험 등급과 실제 결과")
-st.caption("위험 점수가 높은 편부터 보여 줍니다. 이 시연의 예측 시점은 예정 시각 2시간 전이며, 실제 서비스의 예측 시점은 팀에서 정합니다. 결과 열은 다음 날 채웁니다.")
+st.caption("위험 점수가 높은 편부터 보여 줍니다. 이 시연의 예측 시점은 예정 시각 2시간 전이며, 실제 서비스의 예측 시점은 팀에서 정합니다.")
 
 st.subheader("위험 등급을 믿을 수 있는가")
 st.write("등급이 높을수록 실제 지연률도 높아야 합니다. 실전 기록에서도 이 순서가 유지되는지가 성공 기준입니다.")

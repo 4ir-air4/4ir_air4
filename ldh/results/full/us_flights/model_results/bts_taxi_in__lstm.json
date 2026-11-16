@@ -1,0 +1,23 @@
+{
+  "task": "bts_taxi_in",
+  "title": "택시인 시간 (분)",
+  "model": "LSTM",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 30518456,
+  "n_val": 6879484,
+  "n_test": 4608866,
+  "seconds": 753,
+  "fit_seconds": 736,
+  "tuned": false,
+  "mae": 3.493820905685425,
+  "rmse": 6.821534633636475,
+  "medae": 1.9811279773712158,
+  "r2": 0.2513827681541443,
+  "mean_mae": 4.521291732788086,
+  "baseline_mae": 4.521291732788086,
+  "improve": 0.22725161034213204
+}

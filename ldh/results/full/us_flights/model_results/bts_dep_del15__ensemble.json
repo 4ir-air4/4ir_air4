@@ -1,0 +1,31 @@
+{
+  "task": "bts_dep_del15",
+  "title": "출발 지연 여부 (15분 이상)",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "binary",
+  "n_train": 30590198,
+  "n_val": 6898743,
+  "n_test": 4624807,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "XGBoost",
+    "LSTM"
+  ],
+  "val_score": 0.67721805545401,
+  "val_score_single": 0.671241753393,
+  "seconds": 6246,
+  "fit_seconds": 5222,
+  "tuned": false,
+  "roc_auc": 0.8291891614584715,
+  "pr_auc": 0.7000263680243877,
+  "baseline_pr_auc": 0.23995400965213776,
+  "lift": 2.917335572092413,
+  "precision": 0.624025823929227,
+  "recall": 0.6252044395944639,
+  "f1": 0.6246145757655144,
+  "threshold": 0.310579438412999
+}
