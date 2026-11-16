@@ -78,7 +78,17 @@ ENV/
 
 # 정리한 데이터 폴더 (2026-11-11): 입력 자료와 결과. reference 에는 재배포 제한 자료가 있어 절대 올리지 않는다
 datasets/
-results/
+# 결과(2026-11-16): 화면이 읽는 가벼운 결과만 올린다. 저장 모델, 원 예측값, 큰 건별 예측(미국 운항·기상, OpenSky 재배포 제한)은 드라이브로 공유
+/ldh/results/*
+!/ldh/results/full/
+!/ldh/results/2026/
+/ldh/results/*/*/saved_models/
+/ldh/results/*/*/member_preds/
+/ldh/results/full/us_flights/pred_*.parquet
+/ldh/results/full/us_weather/pred_*.parquet
+/ldh/results/full/world_traffic/pred_*.parquet
+# 위 큰 예측의 화면용 무작위 표본(ldh/scripts/sample_preds.py)은 올린다
+!/ldh/results/full/*/pred_sample_*.parquet
 
 # =========================
 # ojh/ (JhonOh 작업 폴더)
@@ -86,6 +96,8 @@ results/
 ojh/models/*
 !ojh/models/train.py
 !ojh/models/train2.py
+# 화면용 학습 모델(2026-11-16, 압축 저장해 약 86MB). 재학습하면 joblib compress 로 저장해야 GitHub 100MB 한도를 넘지 않는다
+!ojh/models/saved/
 ojh/data/airport_demand/input/
 ojh/data/cache/*
 ojh/data/raw/

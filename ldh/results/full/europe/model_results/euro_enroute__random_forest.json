@@ -1,0 +1,23 @@
+{
+  "task": "euro_enroute",
+  "title": "관제 구역별 항공편당 항로 ATFM 지연(분)",
+  "model": "RandomForest",
+  "group": "과거 값, 요일",
+  "train_period": "2020-01~2025-09",
+  "test_period": "2026-04~2026-09",
+  "note": "",
+  "kind": "regression",
+  "n_train": 112362,
+  "n_val": 10008,
+  "n_test": 10248,
+  "seconds": 6,
+  "fit_seconds": 5,
+  "mae": 0.21661665946018202,
+  "rmse": 0.5211895958920233,
+  "medae": 0.04951027024915372,
+  "r2": 0.6206007069176888,
+  "mean_mae": 0.47956231236457825,
+  "persistence_mae": 0.23609822988510132,
+  "baseline_mae": 0.23609822988510132,
+  "improve": 0.08251468227610226
+}

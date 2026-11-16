@@ -1,0 +1,23 @@
+{
+  "task": "bts_dep_delay",
+  "title": "출발 지연 시간 (분)",
+  "model": "RandomForest",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 30590198,
+  "n_val": 6898743,
+  "n_test": 4624807,
+  "seconds": 205,
+  "fit_seconds": 178,
+  "tuned": false,
+  "mae": 21.07463826842461,
+  "rmse": 56.13164058864043,
+  "medae": 10.991201406392282,
+  "r2": 0.15836260881301445,
+  "mean_mae": 25.534603118896484,
+  "baseline_mae": 25.534603118896484,
+  "improve": 0.17466356652206383
+}

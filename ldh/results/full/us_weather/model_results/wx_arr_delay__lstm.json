@@ -1,0 +1,23 @@
+{
+  "task": "wx_arr_delay",
+  "title": "도착 지연 시간 (분)",
+  "model": "LSTM",
+  "group": "일정·혼잡·직전 운항·기상·기체",
+  "train_period": "2023-01~2025-09",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 18859344,
+  "n_val": 1728790,
+  "n_test": 4608866,
+  "seconds": 551,
+  "fit_seconds": 523,
+  "tuned": false,
+  "mae": 26.5129451751709,
+  "rmse": 57.90399169921875,
+  "medae": 16.686748504638672,
+  "r2": 0.1655762791633606,
+  "mean_mae": 29.932594299316406,
+  "baseline_mae": 29.932594299316406,
+  "improve": 0.11424499627229456
+}

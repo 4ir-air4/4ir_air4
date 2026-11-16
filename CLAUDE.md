@@ -2,14 +2,22 @@
 
 - 실행: `.venv/Scripts/python.exe -m streamlit run app.py` (시스템 파이썬에는 lightgbm·xgboost·tensorflow가 없다)
 - 내 작업은 모두 `ldh/` 안에 둔다(팀원 파일과 섞지 않는다). `core/`, `categories/`, `scripts/`(학습·평가·전처리),
-  `collect/`(인천 수집기), `tests/`, `docs/`, `notebooks/`, `config/`(tuned_params.json), `datasets/`·`results/`·`logs/`(아래, git 제외).
+  `collect/`(인천 수집기), `tests/`, `docs/`, `notebooks/`, `config/`(tuned_params.json), `datasets/`·`results/`·`logs/`(아래. `results`는 화면용 가벼운 결과만 git에 올리고 나머지는 git 제외).
   프로젝트 루트에서 모듈로 실행한다(예: `python -m ldh.scripts.run_models korea_ops:kac_delay_hour`, `python -m ldh.tests.test_collect_icn`).
-- 루트에는 `app.py`(메뉴), `requirements.txt`, `CLAUDE.md`, `.streamlit/config.toml`(밝은 테마, PR #9)과 사람별 폴더(`ldh/`, `ojh/`)만 둔다.
+- 루트에는 `app.py`(메뉴), `requirements.txt`, `CLAUDE.md`, `.streamlit/config.toml`(밝은 테마, PR #9), `.streamlit/secrets.toml.example`(실시간 지도용 OpenSky 키 이름, 값 없음)과 사람별 폴더(`ldh/`, `ojh/`)만 둔다.
+- 팀원이 저장소만 받아도 모든 화면이 나오도록 화면용 파일을 git에 올린다(2026-11-16).
+  - ldh: 결과 아래 참고. 미국 운항·기상, OpenSky 건별 예측은 5만 건 표본(`pred_sample_*`, `ldh/scripts/sample_preds.py`)만 올리고, 화면은 `Store.pred_path()`로 원본이 없으면 표본을 읽는다.
+  - ojh: `ojh/models/saved`(joblib zlib 압축, 약 86MB)와 `ojh/data/raw`의 `aircraftlive_counts.csv`·`opensky_counts.csv`(`git add -f`)를 올린다. `btstranstats_counts.csv`(353MB)는 빼며, 없으면 과거 화면은 테스트 구간만 그린다.
+  - 재학습하면 `joblib.dump(..., compress=("zlib", 6))`로 저장해야 한다. RandomForest가 압축 없이 97MB라 GitHub 100MB 한도에 걸린다.
+  - 실시간 지도는 각자 `.streamlit/secrets.toml`에 OpenSky 키를 넣어야 나온다. 키는 절대 커밋하지 않는다.
+  - 팀원 PR을 합친 뒤에는 `python -m ldh.tests.test_fresh_clone`으로 확인한다. git 파일만으로 모든 화면을 열어 오류, "파일 없음" 안내, 100MB 넘는 파일을 찾는다. 커밋 전이면 `--include-new`를 붙인다.
 - 팀원 JhonOh(ojh) 작업은 `ojh/`이고 배치는 JhonOh가 정한다(PR #6): `live_app.py`(실시간 항공기 화면)와 탭 파일, `fetch_*.py`, `data_collector.py`, `check_airport_data.py`가 `ojh/` 바로 아래, `models/`(train.py, train2.py, saved), `data/`. 팀원 파일은 옮기거나 이름을 바꾸지 않는다(다음 PR과 충돌). 루트 `app.py`는 JhonOh가 PR #9에서 통합 앱 AERO INSIGHT(상단·사이드 그룹 메뉴, 디자인 CSS)로 바꿨다. `ojh/`를 import 경로에 넣고, ojh 화면은 `ojh/views/`의 래퍼(실시간 지도·교통량 예측·공항 수요 예측)로 연다. ldh 카테고리는 `META["group"]`에 맞는 메뉴 그룹에 자동으로 붙는다. app.py 화면 구성은 JhonOh 쪽을 기준으로 한다.
-- 데이터 폴더(git 제외):
+- 데이터 폴더(대부분 git 제외, 화면용 결과만 예외):
   - `ldh/datasets/` 내 입력 자료: `raw/bts_zip`(BTS 원본 zip), `raw/reference`(받은 참고 자료, 재배포 제한 있음), `raw/icn_live`(인천 수집),
     `processed/bts_parquet`(prepare_data 결과, 2020년 이후), `processed/cache`(학습용 캐시)
   - `ldh/results/` 내 결과: `full`(전체 학습), `2026`(2026년 학습), `legacy_models`(예전 scripts/train.py 모델)
+    - 2026-11-16부터 `full`·`2026`의 화면용 결과(요약·지표 JSON, 집계, 다음 기간 예측, 중요도·SHAP, 통계표, 한국·유럽·안전 건별 예측)는 git에 올린다(약 31MB). 팀원은 받기만 하면 ldh 화면이 나온다.
+    - 저장 모델(`saved_models`), 원 예측값(`member_preds`), 미국 운항·기상·OpenSky 건별 예측(약 2.7GB, OpenSky 재배포 제한)과 `legacy_models`, 시험 결과 JSON은 계속 git 제외이고 드라이브로 공유한다. 규칙은 `.gitignore`의 `/ldh/results/` 부분.
 - 공개하면 안 되는 것: `.streamlit/secrets.toml`과 `.env`(키)는 읽거나 출력하거나 커밋하지 않는다. `ldh/datasets/raw/reference`는 커밋하지 않는다(EUROCONTROL 비상업 한정, OpenSky 재배포 제한).
 - 인천 수집기는 `ldh/collect/collect_icn.py`다. 윈도우 예약 작업 3개(`4ir_icn_status`, `4ir_icn_closing`, `4ir_icn_backup`)가 이 경로로 실행하므로, 옮기면 예약 작업 인자도 바꿔야 한다.
   수집 3개는 사용자 요청으로 2026-11-16에 멈추도록 끝 시각을 걸었다(수집·마감 08:59, 백업 09:30). 다시 모으려면 트리거의 끝 시각을 지운다.

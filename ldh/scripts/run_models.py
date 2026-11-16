@@ -10,7 +10,7 @@ import threading
 import time
 import traceback
 
-from ldh.core.models import MODEL_NAMES, MODELS, merge_summary, only_year, run_model, self_check
+from ldh.core.models import EXTRA_MODELS, MODEL_NAMES, MODELS, merge_summary, only_year, run_model, self_check
 from ldh.core.registry import CATEGORY_DIR, discover
 from ldh.core.store import OUTPUT_DIR, Store
 
@@ -37,9 +37,9 @@ if __name__ == "__main__":
     resave = "--resave" in sys.argv
     year = next((int(a.split("=", 1)[1]) for a in sys.argv[1:] if a.startswith("--year=")), None)
     chosen = next((a.split("=", 1)[1].split(",") for a in sys.argv[1:] if a.startswith("--models=")), MODELS)
-    unknown = set(chosen) - set(MODELS)
+    unknown = set(chosen) - set(MODELS) - set(EXTRA_MODELS)
     if unknown:
-        raise SystemExit(f"알 수 없는 모델: {unknown}. 가능: {MODELS}")
+        raise SystemExit(f"알 수 없는 모델: {unknown}. 가능: {MODELS + EXTRA_MODELS}")
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     picks = {}  # slug -> 고른 과제 (비면 전부). 'slug:task' 로 과제 하나만 고를 수 있다
     for a in args:

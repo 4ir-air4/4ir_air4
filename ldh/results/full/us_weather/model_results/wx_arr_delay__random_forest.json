@@ -1,0 +1,22 @@
+{
+  "task": "wx_arr_delay",
+  "title": "도착 지연 시간 (분)",
+  "model": "RandomForest",
+  "group": "일정·혼잡·직전 운항·기상·기체",
+  "train_period": "2023-01~2025-09",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 18859344,
+  "n_val": 1728790,
+  "n_test": 4608866,
+  "seconds": 722,
+  "fit_seconds": 641,
+  "mae": 25.33801197243069,
+  "rmse": 57.751704659064345,
+  "medae": 15.832180306338824,
+  "r2": 0.16995951039476298,
+  "mean_mae": 29.932594299316406,
+  "baseline_mae": 29.932594299316406,
+  "improve": 0.15349763140947148
+}

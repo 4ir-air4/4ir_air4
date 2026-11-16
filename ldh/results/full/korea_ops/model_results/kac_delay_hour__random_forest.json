@@ -1,0 +1,23 @@
+{
+  "task": "kac_delay_hour",
+  "title": "시간대별 지연 편수 (월 단위)",
+  "model": "RandomForest",
+  "group": "과거 값",
+  "train_period": "2020-01~2024-06",
+  "test_period": "2025-01~2025-05",
+  "note": "",
+  "kind": "regression",
+  "n_train": 2675,
+  "n_val": 451,
+  "n_test": 357,
+  "seconds": 0,
+  "fit_seconds": 0,
+  "mae": 27.907965612497847,
+  "rmse": 36.16195245749912,
+  "medae": 22.73531721904986,
+  "r2": 0.8184992367657979,
+  "mean_mae": 70.23155212402344,
+  "persistence_mae": 21.983192443847656,
+  "baseline_mae": 21.983192443847656,
+  "improve": -0.26951377438850255
+}

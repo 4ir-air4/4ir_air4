@@ -1,0 +1,30 @@
+{
+  "task": "euro_all_pre",
+  "title": "공항별 출발편당 전체 사전 지연(분)",
+  "group": "과거 값, 요일",
+  "train_period": "2020-01~2025-08",
+  "test_period": "2026-03~2026-08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 181245,
+  "n_val": 16855,
+  "n_test": 16879,
+  "model": "앙상블",
+  "members": [
+    "LightGBM",
+    "LSTM"
+  ],
+  "val_score": -5.600782228288003,
+  "val_score_single": -5.623846790592202,
+  "seconds": 194,
+  "fit_seconds": 193,
+  "tuned": false,
+  "mae": 4.921717661984574,
+  "rmse": 10.388754190687477,
+  "medae": 3.2551826254600655,
+  "r2": 0.35215338298720567,
+  "mean_mae": 7.232043266296387,
+  "persistence_mae": 5.927638530731201,
+  "baseline_mae": 5.927638530731201,
+  "improve": 0.16970010292151572
+}

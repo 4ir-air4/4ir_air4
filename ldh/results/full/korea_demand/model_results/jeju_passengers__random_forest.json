@@ -1,0 +1,23 @@
+{
+  "task": "jeju_passengers",
+  "title": "제주공항 일별 여객",
+  "model": "RandomForest",
+  "group": "과거 값, 달력",
+  "train_period": "2023-01~2024-09",
+  "test_period": "2025-01~10",
+  "note": "",
+  "kind": "regression",
+  "n_train": 639,
+  "n_val": 92,
+  "n_test": 304,
+  "seconds": 0,
+  "fit_seconds": 0,
+  "mae": 4107.525575552716,
+  "rmse": 6398.890881584324,
+  "medae": 2864.3283528748143,
+  "r2": 0.4975090536590674,
+  "mean_mae": 6844.74609375,
+  "persistence_mae": 5024.7861328125,
+  "baseline_mae": 5024.7861328125,
+  "improve": 0.1825471837039898
+}

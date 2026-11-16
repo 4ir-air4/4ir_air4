@@ -1,0 +1,23 @@
+{
+  "task": "bts_air_time",
+  "title": "실제 비행 시간 (분)",
+  "model": "RandomForest",
+  "group": "일정·혼잡·직전 운항",
+  "train_period": "2020-01~2024-12",
+  "test_period": "2026-01~08",
+  "note": "",
+  "kind": "regression",
+  "n_train": 30518456,
+  "n_val": 6879484,
+  "n_test": 4608866,
+  "seconds": 231,
+  "fit_seconds": 208,
+  "tuned": false,
+  "mae": 6.456858433129693,
+  "rmse": 9.195432206299024,
+  "medae": 4.780374123778827,
+  "r2": 0.9835265506974704,
+  "mean_mae": 53.913818359375,
+  "baseline_mae": 53.913818359375,
+  "improve": 0.8802374116763533
+}

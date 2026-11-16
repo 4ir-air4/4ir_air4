@@ -16,7 +16,9 @@ from sklearn.metrics import (accuracy_score, average_precision_score, f1_score, 
                              precision_recall_curve, precision_score, r2_score, recall_score, roc_auc_score, root_mean_squared_error)
 
 MODELS = ["lightgbm", "xgboost", "random_forest", "lstm"]
-MODEL_NAMES = {"lightgbm": "LightGBM", "xgboost": "XGBoost", "random_forest": "RandomForest", "lstm": "LSTM", "ensemble": "앙상블"}  # ensemble 은 학습하지 않고 ldh/scripts/ensemble.py 가 만든다
+EXTRA_MODELS = ["lgbm_delta"]  # 기본 학습 목록에 없다. 검증에서 이긴 과제만 --models=lgbm_delta 로 학습 (WORK_LOG 2026-11-16)
+MODEL_NAMES = {"lightgbm": "LightGBM", "xgboost": "XGBoost", "random_forest": "RandomForest", "lstm": "LSTM", "lgbm_delta": "변화량 LightGBM",
+               "ensemble": "앙상블"}  # ensemble 은 학습하지 않고 ldh/scripts/ensemble.py 가 만든다
 TRAIN, VAL, TEST, FUTURE = 0, 1, 2, 3
 THREADS = min(8, os.cpu_count() or 8)  # 코랩은 코어가 적어 8개를 띄우면 오히려 느려진다
 TUNED_PATH = Path(__file__).resolve().parents[1] / "config" / "tuned_params.json"  # ldh/config
@@ -290,6 +292,32 @@ def fit_lstm(d, kind, tr, val, seed=0):
     return predict
 
 
+def delta_features(d, rows):
+    """변화량 LightGBM 입력: 기존 입력(범주 코드, 과거 값) + 달, 직전 달 변화, 작년 같은 달 변화(양·비율). trial_weak_tasks.lgbm 과 같은 파생값."""
+    col = {c: i for i, c in enumerate(d.columns)}
+    X = np.asarray(d.X[rows], dtype=np.float32)
+    lag = lambda k: X[:, col[f"lag{k}"]]  # noqa: E731
+    month = pd.Series(np.asarray(d.period)[rows]).astype(str).str[5:7].astype(int).to_numpy(np.float32)
+    d12 = lag(12) - lag(13)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        r12 = np.where(np.abs(lag(13)) > 1e-9, d12 / lag(13), np.nan)
+    return np.column_stack([X, month, lag(1) - lag(2), d12, r12]).astype(np.float32)
+
+
+def fit_delta_lightgbm(d, tr, val):
+    """d 는 y 가 이미 변화량인 Data. 설정은 검증 비교에 쓴 trial_weak_tasks.lgbm(delta=True) 와 같다."""
+    import lightgbm as lgb
+    params = {"objective": "l1", "learning_rate": 0.05, "num_leaves": 15, "min_data_in_leaf": 20, "feature_fraction": 0.8, "verbosity": -1, "seed": 0, "num_threads": 4}
+    train_set = lgb.Dataset(delta_features(d, tr), np.asarray(d.y[tr]), categorical_feature=list(d.cat_idx))
+    valid_set = lgb.Dataset(delta_features(d, val), np.asarray(d.y[val]), categorical_feature=list(d.cat_idx), reference=train_set)
+    model = lgb.train(params, train_set, 2000, valid_sets=[valid_set], callbacks=[lgb.early_stopping(100, verbose=False)])
+
+    def predict(rows):
+        return model.predict(delta_features(d, rows))
+    predict.save = lambda folder: save_pkl(model, folder)
+    return predict
+
+
 def save_pkl(model, folder):
     # 부스터는 피클 안에 자체 모델 문자열을 담으므로 라이브러리 버전이 조금 달라도 읽힌다
     import joblib
@@ -336,6 +364,11 @@ def load_model(store, task, name):
 
         def predict(d, rows):
             return lstm_predict(model, norm, meta["kind"], d, rows)
+    elif name == "lgbm_delta":
+        model = load_tree(folder, "lightgbm")
+
+        def predict(d, rows):  # 변화량. 아래 meta["delta"] 처리가 직전 값을 더한다
+            return model.predict(delta_features(d, rows))
     else:
         model = load_tree(folder, name)
 
@@ -376,9 +409,13 @@ def multiclass_scores(y, proba):
 
 def train_one(d, kind, name, task=None, seed=0):
     """task 를 주면 tuned_params.json 의 LightGBM 설정을 쓴다. seed 는 LSTM 에만 쓴다(트리 모델은 0 고정)."""
+    if name == "lgbm_delta" and not d.delta:
+        raise ValueError("변화량 LightGBM 은 delta=True 과제에만 쓴다")
     if d.delta:
         change = replace(d, y=np.asarray(d.y) - np.asarray(d.baseline), delta=False)
-        if name == "lightgbm":
+        if name == "lgbm_delta":
+            inner = fit_delta_lightgbm(change, np.flatnonzero(change.split == TRAIN), np.flatnonzero(change.split == VAL))
+        elif name == "lightgbm":
             # 튜닝값은 값 자체를 맞출 때 고른 것이라 쓰지 않는다. 변화량은 큰 값이 튀어 평가 지표(MAE)에 맞춘 L1 이 낫다 (trial_weak_tasks)
             tr, val = np.flatnonzero(change.split == TRAIN), np.flatnonzero(change.split == VAL)
             inner = fit_lightgbm(change, kind, tr, val, tuned={"objective": "l1", "metric": "l1", "learning_rate": 0.05})
@@ -507,4 +544,6 @@ def self_check():
     numbers = Data(X=empty, columns=["a"], y=empty[:, 0], split=np.array([TRAIN] * 6), period=np.array([202512, 202601, 202601, 202602, 202603, 202603]))
     assert only_year(numbers, 2026).split.tolist() == [-1, TRAIN, TRAIN, VAL, TEST, TEST], "정수 YYYYMM 기간"
     assert only_year(numbers, 2024) is None, "자료가 없는 해"
+    one = Data(X=np.array([[0, 10, 8, 5, 4]], np.float32), columns=["k", "lag1", "lag2", "lag12", "lag13"], y=np.zeros(1), split=np.array([TRAIN]), period=np.array(["2026-03"], dtype=object))
+    assert delta_features(one, np.array([0]))[0, 5:].tolist() == [3, 2, 1, 0.25], "달, 직전 달 변화, 작년 변화량·비율"
     gc.collect()
