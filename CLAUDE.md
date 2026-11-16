@@ -17,7 +17,7 @@
     `processed/bts_parquet`(prepare_data 결과, 2020년 이후), `processed/cache`(학습용 캐시)
   - `ldh/results/` 내 결과: `full`(전체 학습), `2026`(2026년 학습), `legacy_models`(예전 scripts/train.py 모델)
     - 2026-11-16부터 `full`·`2026`의 화면용 결과(요약·지표 JSON, 집계, 다음 기간 예측, 중요도·SHAP, 통계표, 한국·유럽·안전 건별 예측)는 git에 올린다(약 31MB). 팀원은 받기만 하면 ldh 화면이 나온다.
-    - 저장 모델(`saved_models`), 원 예측값(`member_preds`), 미국 운항·기상·OpenSky 건별 예측(약 2.7GB, OpenSky 재배포 제한)과 `legacy_models`, 시험 결과 JSON은 계속 git 제외이고 드라이브로 공유한다. 규칙은 `.gitignore`의 `/ldh/results/` 부분.
+    - 저장 모델(`saved_models`), 원 예측값(`member_preds`), 미국 운항·기상·OpenSky 건별 예측(약 2.7GB, OpenSky 재배포 제한), `legacy_models`의 하위 폴더, 시험 결과 JSON은 계속 git 제외(`legacy_models` 최상위 pkl 11개는 미국 운항 '직접 예측' 보기용으로 압축해 올린다)이고 드라이브로 공유한다. 규칙은 `.gitignore`의 `/ldh/results/` 부분.
 - 공개하면 안 되는 것: `.streamlit/secrets.toml`과 `.env`(키)는 읽거나 출력하거나 커밋하지 않는다. `ldh/datasets/raw/reference`는 커밋하지 않는다(EUROCONTROL 비상업 한정, OpenSky 재배포 제한).
 - 인천 수집기는 `ldh/collect/collect_icn.py`다. 윈도우 예약 작업 3개(`4ir_icn_status`, `4ir_icn_closing`, `4ir_icn_backup`)가 이 경로로 실행하므로, 옮기면 예약 작업 인자도 바꿔야 한다.
   수집 3개는 사용자 요청으로 2026-11-16에 멈추도록 끝 시각을 걸었다(수집·마감 08:59, 백업 09:30). 다시 모으려면 트리거의 끝 시각을 지운다.

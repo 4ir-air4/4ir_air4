@@ -82,6 +82,9 @@ datasets/
 /ldh/results/*
 !/ldh/results/full/
 !/ldh/results/2026/
+# 미국 운항 화면 '직접 예측' 보기가 읽는 예전 모델 11개(압축 약 13MB). 하위 폴더(enhanced, metrics)는 제외
+!/ldh/results/legacy_models/
+/ldh/results/legacy_models/*/
 /ldh/results/*/*/saved_models/
 /ldh/results/*/*/member_preds/
 /ldh/results/full/us_flights/pred_*.parquet

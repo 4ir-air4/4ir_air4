@@ -45,12 +45,38 @@ time_chart(right, trend, x="ym", y="여객 천 명당 지연 편수", color="국
 st.markdown("**시간대별 누적 지연 편수**")
 st.bar_chart(load(store, "kac_hour"), x="시간대", y="지연편", color="국내_국제", stack=False, y_label="편", alt="시간대별 지연 편수")
 
-st.subheader("공항별 지연·결항 현황 (집계 기간 불명)")
+st.subheader("공항별 지연·결항 원인 (집계 기간 불명)")
+# 원인 순서와 색은 두 그래프에서 같게 고정한다(같은 원인 = 같은 색). dataviz 기본 범주 팔레트 1~4번, 이웃 색 구분 검증 통과
+CAUSES = {"기상": "#2a78d6", "연결편": "#eb6834", "정비": "#1baf7a", "기타": "#eda100"}
+CAUSE_WORD = {"기상": "기상", "연결": "연결편", "정비": "정비", "기타": "기타"}  # 원본 열 이름의 단어 -> 원인
+
+
+def by_airport(table, total_word):
+    """원본 열 이름(공개 시점마다 조금 다름)을 원인 4개로 묶고, 국내·국제를 공항별로 더한다."""
+    d = load(store, table)
+    causes = {c: v for c in d.columns for k, v in CAUSE_WORD.items() if k in c}
+    total = next(c for c in d.columns if c.startswith(total_word))
+    out = d.rename(columns={**causes, total: total_word}).groupby("공항", as_index=False)[[total_word, *CAUSES]].sum()
+    return out[out[total_word] > 0].sort_values(total_word, ascending=False, ignore_index=True)  # 편수 0인 공항(무안 등)은 빈 막대라 뺀다
+
+
+delay, cancel = by_airport("airport_delay", "지연편수"), by_airport("airport_cancel", "결항편수")
+share = lambda t, k: t[k].sum() / t[list(CAUSES)].sum().sum()  # noqa: E731
+with st.container(horizontal=True):
+    st.metric("지연 중 연결편 원인", f"{share(delay, '연결편'):.0%}", border=True, help="앞 편이 늦게 도착해 다음 편이 늦게 떠나는 경우입니다.")
+    st.metric("결항 중 기상 원인", f"{share(cancel, '기상'):.0%}", border=True)
+    st.metric("지연 중 기상 원인", f"{share(delay, '기상'):.0%}", border=True)
 left, right = st.columns(2)
-left.markdown("**지연**")
-left.dataframe(load(store, "airport_delay"), hide_index=True, alt="공항별 지연 현황")
-right.markdown("**결항**")
-right.dataframe(load(store, "airport_cancel"), hide_index=True, alt="공항별 결항 현황")
+for col, t, what in ((left, delay, "지연"), (right, cancel, "결항")):
+    col.markdown(f"**{what} 원인 구성비** (위쪽일수록 {what} 편수가 많은 공항)")
+    col.bar_chart(t, x="공항", y=list(CAUSES), color=list(CAUSES.values()), stack="normalize", horizontal=True, sort=False,
+                  x_label="공항", y_label="구성비", height=420, alt=f"한국공항공사 공항별 {what} 원인 구성비(기상, 연결편, 정비, 기타)")
+st.caption("지연은 대부분 연결편(앞 편 지연이 이어짐) 때문이고, 결항은 대부분 기상 때문입니다. 인천 지연 모델이 같은 편명의 이전 지연 이력을 쓰고, "
+           "결항 모델에서 기상 입력이 성능을 크게 올리는(미국 결항 PR-AUC 0.051 → 0.218) 근거입니다. 자료: 한국공항공사 공항별 지연·결항 현황(국내선·국제선 합계, 공개 자료에 집계 기간이 적혀 있지 않음).")
+with st.expander("공항별 편수 표로 보기"):
+    left, right = st.columns(2)
+    left.dataframe(delay, hide_index=True, alt="공항별 지연 편수와 원인별 건수")
+    right.dataframe(cancel, hide_index=True, alt="공항별 결항 편수와 원인별 건수")
 
 st.subheader("모델 성능")
 model_tables(summary["models"])
