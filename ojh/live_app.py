@@ -131,7 +131,8 @@ def load_aircraft_data():
             remaining_credits = response.headers.get(
                 "X-Rate-Limit-Remaining", "정보 없음"
             )
-            print(f"📌 [OpenSky] 오늘 남은 크레딧(X-Rate-Limit-Remaining): {remaining_credits}")
+            # Windows 콘솔(cp949)은 이모지를 못 써서 print 가 예외를 내므로 서버 로그에는 이모지를 쓰지 않는다
+            print(f"[OpenSky] 오늘 남은 크레딧(X-Rate-Limit-Remaining): {remaining_credits}")
 
             result = response.json()
 
@@ -156,7 +157,7 @@ def load_aircraft_data():
         # 모두 실패하면 마지막으로 받아 둔 데이터를 보여 준다 (기준 시각 문구로 오래된 데이터인지 알 수 있다)
         if STATES_CACHE_PATH.exists():
 
-            print(f"⚠️ [OpenSky] 조회 실패, 저장된 마지막 데이터를 사용합니다: {last_error}")
+            print(f"[주의] [OpenSky] 조회 실패, 저장된 마지막 데이터를 사용합니다: {last_error}")
 
             result = json.loads(STATES_CACHE_PATH.read_text(encoding="utf-8"))
 
@@ -1191,12 +1192,10 @@ def show_live_map():
 
     st.subheader("🌍 실시간 항공기 위치")
 
-    col_btn1, col_btn2 = st.columns([1, 4])
-    with col_btn1:
-        if st.button("🔄 데이터 새로고침"):
-            load_aircraft_data.clear()
-            get_access_token.clear()
-            st.rerun()
+    if st.button("🔄 데이터 새로고침"):  # 컬럼에 넣으면 좁은 화면에서 글자가 잘려 단독 버튼으로 둔다
+        load_aircraft_data.clear()
+        get_access_token.clear()
+        st.rerun()
 
     try:
 

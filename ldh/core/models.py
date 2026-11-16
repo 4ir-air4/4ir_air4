@@ -409,12 +409,13 @@ def run_model(store, task, title, kind, d, name, seed=0):
     start = time.time()
     predict = train_one(d, kind, name, task, seed)
     fit_seconds = time.time() - start
-    val, test = np.flatnonzero(d.split == VAL), np.flatnonzero(d.split == TEST)
-    p = predict(test)
+    val, test, future = (np.flatnonzero(d.split == s) for s in (VAL, TEST, FUTURE))
+    p, p_val = predict(test), predict(val)
+    p_future = predict(future) if len(future) else np.empty(0, np.float32)
     y = np.asarray(d.y[test])
     threshold = None
     if kind == "binary":
-        pv, rv, tv = precision_recall_curve(np.asarray(d.y[val]), predict(val))
+        pv, rv, tv = precision_recall_curve(np.asarray(d.y[val]), p_val)
         threshold = float(tv[np.argmax((2 * pv * rv / np.maximum(pv + rv, 1e-12))[:-1])])
         scores = binary_scores(y, p, threshold)
     elif kind == "regression":
@@ -427,13 +428,21 @@ def run_model(store, task, title, kind, d, name, seed=0):
            "tuned": name == "lightgbm" and tuned_params(task) is not None, **scores}
     save_model(store, task, name, kind, d, predict, threshold)
     save_predictions(store, task, name, kind, d, test, p, threshold)
-    future = np.flatnonzero(d.split == FUTURE)
     if len(future):
-        save_predictions(store, task, name, kind, d, future, predict(future), threshold, prefix="forecast")
+        save_predictions(store, task, name, kind, d, future, p_future, threshold, prefix="forecast")
+    # 앙상블이 모델을 다시 불러와 예측하지 않도록 원 예측값을 남긴다 (ldh/scripts/ensemble.py)
+    member = member_path(store, task, name)
+    member.parent.mkdir(parents=True, exist_ok=True)
+    np.savez(member, val=np.asarray(p_val, np.float32), test=np.asarray(p, np.float32), future=np.asarray(p_future, np.float32))
     results = store.dir / "model_results"
     results.mkdir(parents=True, exist_ok=True)
     (results / f"{task}__{name}.json").write_text(json.dumps(row, indent=2, ensure_ascii=False), encoding="utf-8")
     return row
+
+
+def member_path(store, task, name):
+    """run_model 이 남기는 검증·평가·다음 기간 원 예측값(npz) 경로."""
+    return store.dir / "member_preds" / f"{task}__{name}.npz"
 
 
 def save_predictions(store, task, name, kind, d, rows, p, threshold, prefix="pred"):

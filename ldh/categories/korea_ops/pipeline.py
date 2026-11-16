@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ldh.core.data import REF, START_YEAR, read_csv_any, read_csv_bytes
+from ldh.core.data import REF, START_YEAR, read_asos, read_csv_any, read_csv_bytes
 from ldh.core.ml import binary_result, encode, lag_regression, model_row, self_check
 
 KOREA = REF / "korea"
@@ -24,9 +24,10 @@ def delay_minutes(plan, actual):
     return (minutes(actual) - minutes(plan) + 720) % 1440 - 720
 
 
-# shortcut: 11-06 하루치를 학습 자료와 같은 편끼리 비교한 값. API는 게이트 도착·출발, 학습 자료는 착륙·이륙 시각이다(ldh/docs/WORK_LOG.md 2026-11-10 '인천 시각 차이 원인').
-# 2026 하반기 학습 자료가 공개되면 같은 날짜·같은 편으로 다시 정한다
-LIVE_OFFSET = {"도착": -13, "출발": 15}
+# shortcut: 11-06~11-15 수집 10일치를 2026-03~06 학습 자료와 같은 편명끼리 비교한 값(날짜별 도착 -10~-13, 출발 +13~+16).
+# API는 게이트 도착·출발, 학습 자료는 착륙·이륙 시각이다(ldh/docs/WORK_LOG.md 2026-11-10 '인천 시각 차이 원인', 2026-11-16 재추정).
+# 기준 기간을 2025-11로 잡으면 -9/+16.5라 몇 분은 흔들린다. 2026 하반기 학습 자료가 공개되면 같은 날짜·같은 편으로 다시 정한다
+LIVE_OFFSET = {"도착": -12, "출발": 15}
 
 
 def live_flights(root=LIVE):
@@ -87,9 +88,7 @@ def load_kac():
 
 
 def rksi_weather():
-    cols = {"station": "string", "valid": "string", "tmpf": "float32", "sknt": "float32", "gust": "float32",
-            "vsby": "float32", "p01i": "float32", "skyc1": "string", "skyl1": "float32", "wxcodes": "string"}
-    wx = pd.read_csv(REF / "weather_asos/asos_14airports_2024_2025.csv", usecols=list(cols), dtype=cols, na_values=["M", "T"])
+    wx = read_asos("asos_14airports_2024_2025")
     wx = wx[wx.station == "RKSI"].copy()
     wx["valid"] = pd.to_datetime(wx.valid, format="%Y-%m-%d %H:%M")
     wx["sky_cover"] = wx.skyc1.map(SKY).astype("float32")

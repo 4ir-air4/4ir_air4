@@ -1,6 +1,6 @@
 """공항 이용객 데이터·모델 점검표 (읽기만 하고 아무것도 바꾸지 않습니다).
 
-    python check_airport_data.py
+    python ojh/check_airport_data.py
 
 수집(fetch_airports.py) 뒤에는 '데이터' 부분이, 학습(models/train2.py) 뒤에는 '모델' 부분까지 나옵니다.
 [주의] 표시가 붙은 항목을 위에서부터 확인하세요.
@@ -35,7 +35,7 @@ def flag(message):
 passengers_path = DATA_DIR / "airport_demand_passengers_monthly.csv"
 gdp_path = DATA_DIR / "airport_demand_gdp_growth.csv"
 if not passengers_path.exists():
-    raise SystemExit(f"{passengers_path} 이 없습니다. 먼저 python fetch_airports.py 를 실행하세요.")
+    raise SystemExit(f"{passengers_path} 이 없습니다. 먼저 python ojh/fetch_airports.py 를 실행하세요.")
 
 df = pd.read_csv(passengers_path, parse_dates=["date"])
 title("1. 데이터 개요")
@@ -93,7 +93,7 @@ if gdp_path.exists():
     if missing:
         flag(f"GDP가 없는 국가: {missing} (평균값으로 대체됩니다)")
 else:
-    flag("GDP 파일이 없습니다. GDP 피처가 평균값으로 대체됩니다 (python fetch_airports.py --gdp-only).")
+    flag("GDP 파일이 없습니다. GDP 피처가 평균값으로 대체됩니다 (python ojh/fetch_airports.py --gdp-only).")
 
 comparison_path = SAVE_DIR / "model_comparison.csv"
 if comparison_path.exists():
@@ -125,7 +125,7 @@ if comparison_path.exists():
         print("\n  Test MAPE가 큰 공항 5개")
         print(per.sort_values("Test MAPE (%)", ascending=False).head(5)[["airport", "airport_name", "Test MAPE (%)"]].round(2).to_string(index=False))
 else:
-    print("\n(모델 점검은 python models/train2.py 로 학습한 뒤 다시 실행하면 나옵니다.)")
+    print("\n(모델 점검은 python ojh/models/train2.py 로 학습한 뒤 다시 실행하면 나옵니다.)")
 
 title("요약")
 print(f"  [주의] 항목 {len(warnings)}개" if warnings else "  눈에 띄는 문제가 없습니다.")
