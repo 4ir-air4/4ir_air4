@@ -1,6 +1,7 @@
 """팀원이 저장소를 새로 받았을 때 모든 화면이 나오는지 점검한다. 팀원 PR을 합친 뒤에 돌린다.
 
 git 에 올라간 파일만 임시 폴더에 복사해 "새로 받은 상태"를 만들고, app.py 의 모든 화면을 AppTest 로 연다.
+화면마다 선택 상자·라디오·버튼형 선택(앞 6개, 선택지 12개까지)을 하나씩 바꿔 다른 보기도 연다. 화면이 많아 몇 분 걸린다.
 - 실패: 화면 오류, "파일·모델이 없다"는 안내, 100MB 넘는 파일(GitHub 한도)
 - 알림: 50MB 넘는 파일, 키가 필요한 안내(실시간 지도 OpenSky 키는 각자 .streamlit/secrets.toml 에 넣는다)
 실행: python -m ldh.tests.test_fresh_clone [--include-new]   (--include-new: 아직 커밋 안 한 새 파일도 포함, 커밋 전 점검용)
@@ -21,15 +22,57 @@ NEEDS_KEY = re.compile(r"인증 정보|secrets\.toml")
 # 임시 폴더를 작업 폴더로 한 별도 프로세스에서 돈다. 그래야 import 가 원래 프로젝트가 아니라 복사본의 ldh·ojh 를 쓴다
 PAGES_CODE = r"""
 import glob, json, re
+from streamlit.runtime.state.common import TESTING_KEY
 from streamlit.testing.v1 import AppTest
 core = re.findall(r'st\.Page\("([^"]+)"', open("app.py", encoding="utf-8").read())
 pages = core + [p.replace("\\", "/") for p in sorted(glob.glob("ldh/categories/*/page.py")) if "_template" not in p]
+KINDS = ("selectbox", "radio", "segmented_control", "pills")
+
+
+def choose(kind, w, label):
+    # AppTest 는 고른 값을 format_func 로 한 번 더 바꿔 보내서("1월" -> "1월월") 표시 이름으로는 못 고른다.
+    # 실제 브라우저처럼 표시 이름을 그대로 보내도록 이 위젯의 변환을 잠시 그대로 두기로 바꾼다
+    w.root.session_state[TESTING_KEY][w.id] = lambda x: x
+    if kind == "pills" and not w._is_single_select:
+        return w.set_value([label])
+    return w.set_value(label)
+
+
+def seen(at, where):
+    # 선택지를 바꾼 경우 어느 선택에서 나온 안내인지 앞에 붙인다
+    tag = f"[{where}] " if where else ""
+    return ([tag + str(e.value)[:300] for e in at.exception], [tag + str(m.value) for kind in (at.error, at.warning, at.info) for m in kind])
+
+
+def widgets(at):
+    return [(kind, w) for kind in KINDS for w in getattr(at, kind)]
+
+
 out = []
 for p in dict.fromkeys(pages):
     at = AppTest.from_file("app.py", default_timeout=300).run()
     at.switch_page(p).run()
-    msgs = [str(m.value) for kind in (at.error, at.warning, at.info) for m in kind]
-    out.append({"page": p, "errors": [str(e.value)[:300] for e in at.exception], "messages": msgs, "tables": len(at.dataframe), "metrics": len(at.metric)})
+    errors, msgs = seen(at, "")
+    tables, metrics, tried = len(at.dataframe), len(at.metric), 0
+    # 화면 안의 선택 상자·라디오 선택지를 하나씩 바꿔 연다(첫 보기만 열면 다른 보기의 파일 누락을 놓친다)
+    for i in range(min(len(widgets(at)), 6)):
+        count = len(widgets(at)[i][1].options) if i < len(widgets(at)) else 0
+        for k in range(min(count, 12)):
+            ws = widgets(at)
+            if i >= len(ws) or k >= len(ws[i][1].options):
+                break
+            kind, w = ws[i]
+            label = f"{w.label}={w.options[k]}"
+            try:
+                choose(kind, w, w.options[k]).run()
+            except Exception as exc:
+                errors.append(f"[{label}] 선택 실패: {str(exc)[:150]}")
+                continue
+            tried += 1
+            e, m = seen(at, label)
+            errors += e
+            msgs += m
+    out.append({"page": p, "errors": list(dict.fromkeys(errors)), "messages": list(dict.fromkeys(msgs)), "tables": tables, "metrics": metrics, "tried": tried})
 print("@@" + json.dumps(out, ensure_ascii=False))
 """
 
@@ -72,7 +115,8 @@ def main(include_new):
     for page in pages:
         page_fails, notes = classify(page)
         fails += [f"{page['page']}: {x}" for x in page_fails]
-        print(f"{'실패' if page_fails else '정상'} {page['page']} (표 {page['tables']}, 지표 {page['metrics']})" + "".join(f"\n  {x}" for x in page_fails + notes))
+        print(f"{'실패' if page_fails else '정상'} {page['page']} (표 {page['tables']}, 지표 {page['metrics']}, 선택지 {page.get('tried', 0)}개 확인)"
+              + "".join(f"\n  {x}" for x in page_fails + list(dict.fromkeys(notes))))
     if fails:
         raise SystemExit(f"\n새로 받은 상태에서 문제 {len(fails)}건:\n" + "\n".join(fails))
     print(f"\n화면 {len(pages)}개 모두 정상입니다.")

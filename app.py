@@ -262,8 +262,9 @@ def sidebar(items, order, current):
         st.divider()
         st.markdown(
             '<div class="ai-credit"><b>TEAM 4IR-AIR4</b><br>'
-            '실시간 관제 · 교통량 · 공항 수요 예측 — <b>ojh</b><br>'
-            '한국 · 미국 · 유럽 · 안전 분석 — <b>ldh</b><br>'
+            '실시간 관제 · 교통량 · 공항 수요 예측 — <b>오정현</b><br>'
+            '한국 · 미국 · 유럽 · 안전 분석 — <b>이동형</b><br>'
+            '결항 요인 · 국내 여객 수요 분석 — <b>최효선</b><br>'
             '데이터: OpenSky · BTS · EUROCONTROL · Eurostat 외</div>',
             unsafe_allow_html=True)
 
@@ -306,4 +307,4 @@ mark_top_section(order, groups, sec)
 hero(sec, slug, current)
 current.run()
 st.markdown('<div class="ai-footer"><span><b>AERO INSIGHT</b> · 항공 교통 관제 · 수요 예측 통합 플랫폼</span>'
-            '<span>TEAM 4IR-AIR4 · ojh · ldh</span></div>', unsafe_allow_html=True)
+            '<span><b>TEAM 4IR-AIR4</b> · 오정현 · 이동형 · 최효선</span></div>', unsafe_allow_html=True)
