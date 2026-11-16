@@ -36,8 +36,51 @@ def load(task, mtime):
     return d, pd.DataFrame(rows)
 
 
-st.info("실전 수집은 시작했지만 아직 모델과 연결하지 않아, 2025년 7월~2026년 6월 평가 구간의 저장된 예측으로 보여 줍니다. 실시간 예보가 아닙니다.", title="과거 자료 시연", icon=":material/history:")
+st.info("위쪽은 인천공항 API로 모은 운항편을 저장된 모델로 채점한 실전 결과이고, 아래쪽은 2025년 7월~2026년 6월 평가 구간의 저장된 예측으로 만든 시연입니다. 실시간 예보가 아닙니다.", title="실전 채점과 과거 자료 시연", icon=":material/history:")
 direction = st.segmented_control("방향", list(TASKS), default="도착", required=True, help="기획안의 첫 대상은 도착편입니다.")
+
+
+@st.cache_data(max_entries=2)
+def load_live(task, mtime):
+    d = pd.read_parquet(store.dir / f"pred_live_{task}__{MODEL}.parquet")
+    d["등급"] = pd.cut(d["점수"], [-np.inf, 0.3, 0.5, np.inf], right=False, labels=GRADES).astype(str)
+    return d
+
+
+live_report, live_pred = store.dir / "icn_live_eval.json", store.dir / f"pred_live_{TASKS[direction]}__{MODEL}.parquet"
+if live_report.exists() and live_pred.exists():
+    report = json.loads(live_report.read_text(encoding="utf-8"))
+    live = report["방향"][direction]
+    total, later = live["전체 (학습 기준 정답)"], live["4일째 이후 (학습 기준 정답)"]
+    st.subheader("실전 수집 채점")
+    st.write(f"인천공항 API로 모은 {report['수집 기간']} {direction}편에 저장된 모델(LightGBM)로 점수를 내고 실제 결과와 맞춰 봤습니다. "
+             "학습 자료는 2026년 6월에서 끝나서, 최근 지연률 같은 이력 입력은 수집 자료로만 만듭니다. 그래서 수집 첫 며칠은 학습 때보다 불리합니다.")
+    with st.container(horizontal=True):
+        st.metric("채점 편수", f"{total['편수']:,}", border=True)
+        st.metric("모델 PR-AUC", f"{total['PR-AUC']:.3f}", border=True, help="수집 전체 기간 기준입니다.")
+        st.metric("4일째 이후 PR-AUC", f"{later['PR-AUC']:.3f}", border=True, help="이력 입력이 어느 정도 찬 수집 4일째부터의 값입니다.")
+        st.metric("무작위 PR-AUC", f"{total['실제 지연률']:.3f}", border=True, help="실제 지연 비율과 같습니다.")
+    left, right = st.columns(2)
+    live_grades = pd.DataFrame(live["등급별 (학습 기준 정답)"]).T.rename_axis("등급").reset_index()
+    left.markdown("**등급별 실제 지연률**")
+    left.dataframe(live_grades, hide_index=True, column_config={"편수": st.column_config.NumberColumn(format="localized"), "실제 지연률": st.column_config.NumberColumn(format="percent")},
+                   alt=f"실전 수집 {direction}편의 위험 등급별 편수와 실제 지연률")
+    by_day = pd.DataFrame(live["날짜별 (학습 기준 정답)"]).T.rename_axis("운항일").reset_index()
+    right.markdown("**날짜별 모델 PR-AUC**")
+    right.bar_chart(by_day, x="운항일", y="PR-AUC", height=220, x_label="운항일", y_label="PR-AUC", alt=f"실전 수집 {direction}편의 날짜별 PR-AUC")
+    flights = load_live(TASKS[direction], live_pred.stat().st_mtime)
+    days = sorted(flights["date"].unique())
+    live_day = st.select_slider("운항일 (실전)", days, value=days[-2] if len(days) > 1 else days[-1])
+    shown_live = flights[flights["date"] == live_day].sort_values("점수", ascending=False).assign(결과=lambda t: t["정답_학습기준"].map({0: "정상", 1: "지연"}))
+    st.dataframe(shown_live[["plan", "flight", "code", "등급", "점수", "결과"]], hide_index=True,
+                 column_config={"plan": st.column_config.TextColumn("예정 시각", width="small"), "flight": st.column_config.TextColumn("편명", width="small"), "code": st.column_config.TextColumn("공항", width="small"),
+                                "등급": st.column_config.TextColumn("위험 등급", width="small"), "점수": st.column_config.ProgressColumn("위험 점수", format="percent", min_value=0, max_value=1), "결과": st.column_config.TextColumn(width="small")},
+                 alt=f"{live_day} 인천 {direction}편별 실전 위험 등급과 실제 결과")
+    st.caption("정답은 API 시각(게이트 도착·출발)을 학습 기준(착륙·이륙)으로 옮긴 값으로 판정합니다. 옮기는 폭은 수집 10일치로 추정한 값이라 몇 분 오차가 있을 수 있습니다. "
+               f"API 시각 그대로 15분 초과 지연을 정답으로 보면 PR-AUC는 {live['전체 (API 기준 정답)']['PR-AUC']:.3f}입니다.")
+    st.divider()
+
+st.subheader("과거 평가 구간 시연")
 path = store.table_path(f"pred_{TASKS[direction]}__{MODEL}")
 if not path.exists():
     st.warning(f"예측 파일이 없습니다. 드라이브의 `ldh/results/full/korea_ops/{path.name}` 을 이 프로젝트로 복사하세요.", icon=":material/folder_off:")

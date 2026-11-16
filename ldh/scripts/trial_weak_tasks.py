@@ -4,6 +4,7 @@
   persistence   직전 달 값 (지금 기준선)
   seasonal_a    직전 달 값 + a x (작년 같은 달 - 작년 전달). a 는 검증 구간에서 고름
   arima011      대상별 ARIMA(0,1,1) (= 단순 지수평활). 학습 구간으로 계수를 맞추고, 이후는 계수 고정으로 한 달 앞 예측
+  sarima_*      같은 방식의 계절 ARIMA. airline = (0,1,1)(0,1,1,12), sar = (0,1,1)(1,0,0,12)
   lgbm_level    LightGBM, 값 자체를 맞춤 (지금 방식과 같은 성격)
   lgbm_delta    LightGBM, 직전 달 대비 변화량을 맞춤 -> 직전 달 값 + 예측 변화량
 평가 행: 직전 달 값이 있는 검증·평가 행 (지금 기준선과 같은 행). 결과: ldh/results/trial_weak_tasks.json
@@ -52,8 +53,8 @@ def seasonal(f, a):
     return f.lag1 + a * step
 
 
-def arima011(f):
-    """대상별 ARIMA(0,1,1). 학습 구간 관측이 6개 미만이거나 맞추기 실패면 직전 달 값."""
+def arima011(f, order=(0, 1, 1), seasonal_order=(0, 0, 0, 0), min_obs=6):
+    """대상별 (S)ARIMA. 학습 구간 관측이 min_obs 개 미만이거나 맞추기 실패면 직전 달 값."""
     from statsmodels.tsa.statespace.sarimax import SARIMAX
     pred = f.lag1.to_numpy(dtype=float).copy()
     for _, g in f.groupby("sid"):
@@ -61,13 +62,13 @@ def arima011(f):
         if len(train_t) == 0:
             continue
         s = g.set_index("t").y.reindex(range(g.t.min(), g.t.max() + 1))
-        if s.loc[:train_t.max()].notna().sum() < 6:
+        if s.loc[:train_t.max()].notna().sum() < min_obs:
             continue
         try:
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                res = SARIMAX(s.loc[:train_t.max()].to_numpy(), order=(0, 1, 1)).fit(disp=False)
-                full = SARIMAX(s.to_numpy(), order=(0, 1, 1)).filter(res.params)
+                res = SARIMAX(s.loc[:train_t.max()].to_numpy(), order=order, seasonal_order=seasonal_order).fit(disp=False)
+                full = SARIMAX(s.to_numpy(), order=order, seasonal_order=seasonal_order).filter(res.params)
             one_step = pd.Series(full.predict(), index=s.index)  # t 의 예측은 t-1 까지의 값만 씀
         except Exception:
             continue
@@ -147,6 +148,9 @@ def run(task):
     for a in (0.25, 0.5, 0.75, 1.0):
         preds[f"seasonal_{a}"] = seasonal(f, a).to_numpy()
     preds["arima011"] = arima011(f)
+    # 계절 ARIMA: 항공사 모형(계절 차분)은 2년 넘는 학습 관측이 필요하고, 계절 AR 은 차분 없이 작년 같은 달을 반영한다
+    preds["sarima_airline"] = arima011(f, seasonal_order=(0, 1, 1, 12), min_obs=26)
+    preds["sarima_sar"] = arima011(f, seasonal_order=(1, 0, 0, 12), min_obs=14)
     preds["lgbm_level"] = lgbm(f, keys, delta=False)
     preds["lgbm_delta"] = lgbm(f, keys, delta=True)
     if task in COUNT_TASKS:

@@ -10,11 +10,12 @@ import importlib
 import json
 import sys
 import time
+from pathlib import Path
 
 import numpy as np
 from sklearn.metrics import average_precision_score, f1_score, mean_absolute_error, precision_recall_curve
 
-from ldh.core.models import FUTURE, MODELS, TEST, TRAIN, VAL, binary_scores, load_model, merge_summary, multiclass_scores, regression_scores, save_predictions
+from ldh.core.models import FUTURE, MODELS, TEST, TRAIN, VAL, binary_scores, load_model, member_path, merge_summary, multiclass_scores, regression_scores, save_predictions
 from ldh.core.registry import discover
 from ldh.core.store import Store
 
@@ -49,6 +50,33 @@ def check():
     yc = np.array([0, 1, 1])
     a, b = np.array([[0.6, 0.4], [0.6, 0.4], [0.1, 0.9]]), np.array([[0.9, 0.1], [0.2, 0.8], [0.6, 0.4]])
     assert val_score("multiclass", yc, np.mean([a, b], axis=0)) == 1.0, "다중 분류는 확률을 평균해 argmax"
+    import os
+    import tempfile
+    from types import SimpleNamespace
+    with tempfile.TemporaryDirectory() as tmp:
+        store = SimpleNamespace(dir=Path(tmp))
+        meta = store.dir / "saved_models" / "t__a" / "meta.json"
+        meta.parent.mkdir(parents=True)
+        meta.write_text("{}")
+        os.utime(meta, (1, 1))
+        path = member_path(store, "t", "a")
+        path.parent.mkdir()
+        np.savez(path, val=np.zeros(2), test=np.ones(3), future=np.zeros(0))
+        parts = {"val": np.arange(2), "test": np.arange(3), "future": np.arange(0)}
+        assert cached_preds(store, "t", "a", parts)["test"].sum() == 3, "새 예측 파일이면 그대로 씀"
+        assert cached_preds(store, "t", "a", {**parts, "test": np.arange(4)}) is None, "행 수가 다르면 다시 예측"
+        os.utime(meta, None)
+        os.utime(path, (1, 1))
+        assert cached_preds(store, "t", "a", parts) is None, "저장 모델보다 오래된 예측 파일은 안 씀"
+
+
+def cached_preds(store, task, m, parts):
+    """학습 때 남긴 원 예측값. 저장 모델보다 오래됐거나 행 수가 지금 데이터와 다르면 None (모델을 불러와 다시 예측)."""
+    path, meta = member_path(store, task, m), store.dir / "saved_models" / f"{task}__{m}" / "meta.json"
+    if not path.exists() or path.stat().st_mtime < meta.stat().st_mtime:
+        return None
+    c = np.load(path)
+    return {k: c[k] for k in parts} if all(len(c[k]) == len(rows) for k, rows in parts.items()) else None
 
 
 def run(slug, task_filter=None):
@@ -67,8 +95,14 @@ def run(slug, task_filter=None):
         d = t["load"]()
         val, test, future = (np.flatnonzero(d.split == s) for s in (VAL, TEST, FUTURE))
         y_val, y = np.asarray(d.y[val]), np.asarray(d.y[test])
-        loaded = {m: load_model(store, task, m)[0] for m in rows}
-        preds = {m: np.asarray(f(d, val), dtype=np.float64) for m, f in loaded.items()}
+        parts = {"val": val, "test": test, "future": future}
+        cached = {m: c for m in rows if (c := cached_preds(store, task, m, parts)) is not None}
+        loaded = {m: load_model(store, task, m)[0] for m in rows if m not in cached}
+
+        def member(m, part):
+            return np.asarray(cached[m][part] if m in cached else loaded[m](d, parts[part]), dtype=np.float64)
+
+        preds = {m: member(m, "val") for m in rows}
         members, score, single = choose(kind, y_val, preds)
         out = results / f"{task}__{NAME}.json"
         if len(members) == 1:
@@ -76,7 +110,7 @@ def run(slug, task_filter=None):
             out.unlink(missing_ok=True)  # 예전 앙상블 결과가 남아 있으면 화면에서 빠지게 한다
             continue
         p_val = np.mean([preds[m] for m in members], axis=0)
-        p = np.mean([np.asarray(loaded[m](d, test), dtype=np.float64) for m in members], axis=0)
+        p = np.mean([member(m, "test") for m in members], axis=0)
         threshold = None
         if kind == "binary":
             pv, rv, tv = precision_recall_curve(y_val, p_val)
@@ -93,7 +127,7 @@ def run(slug, task_filter=None):
                 "seconds": sum(rows[m]["seconds"] for m in members), "fit_seconds": sum(rows[m].get("fit_seconds", 0) for m in members), "tuned": False, **scores}
         save_predictions(store, task, NAME, kind, d, test, p.astype(np.float32), threshold)
         if len(future):
-            p_future = np.mean([np.asarray(loaded[m](d, future), dtype=np.float64) for m in members], axis=0)
+            p_future = np.mean([member(m, "future") for m in members], axis=0)
             save_predictions(store, task, NAME, kind, d, future, p_future.astype(np.float32), threshold, prefix="forecast")
         out.write_text(json.dumps(row, indent=2, ensure_ascii=False), encoding="utf-8")
         main = {"binary": "pr_auc", "regression": "mae", "multiclass": "macro_f1"}[kind]

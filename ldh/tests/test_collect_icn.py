@@ -145,7 +145,7 @@ def check_live_flights(root):
         line({"flightId": "D2", "scheduleDateTime": "0900", "estimatedDateTime": "", "remark": "결항"})]), encoding="utf-8")
     d = live_flights(root).set_index("flight")
     assert sorted(d.index) == ["A1", "D1"], "끝난 편만, 공동운항·결항·미완료 제외"
-    assert d.loc["A1", "api_delay"] == 16 and d.loc["A1", "delay"] == 3, "도착은 마지막 상태 값에서 13분 뺌"
+    assert d.loc["A1", "api_delay"] == 16 and d.loc["A1", "delay"] == 4, "도착은 마지막 상태 값에서 12분 뺌"
     assert d.loc["D1", "api_delay"] == -15 and d.loc["D1", "delay"] == 0, "자정 전에 일찍 떠난 00시대 편은 음수, 출발은 15분 더함"
 
 
