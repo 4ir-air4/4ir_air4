@@ -11,8 +11,8 @@
 <table>
   <tr>
     <td align="center" width="25%"><img src="ldh/docs/img/team_male.png" width="120" alt="이동형 캐릭터"></td>
-    <td align="center" width="25%"><img src="ldh/docs/img/team_male.png" width="120" alt="오정현 캐릭터"></td>
-    <td align="center" width="25%"><img src="ldh/docs/img/team_male.png" width="120" alt="신정욱 캐릭터"></td>
+    <td align="center" width="25%"><img src="https://github.com/user-attachments/assets/07bed60f-1430-4a04-b302-a0f21698b94f" width="120" alt="오정현 캐릭터"></td>
+    <td align="center" width="25%"><img src="https://github.com/user-attachments/assets/f3b5dea4-ce18-4db0-ba03-35590f22bda4" width="120" alt="신정욱 캐릭터"></td>
     <td align="center" width="25%"><img src="ldh/docs/img/team_female.png" width="120" alt="최효선 캐릭터"></td>
   </tr>
   <tr>
