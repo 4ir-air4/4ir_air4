@@ -8,12 +8,26 @@
 
 ## 팀
 
-| | 이름 | 담당 |
-|:---:|:---:|---|
-| <img src="https://api.dicebear.com/9.x/avataaars/svg?size=96&radius=50&mouth=smile&eyes=happy&eyebrows=defaultNatural&facialHairProbability=0&seed=a1&top=shortFlat&hairColor=2c1b18&clothing=hoodie&clothesColor=25557c&skinColor=edb98a&accessoriesProbability=0&backgroundColor=b6e3f4" width="64" alt="이동형 캐릭터"> | **이동형** | 한국·미국·유럽·안전 분석, 공통 학습 엔진, 인천 예보 |
-| <img src="https://api.dicebear.com/9.x/avataaars/svg?size=96&radius=50&mouth=smile&eyes=happy&eyebrows=defaultNatural&facialHairProbability=0&seed=a2&top=shortWaved&hairColor=4a312c&clothing=shirtCrewNeck&clothesColor=3c4f5c&skinColor=edb98a&accessories=prescription02&accessoriesProbability=100&backgroundColor=c0aede" width="64" alt="오정현 캐릭터"> | **오정현** | 실시간 관제, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미, 통합 앱 구성 |
-| <img src="https://api.dicebear.com/9.x/avataaars/svg?size=96&radius=50&mouth=smile&eyes=happy&eyebrows=defaultNatural&facialHairProbability=0&seed=a3&top=theCaesar&hairColor=2c1b18&clothing=collarAndSweater&clothesColor=65c9ff&skinColor=edb98a&accessoriesProbability=0&backgroundColor=d1f4d9" width="64" alt="신정욱 캐릭터"> | **신정욱** | 국내 공항 여객·기상·운항 수집, 혼잡 예상 자료 |
-| <img src="https://api.dicebear.com/9.x/avataaars/svg?size=96&radius=50&mouth=smile&eyes=happy&eyebrows=defaultNatural&facialHairProbability=0&seed=a4&top=longButNotTooLong&hairColor=4a312c&clothing=blazerAndSweater&clothesColor=ff488e&skinColor=edb98a&accessoriesProbability=0&backgroundColor=ffdfbf" width="64" alt="최효선 캐릭터"> | **최효선** | 결항 요인, 국내 여객 수요 분석 |
+<table>
+  <tr>
+    <td align="center" width="25%"><img src="ldh/docs/img/team_male.png" width="120" alt="이동형 캐릭터"></td>
+    <td align="center" width="25%"><img src="ldh/docs/img/team_male.png" width="120" alt="오정현 캐릭터"></td>
+    <td align="center" width="25%"><img src="ldh/docs/img/team_male.png" width="120" alt="신정욱 캐릭터"></td>
+    <td align="center" width="25%"><img src="ldh/docs/img/team_female.png" width="120" alt="최효선 캐릭터"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>이동형</b></td>
+    <td align="center"><b>오정현</b></td>
+    <td align="center"><b>신정욱</b></td>
+    <td align="center"><b>최효선</b></td>
+  </tr>
+  <tr>
+    <td align="center">한국·미국·유럽·안전 분석,<br>공통 학습 엔진, 인천 예보</td>
+    <td align="center">실시간 관제, 교통량·공항 수요 예측,<br>계류장 혼잡도, AI 도우미, 통합 앱 구성</td>
+    <td align="center">국내 공항 여객·기상·운항 수집,<br>혼잡 예상 자료</td>
+    <td align="center">결항 요인,<br>국내 여객 수요 분석</td>
+  </tr>
+</table>
 
 브랜치는 `develop`에서 작업하고 팀원 PR도 `develop`으로 받습니다. `main`에는 `develop`을 PR로 합칩니다.
 
