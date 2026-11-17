@@ -137,7 +137,7 @@ YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(
 ## 폴더 구조
 
 ```
-app.py                    통합 앱 메뉴(AERO INSIGHT)
+app.py                    |통합 앱 메뉴(AERO INSIGHT)
 requirements.txt          화면 실행용 패키지 17개
 .streamlit/               밝은 테마 설정, 키 예시 파일
 ojh/                      오정현 : 실시간 지도, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미(설명서 README.md)
