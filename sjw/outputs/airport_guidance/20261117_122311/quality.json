@@ -1,0 +1,4375 @@
+{
+  "metadata": {
+    "schema_version": "1.0",
+    "exported_at": "2026-11-17T03:23:11.468016+00:00",
+    "purpose": "expected passenger and independently collected weather/flight status; not actual congestion or wait-time prediction",
+    "scope": {
+      "airports": {
+        "GMP": "김포공항",
+        "CJU": "제주공항",
+        "PUS": "김해공항",
+        "CJJ": "청주공항",
+        "HIN": "사천공항",
+        "ICN": "ICN (자료별 매핑 확인 필요)",
+        "KPO": "포항경주공항",
+        "KUV": "군산공항",
+        "KWJ": "광주공항",
+        "MWX": "무안공항",
+        "RSU": "여수공항",
+        "TAE": "대구공항",
+        "USN": "울산공항",
+        "WJU": "원주공항",
+        "YNY": "양양공항"
+      },
+      "AOD": [
+        "D",
+        "A"
+      ],
+      "TOF": [
+        "D",
+        "I"
+      ],
+      "passenger_dates": [
+        "20261109",
+        "20261110",
+        "20261111",
+        "20261112",
+        "20261113",
+        "20261116",
+        "20261117"
+      ]
+    },
+    "cross_source_snapshot_atomic": false,
+    "service_validated": false,
+    "reliable_generalization": false,
+    "temporal_availability": "NOT_VERIFIED"
+  },
+  "passenger_selection": [
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "GMP",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "GMP",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "GMP",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "GMP",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "GMP",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "GMP",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "GMP",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "GMP",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "CJU",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "CJU",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "CJU",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "CJU",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "CJU",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "CJU",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "CJU",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "CJU",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "PUS",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "PUS",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "PUS",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "PUS",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "PUS",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "PUS",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "PUS",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "PUS",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "CJJ",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "CJJ",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "CJJ",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "CJJ",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "CJJ",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "CJJ",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "CJJ",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "CJJ",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "HIN",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "HIN",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "HIN",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "HIN",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "HIN",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "HIN",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "HIN",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "HIN",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [
+        {
+          "reason": "unverified_airport_or_dimensions"
+        }
+      ],
+      "available": false,
+      "airport_code": "ICN",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "reason": "unverified_airport_or_dimensions"
+        }
+      ],
+      "available": false,
+      "airport_code": "ICN",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [
+        {
+          "reason": "unverified_airport_or_dimensions"
+        }
+      ],
+      "available": false,
+      "airport_code": "ICN",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "reason": "unverified_airport_or_dimensions"
+        }
+      ],
+      "available": false,
+      "airport_code": "ICN",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KPO",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KPO",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KPO",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KPO",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KPO",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KPO",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KPO",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KPO",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KUV",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KUV",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KUV",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KUV",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KUV",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KUV",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KUV",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KUV",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KWJ",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KWJ",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KWJ",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KWJ",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KWJ",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KWJ",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "KWJ",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "KWJ",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "no_eligible_snapshot"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "MWX",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "MWX",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "no_eligible_snapshot"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "MWX",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "MWX",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "no_eligible_snapshot"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "MWX",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "MWX",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "no_eligible_snapshot"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "no_eligible_snapshot"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "MWX",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "MWX",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "RSU",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "RSU",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "RSU",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "RSU",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "RSU",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "RSU",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "RSU",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "RSU",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "TAE",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "TAE",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "TAE",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "TAE",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "TAE",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "TAE",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "TAE",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "TAE",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "USN",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "USN",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "USN",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "USN",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "USN",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "USN",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "USN",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "USN",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "WJU",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "WJU",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "WJU",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "WJU",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "WJU",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "WJU",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "WJU",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "WJU",
+      "AOD": "A",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "YNY",
+        "AOD": "D",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "YNY",
+      "AOD": "D",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "YNY",
+        "AOD": "D",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "YNY",
+      "AOD": "D",
+      "TOF": "I"
+    },
+    {
+      "excluded": [],
+      "available": true,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "YNY",
+        "AOD": "A",
+        "TOF": "D",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "YNY",
+      "AOD": "A",
+      "TOF": "D"
+    },
+    {
+      "excluded": [
+        {
+          "SDT": "20261109",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a"
+        },
+        {
+          "SDT": "20261110",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc"
+        },
+        {
+          "SDT": "20261111",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45"
+        },
+        {
+          "SDT": "20261112",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f"
+        },
+        {
+          "SDT": "20261113",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe"
+        },
+        {
+          "SDT": "20261116",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475"
+        },
+        {
+          "SDT": "20261117",
+          "reason": "selected_condition_not_provided",
+          "snapshot": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af"
+        }
+      ],
+      "available": false,
+      "queried_at": "2026-11-17T03:23:11.468016+00:00",
+      "HH_timezone_verified": false,
+      "scope": {
+        "airport": "YNY",
+        "AOD": "A",
+        "TOF": "I",
+        "HH": null
+      },
+      "policy": "latest eligible whole snapshot per airport/date; no row stitching",
+      "airport_code": "YNY",
+      "AOD": "A",
+      "TOF": "I"
+    }
+  ],
+  "history": {
+    "queried_at": "2026-11-17T03:23:11.468016+00:00",
+    "errors": [],
+    "scan_complete": true,
+    "file_count": 88,
+    "duplicate_files": 44,
+    "HH_timezone_verified": false,
+    "completeness_scope": "API-reported snapshot count, not all 24 hours",
+    "dates": [
+      "20261109",
+      "20261110",
+      "20261111",
+      "20261112",
+      "20261113",
+      "20261116",
+      "20261117"
+    ]
+  },
+  "snapshot_validation": [
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/04fc8053077262c36c9a1d1f34d5d0b277f1ba0af0047746c2750b32354a5c27.csv",
+        "data/history/passenger/airport_passenger/snapshots/04fc8053077262c36c9a1d1f34d5d0b277f1ba0af0047746c2750b32354a5c27.csv"
+      ],
+      "sha256": "04fc8053077262c36c9a1d1f34d5d0b277f1ba0af0047746c2750b32354a5c27",
+      "available": true,
+      "reasons": [],
+      "row_count": 358,
+      "dates": [
+        "20261110"
+      ],
+      "collected_at": "2026-11-10T04:06:03.488107+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261110"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/09b1778e479b5d80d2691cb1a419131047e8b2779fa67cf328d40b0312509f7e.csv",
+        "data/history/passenger/airport_passenger/snapshots/09b1778e479b5d80d2691cb1a419131047e8b2779fa67cf328d40b0312509f7e.csv"
+      ],
+      "sha256": "09b1778e479b5d80d2691cb1a419131047e8b2779fa67cf328d40b0312509f7e",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T06:06:03.572214+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/0ab1f99422c216bbd721c6d206e20e89d187ff17e9c82f1feed37df8ce1fdbee.csv",
+        "data/history/passenger/airport_passenger/snapshots/0ab1f99422c216bbd721c6d206e20e89d187ff17e9c82f1feed37df8ce1fdbee.csv"
+      ],
+      "sha256": "0ab1f99422c216bbd721c6d206e20e89d187ff17e9c82f1feed37df8ce1fdbee",
+      "available": true,
+      "reasons": [],
+      "row_count": 364,
+      "dates": [
+        "20261111"
+      ],
+      "collected_at": "2026-11-11T02:06:04.170306+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261111"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/0e08ee41660b2c06ca76fa77ac7f8931d059db3bfd0cbb42876f3aa7ce5441b5.csv",
+        "data/history/passenger/airport_passenger/snapshots/0e08ee41660b2c06ca76fa77ac7f8931d059db3bfd0cbb42876f3aa7ce5441b5.csv"
+      ],
+      "sha256": "0e08ee41660b2c06ca76fa77ac7f8931d059db3bfd0cbb42876f3aa7ce5441b5",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261113"
+      ],
+      "collected_at": "2026-11-13T01:06:04.632495+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261113"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe.csv",
+        "data/history/passenger/airport_passenger/snapshots/100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe.csv"
+      ],
+      "sha256": "100870b833f5717afb6318571e76e75e1260c36a6928800305e7ce228ce17dfe",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261113"
+      ],
+      "collected_at": "2026-11-13T08:06:03.516386+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261113"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/148a2881a13462203c767d1b25b0a7506eff9b39b672ebdd1f9568ec56f8699a.csv",
+        "data/history/passenger/airport_passenger/snapshots/148a2881a13462203c767d1b25b0a7506eff9b39b672ebdd1f9568ec56f8699a.csv"
+      ],
+      "sha256": "148a2881a13462203c767d1b25b0a7506eff9b39b672ebdd1f9568ec56f8699a",
+      "available": true,
+      "reasons": [],
+      "row_count": 364,
+      "dates": [
+        "20261111"
+      ],
+      "collected_at": "2026-11-11T01:06:03.908368+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261111"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/1dfc2ee3996570b0d03ca107e8bf3ec680e7f746f7418a68f43aa70f99bc1ca3.csv",
+        "data/history/passenger/airport_passenger/snapshots/1dfc2ee3996570b0d03ca107e8bf3ec680e7f746f7418a68f43aa70f99bc1ca3.csv"
+      ],
+      "sha256": "1dfc2ee3996570b0d03ca107e8bf3ec680e7f746f7418a68f43aa70f99bc1ca3",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T04:06:03.737585+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/1f04a655079693e075e43a0d17c8949e5629a9e6be123e900ee85aff0fe3fe3f.csv",
+        "data/history/passenger/airport_passenger/snapshots/1f04a655079693e075e43a0d17c8949e5629a9e6be123e900ee85aff0fe3fe3f.csv"
+      ],
+      "sha256": "1f04a655079693e075e43a0d17c8949e5629a9e6be123e900ee85aff0fe3fe3f",
+      "available": false,
+      "reasons": [
+        "partial_or_count_mismatch"
+      ],
+      "row_count": 300,
+      "dates": [
+        "20261104"
+      ],
+      "collected_at": "2026-11-03T08:36:19.281348+00:00",
+      "completeness": "NOT_VERIFIED",
+      "excluded_scopes": [],
+      "row_exclusions": {},
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "TOF",
+        "source_total_count",
+        "collection_complete",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/369de160d45fcf264eb0c14470f778b73edd76b542738f6432ccaa176606d4b1.csv",
+        "data/history/passenger/airport_passenger/snapshots/369de160d45fcf264eb0c14470f778b73edd76b542738f6432ccaa176606d4b1.csv"
+      ],
+      "sha256": "369de160d45fcf264eb0c14470f778b73edd76b542738f6432ccaa176606d4b1",
+      "available": true,
+      "reasons": [],
+      "row_count": 364,
+      "dates": [
+        "20261111"
+      ],
+      "collected_at": "2026-11-11T07:06:03.364170+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261111"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a.csv",
+        "data/history/passenger/airport_passenger/snapshots/3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a.csv"
+      ],
+      "sha256": "3ae873adcba65f3cda98fcf3c872985a92850e8640a3c92be084841a39b9df6a",
+      "available": true,
+      "reasons": [],
+      "row_count": 349,
+      "dates": [
+        "20261109"
+      ],
+      "collected_at": "2026-11-09T07:25:47.219059+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261109"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 7
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/3fd45492895e5f05d2c06c44d5bdcfa9e3081e19b0d08da6636ab621157614af.csv",
+        "data/history/passenger/airport_passenger/snapshots/3fd45492895e5f05d2c06c44d5bdcfa9e3081e19b0d08da6636ab621157614af.csv"
+      ],
+      "sha256": "3fd45492895e5f05d2c06c44d5bdcfa9e3081e19b0d08da6636ab621157614af",
+      "available": true,
+      "reasons": [],
+      "row_count": 364,
+      "dates": [
+        "20261111"
+      ],
+      "collected_at": "2026-11-11T04:06:03.405539+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261111"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/42ffa069db0125014e80f3ae91157d2d576b105b6caeda96e3266552bb16b485.csv",
+        "data/history/passenger/airport_passenger/snapshots/42ffa069db0125014e80f3ae91157d2d576b105b6caeda96e3266552bb16b485.csv"
+      ],
+      "sha256": "42ffa069db0125014e80f3ae91157d2d576b105b6caeda96e3266552bb16b485",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261113"
+      ],
+      "collected_at": "2026-11-13T07:06:05.122345+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261113"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/49486d1b35f18d7a742a1b5a60b03fc30b1c31d687c772155175dea528ff5390.csv",
+        "data/history/passenger/airport_passenger/snapshots/49486d1b35f18d7a742a1b5a60b03fc30b1c31d687c772155175dea528ff5390.csv"
+      ],
+      "sha256": "49486d1b35f18d7a742a1b5a60b03fc30b1c31d687c772155175dea528ff5390",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T05:06:03.643724+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/4a26c885ccde31e8c836836aac4a28bf8e847e216af6711b4ec066cc2f4193ec.csv",
+        "data/history/passenger/airport_passenger/snapshots/4a26c885ccde31e8c836836aac4a28bf8e847e216af6711b4ec066cc2f4193ec.csv"
+      ],
+      "sha256": "4a26c885ccde31e8c836836aac4a28bf8e847e216af6711b4ec066cc2f4193ec",
+      "available": true,
+      "reasons": [],
+      "row_count": 358,
+      "dates": [
+        "20261110"
+      ],
+      "collected_at": "2026-11-10T05:06:03.415366+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261110"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/501600ed3698c6cede3eecfb2322f8a4fe5fb607859190bf9348e841bd1ad62d.csv",
+        "data/history/passenger/airport_passenger/snapshots/501600ed3698c6cede3eecfb2322f8a4fe5fb607859190bf9348e841bd1ad62d.csv"
+      ],
+      "sha256": "501600ed3698c6cede3eecfb2322f8a4fe5fb607859190bf9348e841bd1ad62d",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261113"
+      ],
+      "collected_at": "2026-11-13T03:06:03.606504+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261113"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/5893bab8216865573cf792a59bab2b6a41ae0d2b833a853185c2e3787913429b.csv",
+        "data/history/passenger/airport_passenger/snapshots/5893bab8216865573cf792a59bab2b6a41ae0d2b833a853185c2e3787913429b.csv"
+      ],
+      "sha256": "5893bab8216865573cf792a59bab2b6a41ae0d2b833a853185c2e3787913429b",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T08:06:03.901742+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/59d96eb38d8a63f5fbd22d8e6bce3b2662f48b98945d9fbd65c3f1ba0f1a5c0b.csv",
+        "data/history/passenger/airport_passenger/snapshots/59d96eb38d8a63f5fbd22d8e6bce3b2662f48b98945d9fbd65c3f1ba0f1a5c0b.csv"
+      ],
+      "sha256": "59d96eb38d8a63f5fbd22d8e6bce3b2662f48b98945d9fbd65c3f1ba0f1a5c0b",
+      "available": true,
+      "reasons": [],
+      "row_count": 358,
+      "dates": [
+        "20261110"
+      ],
+      "collected_at": "2026-11-10T01:06:03.871760+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261110"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475.csv",
+        "data/history/passenger/airport_passenger/snapshots/5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475.csv"
+      ],
+      "sha256": "5c17fddc8afefadbc4e9862755fe7a11985dd8fdbf1822f9080944c2f5e9c475",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T09:06:03.642157+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/6021a9e7e64914b85ab0b72affc5659e35a7ffcb80e641c1b01b249849547877.csv",
+        "data/history/passenger/airport_passenger/snapshots/6021a9e7e64914b85ab0b72affc5659e35a7ffcb80e641c1b01b249849547877.csv"
+      ],
+      "sha256": "6021a9e7e64914b85ab0b72affc5659e35a7ffcb80e641c1b01b249849547877",
+      "available": true,
+      "reasons": [],
+      "row_count": 359,
+      "dates": [
+        "20261112"
+      ],
+      "collected_at": "2026-11-12T03:06:03.259252+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261112"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/63d9bba847d124d68b37053b4c88e4b7e2cb512df1daf1b1d7244e93b77870a5.csv",
+        "data/history/passenger/airport_passenger/snapshots/63d9bba847d124d68b37053b4c88e4b7e2cb512df1daf1b1d7244e93b77870a5.csv"
+      ],
+      "sha256": "63d9bba847d124d68b37053b4c88e4b7e2cb512df1daf1b1d7244e93b77870a5",
+      "available": true,
+      "reasons": [],
+      "row_count": 359,
+      "dates": [
+        "20261112"
+      ],
+      "collected_at": "2026-11-12T06:06:03.778706+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261112"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/66242bdc1acfa5d557b6867d3a33863224583a441d66f9800ebf6742c68d58db.csv",
+        "data/history/passenger/airport_passenger/snapshots/66242bdc1acfa5d557b6867d3a33863224583a441d66f9800ebf6742c68d58db.csv"
+      ],
+      "sha256": "66242bdc1acfa5d557b6867d3a33863224583a441d66f9800ebf6742c68d58db",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T03:06:03.674828+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/6912986f3f3cd0508d56b1f3f9ff4dfe2137b3c69b3f6a5fc6f7091286b3edcc.csv",
+        "data/history/passenger/airport_passenger/snapshots/6912986f3f3cd0508d56b1f3f9ff4dfe2137b3c69b3f6a5fc6f7091286b3edcc.csv"
+      ],
+      "sha256": "6912986f3f3cd0508d56b1f3f9ff4dfe2137b3c69b3f6a5fc6f7091286b3edcc",
+      "available": true,
+      "reasons": [],
+      "row_count": 364,
+      "dates": [
+        "20261111"
+      ],
+      "collected_at": "2026-11-11T06:06:03.441056+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261111"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/6a552cbf7feb480fc6595754b5e75dbb2b85d99a40bc4c5d0595b8252f46d380.csv",
+        "data/history/passenger/airport_passenger/snapshots/6a552cbf7feb480fc6595754b5e75dbb2b85d99a40bc4c5d0595b8252f46d380.csv"
+      ],
+      "sha256": "6a552cbf7feb480fc6595754b5e75dbb2b85d99a40bc4c5d0595b8252f46d380",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T07:06:04.974411+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/6cc6e8cdf124f057b2c96f1d083119d0a680b17ea1bd0ae7440a90246c252b09.csv",
+        "data/history/passenger/airport_passenger/snapshots/6cc6e8cdf124f057b2c96f1d083119d0a680b17ea1bd0ae7440a90246c252b09.csv"
+      ],
+      "sha256": "6cc6e8cdf124f057b2c96f1d083119d0a680b17ea1bd0ae7440a90246c252b09",
+      "available": true,
+      "reasons": [],
+      "row_count": 358,
+      "dates": [
+        "20261110"
+      ],
+      "collected_at": "2026-11-10T07:06:03.851864+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261110"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f.csv",
+        "data/history/passenger/airport_passenger/snapshots/6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f.csv"
+      ],
+      "sha256": "6e2a71f45e4c34cc83f1d7ab579aa41c08b7e87faf6182482d5038c111f8897f",
+      "available": true,
+      "reasons": [],
+      "row_count": 359,
+      "dates": [
+        "20261112"
+      ],
+      "collected_at": "2026-11-12T08:06:03.441240+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261112"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/74a8254111579d37e5f4bff90cfe5bf13decd3f1f7638e7f1ff516b4a6d0d2dd.csv",
+        "data/history/passenger/airport_passenger/snapshots/74a8254111579d37e5f4bff90cfe5bf13decd3f1f7638e7f1ff516b4a6d0d2dd.csv"
+      ],
+      "sha256": "74a8254111579d37e5f4bff90cfe5bf13decd3f1f7638e7f1ff516b4a6d0d2dd",
+      "available": true,
+      "reasons": [],
+      "row_count": 359,
+      "dates": [
+        "20261112"
+      ],
+      "collected_at": "2026-11-12T02:06:03.276289+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261112"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/7c1ba3d8f760b27ae4379ef655389e350f1b1b1595b5e68ce8827da18be95591.csv",
+        "data/history/passenger/airport_passenger/snapshots/7c1ba3d8f760b27ae4379ef655389e350f1b1b1595b5e68ce8827da18be95591.csv"
+      ],
+      "sha256": "7c1ba3d8f760b27ae4379ef655389e350f1b1b1595b5e68ce8827da18be95591",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T01:06:03.408909+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/87d226e73524356d3e547bac380942ac246758d1af64fff0e076dde5c424400b.csv",
+        "data/history/passenger/airport_passenger/snapshots/87d226e73524356d3e547bac380942ac246758d1af64fff0e076dde5c424400b.csv"
+      ],
+      "sha256": "87d226e73524356d3e547bac380942ac246758d1af64fff0e076dde5c424400b",
+      "available": true,
+      "reasons": [],
+      "row_count": 358,
+      "dates": [
+        "20261110"
+      ],
+      "collected_at": "2026-11-10T03:06:03.415245+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261110"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc.csv",
+        "data/history/passenger/airport_passenger/snapshots/8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc.csv"
+      ],
+      "sha256": "8c9a3e4ad72db8a92422641d567bf2722d2731ea45c4496743f6ec07178803cc",
+      "available": true,
+      "reasons": [],
+      "row_count": 358,
+      "dates": [
+        "20261110"
+      ],
+      "collected_at": "2026-11-10T08:06:04.109602+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261110"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/936e4ee9aa3e3ca8c71d317b096a64709cea30ee8ef9b59dfbdaef9a6db13c17.csv",
+        "data/history/passenger/airport_passenger/snapshots/936e4ee9aa3e3ca8c71d317b096a64709cea30ee8ef9b59dfbdaef9a6db13c17.csv"
+      ],
+      "sha256": "936e4ee9aa3e3ca8c71d317b096a64709cea30ee8ef9b59dfbdaef9a6db13c17",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261113"
+      ],
+      "collected_at": "2026-11-13T02:06:03.701864+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261113"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/9554d53cf609af6f7255c81318a98c89b37bef7ac8ccf7d0c93ca46337538583.csv",
+        "data/history/passenger/airport_passenger/snapshots/9554d53cf609af6f7255c81318a98c89b37bef7ac8ccf7d0c93ca46337538583.csv"
+      ],
+      "sha256": "9554d53cf609af6f7255c81318a98c89b37bef7ac8ccf7d0c93ca46337538583",
+      "available": true,
+      "reasons": [],
+      "row_count": 359,
+      "dates": [
+        "20261112"
+      ],
+      "collected_at": "2026-11-12T01:06:03.843199+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261112"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/9ef9da8c467b7659ac6aadda2640a05397b55008b88ba3f4a8074dd1a8ab3da4.csv",
+        "data/history/passenger/airport_passenger/snapshots/9ef9da8c467b7659ac6aadda2640a05397b55008b88ba3f4a8074dd1a8ab3da4.csv"
+      ],
+      "sha256": "9ef9da8c467b7659ac6aadda2640a05397b55008b88ba3f4a8074dd1a8ab3da4",
+      "available": true,
+      "reasons": [],
+      "row_count": 358,
+      "dates": [
+        "20261110"
+      ],
+      "collected_at": "2026-11-10T06:06:03.973661+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261110"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/9fa09bdcb56c8d96f207a867659e5f18ce1cf0ebc26d6e7a8e7ff42bb4f8f588.csv",
+        "data/history/passenger/airport_passenger/snapshots/9fa09bdcb56c8d96f207a867659e5f18ce1cf0ebc26d6e7a8e7ff42bb4f8f588.csv"
+      ],
+      "sha256": "9fa09bdcb56c8d96f207a867659e5f18ce1cf0ebc26d6e7a8e7ff42bb4f8f588",
+      "available": true,
+      "reasons": [],
+      "row_count": 359,
+      "dates": [
+        "20261112"
+      ],
+      "collected_at": "2026-11-12T04:06:03.994400+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261112"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45.csv",
+        "data/history/passenger/airport_passenger/snapshots/ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45.csv"
+      ],
+      "sha256": "ba7016c15407c8fd2c80256fd2e837f176a8c38a466e88e7292db9ae2f740b45",
+      "available": true,
+      "reasons": [],
+      "row_count": 364,
+      "dates": [
+        "20261111"
+      ],
+      "collected_at": "2026-11-11T08:06:05.617001+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261111"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/bfad722e26b0d1c20fb7ed0cb6e9aa45d33e215e5162605f38512b2bb809c135.csv",
+        "data/history/passenger/airport_passenger/snapshots/bfad722e26b0d1c20fb7ed0cb6e9aa45d33e215e5162605f38512b2bb809c135.csv"
+      ],
+      "sha256": "bfad722e26b0d1c20fb7ed0cb6e9aa45d33e215e5162605f38512b2bb809c135",
+      "available": true,
+      "reasons": [],
+      "row_count": 359,
+      "dates": [
+        "20261112"
+      ],
+      "collected_at": "2026-11-12T05:06:03.321869+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261112"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/c2bd627e7b080265a255b1da193e9270fc5561542ccec76ec4f28fb62723a0db.csv",
+        "data/history/passenger/airport_passenger/snapshots/c2bd627e7b080265a255b1da193e9270fc5561542ccec76ec4f28fb62723a0db.csv"
+      ],
+      "sha256": "c2bd627e7b080265a255b1da193e9270fc5561542ccec76ec4f28fb62723a0db",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261116"
+      ],
+      "collected_at": "2026-11-16T02:06:03.299116+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261116"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/c72ddcff22d5249ce0d73c3af096ad27ff0ad536a7ace331031fb153d2595716.csv",
+        "data/history/passenger/airport_passenger/snapshots/c72ddcff22d5249ce0d73c3af096ad27ff0ad536a7ace331031fb153d2595716.csv"
+      ],
+      "sha256": "c72ddcff22d5249ce0d73c3af096ad27ff0ad536a7ace331031fb153d2595716",
+      "available": true,
+      "reasons": [],
+      "row_count": 364,
+      "dates": [
+        "20261111"
+      ],
+      "collected_at": "2026-11-11T05:06:03.493134+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261111"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/c88d8e6ec53363e58828b6e94f7d3a7f70ed2ba449a14677e689702bfd845e55.csv",
+        "data/history/passenger/airport_passenger/snapshots/c88d8e6ec53363e58828b6e94f7d3a7f70ed2ba449a14677e689702bfd845e55.csv"
+      ],
+      "sha256": "c88d8e6ec53363e58828b6e94f7d3a7f70ed2ba449a14677e689702bfd845e55",
+      "available": true,
+      "reasons": [],
+      "row_count": 359,
+      "dates": [
+        "20261112"
+      ],
+      "collected_at": "2026-11-12T07:06:03.374987+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261112"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/c9776c89b6bf6a10fd82f07102d49f421944376995d7ab8ad9e2bff7b4da1825.csv",
+        "data/history/passenger/airport_passenger/snapshots/c9776c89b6bf6a10fd82f07102d49f421944376995d7ab8ad9e2bff7b4da1825.csv"
+      ],
+      "sha256": "c9776c89b6bf6a10fd82f07102d49f421944376995d7ab8ad9e2bff7b4da1825",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261113"
+      ],
+      "collected_at": "2026-11-13T04:06:03.851979+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261113"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/cb83d0d45993517948c83d891b3285bb7c380a0fb8e33ef0f9d43307060ff249.csv",
+        "data/history/passenger/airport_passenger/snapshots/cb83d0d45993517948c83d891b3285bb7c380a0fb8e33ef0f9d43307060ff249.csv"
+      ],
+      "sha256": "cb83d0d45993517948c83d891b3285bb7c380a0fb8e33ef0f9d43307060ff249",
+      "available": true,
+      "reasons": [],
+      "row_count": 364,
+      "dates": [
+        "20261111"
+      ],
+      "collected_at": "2026-11-11T03:06:04.259816+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261111"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/d12704bdd8363f3afdba3000370eab4124dae9f4df0cdbdceabc493155a477f8.csv",
+        "data/history/passenger/airport_passenger/snapshots/d12704bdd8363f3afdba3000370eab4124dae9f4df0cdbdceabc493155a477f8.csv"
+      ],
+      "sha256": "d12704bdd8363f3afdba3000370eab4124dae9f4df0cdbdceabc493155a477f8",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261113"
+      ],
+      "collected_at": "2026-11-13T06:06:04.465934+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261113"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/fc36bd4ad21f4e5f9e9afe38b070e9021dc1a664c7f3579ea3eef530db403076.csv",
+        "data/history/passenger/airport_passenger/snapshots/fc36bd4ad21f4e5f9e9afe38b070e9021dc1a664c7f3579ea3eef530db403076.csv"
+      ],
+      "sha256": "fc36bd4ad21f4e5f9e9afe38b070e9021dc1a664c7f3579ea3eef530db403076",
+      "available": true,
+      "reasons": [],
+      "row_count": 360,
+      "dates": [
+        "20261113"
+      ],
+      "collected_at": "2026-11-13T05:06:03.817491+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261113"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/originals/fe0fc327ab973e54ae11eda963ff4bae53d011fd6674ae6e8f94687ff5069237.csv",
+        "data/history/passenger/airport_passenger/snapshots/fe0fc327ab973e54ae11eda963ff4bae53d011fd6674ae6e8f94687ff5069237.csv"
+      ],
+      "sha256": "fe0fc327ab973e54ae11eda963ff4bae53d011fd6674ae6e8f94687ff5069237",
+      "available": true,
+      "reasons": [],
+      "row_count": 358,
+      "dates": [
+        "20261110"
+      ],
+      "collected_at": "2026-11-10T02:06:03.291167+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261110"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 6
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    },
+    {
+      "sources": [
+        "data/history/passenger/airport_passenger/snapshots/f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af.csv",
+        "data/raw/airport_passenger.csv"
+      ],
+      "sha256": "f551f8d366a4ee10455ac0cf3456b5702852338dc3eb400da22a0c5d4b5403af",
+      "available": true,
+      "reasons": [],
+      "row_count": 346,
+      "dates": [
+        "20261117"
+      ],
+      "collected_at": "2026-11-17T03:06:03.750874+00:00",
+      "completeness": "VERIFIED_API_COUNT",
+      "excluded_scopes": [
+        [
+          "ICN",
+          "20261117"
+        ]
+      ],
+      "row_exclusions": {
+        "unverified_airport_mapping": 5
+      },
+      "duplicate_rows": 0,
+      "columns": [
+        "ARP",
+        "AOD",
+        "SDT",
+        "HH",
+        "PCT",
+        "PCG",
+        "TOF",
+        "CONGEST_YN",
+        "source_total_count",
+        "collection_complete",
+        "requested_sch_date",
+        "airport_code",
+        "airport_name",
+        "country_code",
+        "direction",
+        "date",
+        "hour",
+        "operation_date",
+        "event_at_candidate_kst",
+        "event_at",
+        "operation_date_verified",
+        "airport_verified",
+        "semantics_verified",
+        "time_basis",
+        "operation_date_source",
+        "expected_passengers",
+        "within_documented_airport_scope",
+        "collected_at",
+        "pct_raw",
+        "tof_raw",
+        "pct_definition_candidate",
+        "tof_definition_candidate",
+        "definition_reference",
+        "validation_issue"
+      ]
+    }
+  ]
+}

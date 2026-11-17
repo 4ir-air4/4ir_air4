@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "schema_version": "1.0",
+    "exported_at": "2026-11-17T03:23:11.468016+00:00",
+    "purpose": "expected passenger and independently collected weather/flight status; not actual congestion or wait-time prediction",
+    "scope": {
+      "airports": {
+        "GMP": "김포공항",
+        "CJU": "제주공항",
+        "PUS": "김해공항",
+        "CJJ": "청주공항",
+        "HIN": "사천공항",
+        "ICN": "ICN (자료별 매핑 확인 필요)",
+        "KPO": "포항경주공항",
+        "KUV": "군산공항",
+        "KWJ": "광주공항",
+        "MWX": "무안공항",
+        "RSU": "여수공항",
+        "TAE": "대구공항",
+        "USN": "울산공항",
+        "WJU": "원주공항",
+        "YNY": "양양공항"
+      },
+      "AOD": [
+        "D",
+        "A"
+      ],
+      "TOF": [
+        "D",
+        "I"
+      ],
+      "passenger_dates": [
+        "20261109",
+        "20261110",
+        "20261111",
+        "20261112",
+        "20261113",
+        "20261116",
+        "20261117"
+      ]
+    },
+    "cross_source_snapshot_atomic": false,
+    "service_validated": false,
+    "reliable_generalization": false,
+    "temporal_availability": "NOT_VERIFIED"
+  },
+  "counts": {
+    "passenger_records": 2455,
+    "passenger_airports": 13,
+    "passenger_dates": [
+      "20261109",
+      "20261110",
+      "20261111",
+      "20261112",
+      "20261113",
+      "20261116",
+      "20261117"
+    ],
+    "weather_records": 7,
+    "flight_records": 1803,
+    "queried_airports": 15
+  },
+  "files": [
+    {
+      "path": "flights.json",
+      "bytes": 1738900,
+      "sha256": "dc14617c46726e6f09093b3687142a888914b2dbde01a9d425b82c53734cad2e"
+    },
+    {
+      "path": "passengers.csv",
+      "bytes": 1146220,
+      "sha256": "0578dfc2d7e0703b6f61a3b651429c3a4d6e9e3a6e5f1c33c3f6633b5a70d86d"
+    },
+    {
+      "path": "passengers.json",
+      "bytes": 2377232,
+      "sha256": "75e88f817dfcdb968b59d6aeb19da544257c59e558d3992948da3ce7b7e56c58"
+    },
+    {
+      "path": "quality.json",
+      "bytes": 127371,
+      "sha256": "e2a4c6934c94314f55242a29fe1a95937f3598c216246f0fc9d9f7efc215f64c"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5117,
+      "sha256": "310f73be59c70f1b3784468d57d2baf578a2fa308698620aa91269411e6e8b57"
+    },
+    {
+      "path": "weather.json",
+      "bytes": 19642,
+      "sha256": "51b147ebb6ec1e28fd565a4f9007561996c3a992f485cea8ecd688a89a0e0974"
+    }
+  ]
+}

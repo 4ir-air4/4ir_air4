@@ -63,6 +63,8 @@ bts_data/
 data/
 reference_data/
 outputs/
+# 팀원 sjw 가 화면용으로 내보낸 정적 결과(공공 API 자료, 약 5MB)는 올린다 (2026-11-17)
+!/sjw/outputs/
 outputs_*/
 _archive_before_2020/
 

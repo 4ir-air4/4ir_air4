@@ -83,7 +83,7 @@ def classify(page):
     notes = []
     for m in page["messages"]:
         if NEEDS_KEY.search(m):
-            notes.append(f"키 필요: {m[:80]}")
+            notes.append(f"키 필요: {re.sub(r'^\[[^]]*\] ', '', m)[:80]}")  # 선택지마다 붙는 [위젯=값] 을 떼어 같은 안내는 한 줄로
         elif MISSING.search(m):
             fails.append(f"파일 없음 안내: {m[:120]}")
     return fails, notes
@@ -125,6 +125,8 @@ def main(include_new):
 def check():
     ok = classify({"errors": [], "messages": ["항공기 데이터를 불러오지 못했습니다: OpenSky 인증 정보가 없습니다.", "수집이 멈춘 것 같습니다."]})
     assert ok == ([], ["키 필요: 항공기 데이터를 불러오지 못했습니다: OpenSky 인증 정보가 없습니다."]), "키 안내는 실패가 아님"
+    same = classify({"errors": [], "messages": ["AI 키가 없습니다. secrets.toml", "[모델=LSTM] AI 키가 없습니다. secrets.toml"]})
+    assert same[1][0] == same[1][1], "선택지 접두어만 다른 키 안내는 같은 줄"
     bad = classify({"errors": ["boom"], "messages": ["모델 파일이 없습니다."]})
     assert len(bad[0]) == 2, "오류와 파일 없음 안내는 실패"
 

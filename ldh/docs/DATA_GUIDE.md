@@ -25,7 +25,7 @@ icn_live/ (인천 API)         (live_flights 로 학습 기준 지연으로 변�
 | `ldh/results/legacy_models/` | 예전 `ldh/scripts/train.py` 모델과 지표. 미국 화면이 읽음 | 56MB | 미국 화면 일부가 비거나 다시 학습해야 함 |
 | `ldh/logs/` | 학습 로그 | 작음 | 영향 없음 |
 | `ldh/` 의 나머지 | 코드, 문서, 노트북, 설정 | 1MB 미만 | Git에서 복구 (커밋된 부분만) |
-| `.venv/` | 파이썬 환경 | 2.3GB | `requirements.txt`로 다시 설치 |
+| `.venv/` | 파이썬 환경 | 2.3GB | 학습까지 하려면 `ldh/requirements-train.txt`, 화면만 보려면 `requirements.txt`로 다시 설치 |
 
 위 자료 폴더는 코드를 제외하고 모두 Git에 올라가지 않습니다. 그래서 팀원이나 다른 PC에는 따로 전달해야 합니다.
 
