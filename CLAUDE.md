@@ -1,10 +1,18 @@
 # 4ir 항공 데이터 프로젝트
 
 - 실행: `.venv/Scripts/python.exe -m streamlit run app.py` (시스템 파이썬에는 lightgbm·xgboost·tensorflow가 없다)
+- 설치 목록은 둘로 나뉜다(2026-11-16).
+  - 루트 `requirements.txt`: 화면용 17개(2026-11-17 PR #13의 AI 도우미·계류장 YOLO용 anthropic, google-genai, ultralytics 포함. torch 는 CPU 판 권장).
+  - `ldh/requirements-train.txt`: 학습·자료 준비용이고, `-r ../requirements.txt`로 화면용도 함께 설치한다.
+  - 새 패키지를 화면 코드에서 import하면 루트 목록에 넣고, 학습에만 쓰면 학습용에 넣는다. 버전은 두 목록과 `.venv`를 같게 유지한다(저장 모델 joblib 호환).
 - 내 작업은 모두 `ldh/` 안에 둔다(팀원 파일과 섞지 않는다). `core/`, `categories/`, `scripts/`(학습·평가·전처리),
   `collect/`(인천 수집기), `tests/`, `docs/`, `notebooks/`, `config/`(tuned_params.json), `datasets/`·`results/`·`logs/`(아래. `results`는 화면용 가벼운 결과만 git에 올리고 나머지는 git 제외).
   프로젝트 루트에서 모듈로 실행한다(예: `python -m ldh.scripts.run_models korea_ops:kac_delay_hour`, `python -m ldh.tests.test_collect_icn`).
-- 루트에는 `app.py`(메뉴), `requirements.txt`, `CLAUDE.md`, `.streamlit/config.toml`(밝은 테마, PR #9), `.streamlit/secrets.toml.example`(실시간 지도용 OpenSky 키 이름, 값 없음)과 사람별 폴더(`ldh/`, `ojh/`)만 둔다.
+- 루트에는 `app.py`(메뉴), `requirements.txt`(화면 실행용 17개, 배포용), `README.md`(프로젝트 안내, ojh 상세는 `ojh/README.md`), `.gitattributes`(sjw 결과 줄바꿈 변환 금지, 해시 보존), `CLAUDE.md`, `.streamlit/config.toml`(밝은 테마, PR #9), `.streamlit/secrets.toml.example`(실시간 지도용 OpenSky 키 이름, 값 없음)과 사람별 폴더(`ldh/`, `ojh/`, `chs/`, `sjw/`)만 둔다.
+- 팀원 chs(최효선) 작업(2026-11-17): `chs/notebooks/`에 드라이브 `4ir\chs\4ir_air4`의 본인 작성 노트북(Untitled6~10, `untitled9 (1).py`)만 원래 이름으로 둔다. 저장소 사본·가상환경은 넣지 않았고, `.py`의 Colab 주소 한 줄만 지웠다. 화면은 읽지 않는다. `ldh/core/chs_review.py`(드라이브를 읽는 검토 화면)는 계속 커밋하지 않는다.
+- 팀원 sjw 결과(2026-11-17): `sjw/outputs/airport_guidance/<생성번호>/`에 sjw가 내보낸 정적 결과(여객 예상·혼잡 Y/N, 기상, 운항, manifest 해시)를 그대로 둔다.
+  - 화면은 `ldh/core/airport_guidance.py`(메뉴 "국내 공항 혼잡 예상")가 이 결과만 읽는다. 해시를 확인하고 시각은 KST로 바꾼다.
+  - sjw의 원본·수집기·AI 코드는 넣지 않는다(sjw 요청). 새 결과를 받으면 새 생성번호 폴더를 통째로 넣고 화면의 `RUN`만 바꾼다. 드라이브 원본은 `G:\내 드라이브\4ir\sjw\Final`.
 - 팀원이 저장소만 받아도 모든 화면이 나오도록 화면용 파일을 git에 올린다(2026-11-16).
   - ldh: 결과 아래 참고. 미국 운항·기상, OpenSky 건별 예측은 5만 건 표본(`pred_sample_*`, `ldh/scripts/sample_preds.py`)만 올리고, 화면은 `Store.pred_path()`로 원본이 없으면 표본을 읽는다.
   - ojh: `ojh/models/saved`(joblib zlib 압축, 약 86MB)와 `ojh/data/raw`의 `aircraftlive_counts.csv`·`opensky_counts.csv`(`git add -f`)를 올린다. `btstranstats_counts.csv`(353MB)는 빼며, 없으면 과거 화면은 테스트 구간만 그린다.

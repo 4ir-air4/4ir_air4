@@ -1,0 +1,597 @@
+{
+  "metadata": {
+    "schema_version": "1.0",
+    "exported_at": "2026-11-17T03:23:11.468016+00:00",
+    "purpose": "expected passenger and independently collected weather/flight status; not actual congestion or wait-time prediction",
+    "scope": {
+      "airports": {
+        "GMP": "김포공항",
+        "CJU": "제주공항",
+        "PUS": "김해공항",
+        "CJJ": "청주공항",
+        "HIN": "사천공항",
+        "ICN": "ICN (자료별 매핑 확인 필요)",
+        "KPO": "포항경주공항",
+        "KUV": "군산공항",
+        "KWJ": "광주공항",
+        "MWX": "무안공항",
+        "RSU": "여수공항",
+        "TAE": "대구공항",
+        "USN": "울산공항",
+        "WJU": "원주공항",
+        "YNY": "양양공항"
+      },
+      "AOD": [
+        "D",
+        "A"
+      ],
+      "TOF": [
+        "D",
+        "I"
+      ],
+      "passenger_dates": [
+        "20261109",
+        "20261110",
+        "20261111",
+        "20261112",
+        "20261113",
+        "20261116",
+        "20261117"
+      ]
+    },
+    "cross_source_snapshot_atomic": false,
+    "service_validated": false,
+    "reliable_generalization": false,
+    "temporal_availability": "NOT_VERIFIED"
+  },
+  "airports": {
+    "GMP": {
+      "kind": "weather",
+      "airport_code": "GMP",
+      "available": true,
+      "status": "partial",
+      "verified": true,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:19.730271+00:00",
+      "collected_at": "2026-11-17T03:22:05.061934+00:00",
+      "data_age": 259.730271,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 1,
+      "records": [
+        {
+          "airport_code": "GMP",
+          "station": 110,
+          "temperature": 15.7,
+          "humidity": 62.0,
+          "wind_speed_10m": 0.8,
+          "wind_dir_10m": 100.0,
+          "l_vis": 10000.0,
+          "r_vis": null,
+          "precipitation": 0.0,
+          "observed_at": "2026-11-17T03:19:00+00:00",
+          "collected_at": "2026-11-17T03:22:05.061934+00:00",
+          "mapping_verified": true,
+          "integration_eligible": true,
+          "integration_exclusion_reasons": [],
+          "quality_warnings": [],
+          "data_age": 259.730271,
+          "collection_age": 74.668337,
+          "verified": true,
+          "missing_measurements": [
+            "r_vis"
+          ],
+          "measurement_scaling": "unchanged_from_collector"
+        }
+      ],
+      "reasons": [],
+      "quality": {
+        "matching_source_rows": 10,
+        "excluded_invalid_rows": 0,
+        "validation_reasons": [],
+        "integration_policy_unchanged": true,
+        "missing_values_are_null": true,
+        "cross_source_snapshot_atomic": false,
+        "stale": null
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "CJU": {
+      "kind": "weather",
+      "airport_code": "CJU",
+      "available": true,
+      "status": "partial",
+      "verified": true,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:20.726629+00:00",
+      "collected_at": "2026-11-17T03:22:05.061934+00:00",
+      "data_age": 260.726629,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 1,
+      "records": [
+        {
+          "airport_code": "CJU",
+          "station": 182,
+          "temperature": 18.8,
+          "humidity": 83.0,
+          "wind_speed_10m": 6.6,
+          "wind_dir_10m": 90.0,
+          "l_vis": 9200.0,
+          "r_vis": null,
+          "precipitation": 6.6,
+          "observed_at": "2026-11-17T03:19:00+00:00",
+          "collected_at": "2026-11-17T03:22:05.061934+00:00",
+          "mapping_verified": true,
+          "integration_eligible": true,
+          "integration_exclusion_reasons": [],
+          "quality_warnings": [],
+          "data_age": 260.726629,
+          "collection_age": 75.664695,
+          "verified": true,
+          "missing_measurements": [
+            "r_vis"
+          ],
+          "measurement_scaling": "unchanged_from_collector"
+        }
+      ],
+      "reasons": [],
+      "quality": {
+        "matching_source_rows": 10,
+        "excluded_invalid_rows": 0,
+        "validation_reasons": [],
+        "integration_policy_unchanged": true,
+        "missing_values_are_null": true,
+        "cross_source_snapshot_atomic": false,
+        "stale": null
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "PUS": {
+      "kind": "weather",
+      "airport_code": "PUS",
+      "available": false,
+      "status": "unavailable",
+      "verified": false,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:21.604771+00:00",
+      "collected_at": null,
+      "data_age": null,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 0,
+      "records": [],
+      "reasons": [
+        "no_matching_records"
+      ],
+      "quality": {
+        "matching_source_rows": 0
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "CJJ": {
+      "kind": "weather",
+      "airport_code": "CJJ",
+      "available": false,
+      "status": "unavailable",
+      "verified": false,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:22.407252+00:00",
+      "collected_at": null,
+      "data_age": null,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 0,
+      "records": [],
+      "reasons": [
+        "no_matching_records"
+      ],
+      "quality": {
+        "matching_source_rows": 0
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "HIN": {
+      "kind": "weather",
+      "airport_code": "HIN",
+      "available": false,
+      "status": "unavailable",
+      "verified": false,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:22.889192+00:00",
+      "collected_at": null,
+      "data_age": null,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 0,
+      "records": [],
+      "reasons": [
+        "no_matching_records"
+      ],
+      "quality": {
+        "matching_source_rows": 0
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "ICN": {
+      "kind": "weather",
+      "airport_code": "ICN",
+      "available": true,
+      "status": "partial",
+      "verified": true,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:23.179373+00:00",
+      "collected_at": "2026-11-17T03:22:05.061934+00:00",
+      "data_age": 263.179373,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 1,
+      "records": [
+        {
+          "airport_code": "ICN",
+          "station": 113,
+          "temperature": 14.8,
+          "humidity": 69.0,
+          "wind_speed_10m": 2.5,
+          "wind_dir_10m": 140.0,
+          "l_vis": 10000.0,
+          "r_vis": null,
+          "precipitation": 0.0,
+          "observed_at": "2026-11-17T03:19:00+00:00",
+          "collected_at": "2026-11-17T03:22:05.061934+00:00",
+          "mapping_verified": true,
+          "integration_eligible": true,
+          "integration_exclusion_reasons": [],
+          "quality_warnings": [],
+          "data_age": 263.179373,
+          "collection_age": 78.117439,
+          "verified": true,
+          "missing_measurements": [
+            "r_vis"
+          ],
+          "measurement_scaling": "unchanged_from_collector"
+        }
+      ],
+      "reasons": [],
+      "quality": {
+        "matching_source_rows": 10,
+        "excluded_invalid_rows": 0,
+        "validation_reasons": [],
+        "integration_policy_unchanged": true,
+        "missing_values_are_null": true,
+        "cross_source_snapshot_atomic": false,
+        "stale": null
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "KPO": {
+      "kind": "weather",
+      "airport_code": "KPO",
+      "available": false,
+      "status": "unavailable",
+      "verified": false,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:23.560367+00:00",
+      "collected_at": null,
+      "data_age": null,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 0,
+      "records": [],
+      "reasons": [
+        "no_matching_records"
+      ],
+      "quality": {
+        "matching_source_rows": 0
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "KUV": {
+      "kind": "weather",
+      "airport_code": "KUV",
+      "available": false,
+      "status": "unavailable",
+      "verified": false,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:23.948634+00:00",
+      "collected_at": null,
+      "data_age": null,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 0,
+      "records": [],
+      "reasons": [
+        "no_matching_records"
+      ],
+      "quality": {
+        "matching_source_rows": 0
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "KWJ": {
+      "kind": "weather",
+      "airport_code": "KWJ",
+      "available": false,
+      "status": "unavailable",
+      "verified": false,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:24.339222+00:00",
+      "collected_at": null,
+      "data_age": null,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 0,
+      "records": [],
+      "reasons": [
+        "no_matching_records"
+      ],
+      "quality": {
+        "matching_source_rows": 0
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "MWX": {
+      "kind": "weather",
+      "airport_code": "MWX",
+      "available": true,
+      "status": "partial",
+      "verified": true,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:24.727934+00:00",
+      "collected_at": "2026-11-17T03:22:05.061934+00:00",
+      "data_age": 264.727934,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 1,
+      "records": [
+        {
+          "airport_code": "MWX",
+          "station": 163,
+          "temperature": 15.2,
+          "humidity": 78.0,
+          "wind_speed_10m": 3.7,
+          "wind_dir_10m": 20.0,
+          "l_vis": 10000.0,
+          "r_vis": null,
+          "precipitation": 0.6,
+          "observed_at": "2026-11-17T03:19:00+00:00",
+          "collected_at": "2026-11-17T03:22:05.061934+00:00",
+          "mapping_verified": true,
+          "integration_eligible": true,
+          "integration_exclusion_reasons": [],
+          "quality_warnings": [],
+          "data_age": 264.727934,
+          "collection_age": 79.666,
+          "verified": true,
+          "missing_measurements": [
+            "r_vis"
+          ],
+          "measurement_scaling": "unchanged_from_collector"
+        }
+      ],
+      "reasons": [],
+      "quality": {
+        "matching_source_rows": 10,
+        "excluded_invalid_rows": 0,
+        "validation_reasons": [],
+        "integration_policy_unchanged": true,
+        "missing_values_are_null": true,
+        "cross_source_snapshot_atomic": false,
+        "stale": null
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "RSU": {
+      "kind": "weather",
+      "airport_code": "RSU",
+      "available": true,
+      "status": "partial",
+      "verified": true,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:25.142117+00:00",
+      "collected_at": "2026-11-17T03:22:05.061934+00:00",
+      "data_age": 265.142117,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 1,
+      "records": [
+        {
+          "airport_code": "RSU",
+          "station": 167,
+          "temperature": 17.7,
+          "humidity": 66.0,
+          "wind_speed_10m": 3.0,
+          "wind_dir_10m": 70.0,
+          "l_vis": 10000.0,
+          "r_vis": null,
+          "precipitation": 0.0,
+          "observed_at": "2026-11-17T03:19:00+00:00",
+          "collected_at": "2026-11-17T03:22:05.061934+00:00",
+          "mapping_verified": true,
+          "integration_eligible": true,
+          "integration_exclusion_reasons": [],
+          "quality_warnings": [],
+          "data_age": 265.142117,
+          "collection_age": 80.080183,
+          "verified": true,
+          "missing_measurements": [
+            "r_vis"
+          ],
+          "measurement_scaling": "unchanged_from_collector"
+        }
+      ],
+      "reasons": [],
+      "quality": {
+        "matching_source_rows": 10,
+        "excluded_invalid_rows": 0,
+        "validation_reasons": [],
+        "integration_policy_unchanged": true,
+        "missing_values_are_null": true,
+        "cross_source_snapshot_atomic": false,
+        "stale": null
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "TAE": {
+      "kind": "weather",
+      "airport_code": "TAE",
+      "available": false,
+      "status": "unavailable",
+      "verified": false,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:25.593606+00:00",
+      "collected_at": null,
+      "data_age": null,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 0,
+      "records": [],
+      "reasons": [
+        "no_matching_records"
+      ],
+      "quality": {
+        "matching_source_rows": 0
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "USN": {
+      "kind": "weather",
+      "airport_code": "USN",
+      "available": true,
+      "status": "partial",
+      "verified": true,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:26.021572+00:00",
+      "collected_at": "2026-11-17T03:22:05.061934+00:00",
+      "data_age": 266.021572,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 1,
+      "records": [
+        {
+          "airport_code": "USN",
+          "station": 151,
+          "temperature": 17.1,
+          "humidity": 60.0,
+          "wind_speed_10m": 4.7,
+          "wind_dir_10m": 90.0,
+          "l_vis": 10000.0,
+          "r_vis": null,
+          "precipitation": 5.0,
+          "observed_at": "2026-11-17T03:19:00+00:00",
+          "collected_at": "2026-11-17T03:22:05.061934+00:00",
+          "mapping_verified": true,
+          "integration_eligible": true,
+          "integration_exclusion_reasons": [],
+          "quality_warnings": [],
+          "data_age": 266.021572,
+          "collection_age": 80.959638,
+          "verified": true,
+          "missing_measurements": [
+            "r_vis"
+          ],
+          "measurement_scaling": "unchanged_from_collector"
+        }
+      ],
+      "reasons": [],
+      "quality": {
+        "matching_source_rows": 10,
+        "excluded_invalid_rows": 0,
+        "validation_reasons": [],
+        "integration_policy_unchanged": true,
+        "missing_values_are_null": true,
+        "cross_source_snapshot_atomic": false,
+        "stale": null
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "WJU": {
+      "kind": "weather",
+      "airport_code": "WJU",
+      "available": false,
+      "status": "unavailable",
+      "verified": false,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:26.495587+00:00",
+      "collected_at": null,
+      "data_age": null,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 0,
+      "records": [],
+      "reasons": [
+        "no_matching_records"
+      ],
+      "quality": {
+        "matching_source_rows": 0
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    },
+    "YNY": {
+      "kind": "weather",
+      "airport_code": "YNY",
+      "available": true,
+      "status": "partial",
+      "verified": true,
+      "verified_scope": "mapping_and_source_time_semantics",
+      "queried_at": "2026-11-17T03:23:26.886861+00:00",
+      "collected_at": "2026-11-17T03:22:05.061934+00:00",
+      "data_age": 266.886861,
+      "data_age_unit": "seconds",
+      "data_age_basis": "observed_at",
+      "source_sha256": "75c0dd34cf51bcd42d67cad91c64dd1ad76062fcc7c5392d2afc295d1f619c10",
+      "count": 1,
+      "records": [
+        {
+          "airport_code": "YNY",
+          "station": 92,
+          "temperature": 11.6,
+          "humidity": 81.0,
+          "wind_speed_10m": 3.7,
+          "wind_dir_10m": 360.0,
+          "l_vis": 10000.0,
+          "r_vis": null,
+          "precipitation": 1.7,
+          "observed_at": "2026-11-17T03:19:00+00:00",
+          "collected_at": "2026-11-17T03:22:05.061934+00:00",
+          "mapping_verified": true,
+          "integration_eligible": true,
+          "integration_exclusion_reasons": [],
+          "quality_warnings": [],
+          "data_age": 266.886861,
+          "collection_age": 81.824927,
+          "verified": true,
+          "missing_measurements": [
+            "r_vis"
+          ],
+          "measurement_scaling": "unchanged_from_collector"
+        }
+      ],
+      "reasons": [],
+      "quality": {
+        "matching_source_rows": 10,
+        "excluded_invalid_rows": 0,
+        "validation_reasons": [],
+        "integration_policy_unchanged": true,
+        "missing_values_are_null": true,
+        "cross_source_snapshot_atomic": false,
+        "stale": null
+      },
+      "source_collected_at": "2026-11-17T03:22:05.061934+00:00"
+    }
+  }
+}

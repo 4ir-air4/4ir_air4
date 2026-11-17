@@ -37,8 +37,8 @@ SIDE = {TOP: ("실시간 관제", ":material/satellite_alt:"), "한국": ("인�
 
 # 같은 그룹 안의 순서(작을수록 위). 적지 않은 ldh 카테고리는 META["order"] + 100 순서로 뒤에 붙는다.
 RANK = {
-    "live": 0, "traffic_forecast": 1, "airport_demand": 2,
-    "icn_risk": 0, "korea_ops": 1, "korea_demand": 2, "korea_airfare": 3,
+    "live": 0, "traffic_forecast": 1, "airport_demand": 2, "apron_congestion": 3,
+    "icn_risk": 0, "korea_ops": 1, "airport_guidance": 2, "korea_demand": 3, "korea_airfare": 4,
     "us_flights": 0, "us_weather": 1,
     "world_traffic": 0, "europe": 1,
     "safety": 0,
@@ -50,8 +50,10 @@ INFO = {
     "live":             ("OpenSky Network 실시간 관측으로 전 세계 항공기 위치·고도·기종과 비행 경로를 추적합니다.", ["LIVE", "OpenSky"]),
     "traffic_forecast": ("관측 데이터로 미래 항공 교통량을 예측하고 여러 모델의 성능을 비교합니다.", ["ML 예측", "모델 비교"]),
     "airport_demand":   ("미국·유럽·영국·한국 공항의 월별 승객 수와 GDP 성장률로 공항 수요를 예측합니다.", ["ML 예측", "글로벌"]),
+    "apron_congestion": ("공항 CCTV·사진에서 YOLO 로 비행기·차량·사람을 세어 활주로·계류장 혼잡 등급을 매깁니다.", ["YOLO", "비전 AI"]),
     "icn_risk":         ("인천공항 도착·출발편의 지연 위험을 시간대·기상 조건으로 예보합니다.", ["ML 예측", "인천"]),
     "korea_ops":        ("국내 공항별 운항 실적과 지연 패턴을 분석합니다.", ["통계", "ML"]),
+    "airport_guidance": ("국내 공항별 시간대 예상 여객과 혼잡 구분, 최신 기상·운항 현황을 봅니다(sjw 수집 자료).", ["공항공사", "기상청"]),
     "korea_demand":     ("국내 항공 여객·화물 수송 실적과 수요 추이를 예측합니다.", ["수요", "ML"]),
     "korea_airfare":    ("국내선 노선별 항공료 흐름과 변동 요인을 살펴봅니다.", ["요금", "통계"]),
     "us_flights":       ("미국 국내선 운항 실적(BTS)으로 지연·결항 패턴을 분석합니다.", ["BTS", "ML"]),
@@ -74,9 +76,14 @@ def build_pages():
                                           url_path="traffic_forecast")),
         (TOP, "airport_demand", st.Page("ojh/views/airport_demand.py", title="공항 수요 예측", icon="🛫",
                                         url_path="airport_demand")),
+        (TOP, "apron_congestion", st.Page("ojh/views/apron_congestion.py", title="계류장 혼잡도", icon="📷",
+                                          url_path="apron_congestion")),
         # --- 팀원 작업 (ldh) ---
         ("한국", "icn_risk", st.Page("ldh/core/icn_risk.py", title="인천 지연 위험 예보",
                                         icon=":material/flight_takeoff:", url_path="icn_risk")),
+        # --- 팀원 작업 (sjw 수집 결과를 ldh 화면으로 표시) ---
+        ("한국", "airport_guidance", st.Page("ldh/core/airport_guidance.py", title="국내 공항 혼잡 예상",
+                                                icon=":material/groups:", url_path="airport_guidance")),
         ("종합·모델", "home", st.Page("ldh/core/home.py", title="통합 요약", icon=":material/dashboard:", url_path="home")),
         ("종합·모델", "model_compare", st.Page("ldh/core/model_compare.py", title="모델 비교",
                                              icon=":material/compare_arrows:", url_path="model_compare")),
@@ -265,6 +272,7 @@ def sidebar(items, order, current):
             '실시간 관제 · 교통량 · 공항 수요 예측 — <b>오정현</b><br>'
             '한국 · 미국 · 유럽 · 안전 분석 — <b>이동형</b><br>'
             '결항 요인 · 국내 여객 수요 분석 — <b>최효선</b><br>'
+            '국내 공항 여객·기상·운항 수집 · 혼잡 예상 — <b>신정욱</b><br>'
             '데이터: OpenSky · BTS · EUROCONTROL · Eurostat 외</div>',
             unsafe_allow_html=True)
 
@@ -305,6 +313,15 @@ sidebar(items, order, current)
 sec, slug = next((g, k) for g, k, p in items if p.title == current.title)
 mark_top_section(order, groups, sec)
 hero(sec, slug, current)
+import importlib  # noqa: E402
+
+import _4_ai_chat_tab as ai_chat  # noqa: E402  (ojh/ 는 위에서 import 경로에 넣었다)
+_ai_mtime = Path(ai_chat.__file__).stat().st_mtime
+if getattr(ai_chat, "_loaded_mtime", None) != _ai_mtime:  # 파일이 바뀌었으면 서버를 재시작하지 않아도 새 버전을 읽는다
+    ai_chat = importlib.reload(ai_chat)
+    ai_chat._loaded_mtime = _ai_mtime
+# 페이지 내용보다 먼저 그린다: 오래 걸리는 페이지(YOLO 분석 등)가 도는 동안에도 버튼이 사라지지 않게
+ai_chat.floating_chat()  # 모든 페이지 오른쪽 아래 AI 항공 도우미
 current.run()
 st.markdown('<div class="ai-footer"><span><b>AERO INSIGHT</b> · 항공 교통 관제 · 수요 예측 통합 플랫폼</span>'
-            '<span><b>TEAM 4IR-AIR4</b> · 오정현 · 이동형 · 최효선</span></div>', unsafe_allow_html=True)
+            '<span><b>TEAM 4IR-AIR4</b> · 오정현 · 이동형 · 최효선 · 신정욱</span></div>', unsafe_allow_html=True)
