@@ -1,0 +1,2 @@
+# sjw 내보내기 결과는 manifest.json 의 SHA-256 으로 확인한다(ldh/core/airport_guidance.py). 줄바꿈을 바꾸면 해시가 달라지므로 바이트 그대로 둔다
+/sjw/outputs/** -text

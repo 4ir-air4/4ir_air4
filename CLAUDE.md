@@ -8,7 +8,7 @@
 - 내 작업은 모두 `ldh/` 안에 둔다(팀원 파일과 섞지 않는다). `core/`, `categories/`, `scripts/`(학습·평가·전처리),
   `collect/`(인천 수집기), `tests/`, `docs/`, `notebooks/`, `config/`(tuned_params.json), `datasets/`·`results/`·`logs/`(아래. `results`는 화면용 가벼운 결과만 git에 올리고 나머지는 git 제외).
   프로젝트 루트에서 모듈로 실행한다(예: `python -m ldh.scripts.run_models korea_ops:kac_delay_hour`, `python -m ldh.tests.test_collect_icn`).
-- 루트에는 `app.py`(메뉴), `requirements.txt`(화면 실행용 17개, 배포용), `README.md`(프로젝트 안내, ojh 상세는 `ojh/README.md`), `CLAUDE.md`, `.streamlit/config.toml`(밝은 테마, PR #9), `.streamlit/secrets.toml.example`(실시간 지도용 OpenSky 키 이름, 값 없음)과 사람별 폴더(`ldh/`, `ojh/`, `chs/`, `sjw/`)만 둔다.
+- 루트에는 `app.py`(메뉴), `requirements.txt`(화면 실행용 17개, 배포용), `README.md`(프로젝트 안내, ojh 상세는 `ojh/README.md`), `.gitattributes`(sjw 결과 줄바꿈 변환 금지, 해시 보존), `CLAUDE.md`, `.streamlit/config.toml`(밝은 테마, PR #9), `.streamlit/secrets.toml.example`(실시간 지도용 OpenSky 키 이름, 값 없음)과 사람별 폴더(`ldh/`, `ojh/`, `chs/`, `sjw/`)만 둔다.
 - 팀원 chs(최효선) 작업(2026-11-17): `chs/notebooks/`에 드라이브 `4ir\chs\4ir_air4`의 본인 작성 노트북(Untitled6~10, `untitled9 (1).py`)만 원래 이름으로 둔다. 저장소 사본·가상환경은 넣지 않았고, `.py`의 Colab 주소 한 줄만 지웠다. 화면은 읽지 않는다. `ldh/core/chs_review.py`(드라이브를 읽는 검토 화면)는 계속 커밋하지 않는다.
 - 팀원 sjw 결과(2026-11-17): `sjw/outputs/airport_guidance/<생성번호>/`에 sjw가 내보낸 정적 결과(여객 예상·혼잡 Y/N, 기상, 운항, manifest 해시)를 그대로 둔다.
   - 화면은 `ldh/core/airport_guidance.py`(메뉴 "국내 공항 혼잡 예상")가 이 결과만 읽는다. 해시를 확인하고 시각은 KST로 바꾼다.
