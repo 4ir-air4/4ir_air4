@@ -68,7 +68,7 @@ YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(
 ## 기술 스택
 
 <p>
-  <img src="https://skillicons.dev/icons?i=py,tensorflow,pytorch,sklearn,git,github,pycharm,vscode,windows,powershell" alt="Python, TensorFlow, PyTorch, scikit-learn, Git, GitHub, PyCharm, VS Code, Windows, PowerShell">
+  <img src="https://skillicons.dev/icons?i=py,tensorflow,pytorch,sklearn,git,github,pycharm,vscode,windows,powershell" alt="Python, TensorFlow, PyTorch, scikit-learn, Git, GitHub, PyCharm, VS Code, PowerShell">
 </p>
 
 **ML 모델**
@@ -137,23 +137,23 @@ YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(
 ## 폴더 구조
 
 ```
-app.py                    |통합 앱 메뉴(AERO INSIGHT)
-requirements.txt          화면 실행용 패키지 17개
-.streamlit/               밝은 테마 설정, 키 예시 파일
-ojh/                      오정현 : 실시간 지도, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미(설명서 README.md)
-views/                    통합 앱에서 여는 화면 래퍼
-models/                   학습 코드(train.py, train2.py)와 저장 모델(saved/)
-ldh/                      이동형 : 카테고리 분석·예측
-categories/               카테고리 8개(폴더 하나가 메뉴 하나, 추가 방법은 categories/README.md)
-core/                     공통 학습 엔진, 화면(통합 요약, 모델 비교, 인천 예보, 혼잡 예상 등)
-scripts/                  자료 준비, 학습, 평가
-collect/                  인천공항 운항 수집기
-results/                  화면용 결과(요약·지표, 집계, 예측 표본, SHAP)
-tests/                    점검 스크립트
-docs/                     자료 안내(DATA_GUIDE.md), 출처(DATA_SOURCES.md), 작업 기록(WORK_LOG.md)
-requirements-train.txt    학습·자료 준비용 패키지(화면용 포함)
-chs/notebooks/            최효선 : 결항·지연 예측, 월별 여객 수요 예측 Colab 노트북(설명 chs/README.md)
-sjw/outputs/              신정욱 : 국내 공항 여객·기상·운항 수집 결과(정적 내보내기, 설명 sjw/README.md)
+app.py                    | 통합 앱 메뉴(AERO INSIGHT)
+requirements.txt          | 화면 실행용 패키지 17개
+.streamlit/               | 밝은 테마 설정, 키 예시 파일
+ojh/                      | 오정현 : 실시간 지도, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미(설명서 README.md)
+views/                    | 통합 앱에서 여는 화면 래퍼
+models/                   | 학습 코드(train.py, train2.py)와 저장 모델(saved/)
+ldh/                      | 이동형 : 카테고리 분석·예측
+categories/               | 카테고리 8개(폴더 하나가 메뉴 하나, 추가 방법은 categories/README.md)
+core/                     | 공통 학습 엔진, 화면(통합 요약, 모델 비교, 인천 예보, 혼잡 예상 등)
+scripts/                  | 자료 준비, 학습, 평가
+collect/                  | 인천공항 운항 수집기
+results/                  | 화면용 결과(요약·지표, 집계, 예측 표본, SHAP)
+tests/                    | 점검 스크립트
+docs/                     | 자료 안내(DATA_GUIDE.md), 출처(DATA_SOURCES.md), 작업 기록(WORK_LOG.md)
+requirements-train.txt    | 학습·자료 준비용 패키지(화면용 포함)
+chs/notebooks/            | 최효선 : 결항·지연 예측, 월별 여객 수요 예측 Colab 노트북(설명 chs/README.md)
+sjw/outputs/              | 신정욱 : 국내 공항 여객·기상·운항 수집 결과(정적 내보내기, 설명 sjw/README.md)
 ```
 
 ## 학습 다시 돌리기
