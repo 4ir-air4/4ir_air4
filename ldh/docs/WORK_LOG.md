@@ -916,3 +916,17 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
 - `sjw/`: 내보낸 결과(`outputs/`)만 둡니다. 원본·수집기·AI 코드는 신정욱님 요청대로 넣지 않습니다.
 - `chs/README.md`, `sjw/README.md`에 내용과 출처를 적었습니다. 루트 README 폴더 구조와 CLAUDE.md에도 반영했습니다.
 - 드라이브 원본은 읽기만 했고 바꾸지 않았습니다.
+
+## 2026-11-17 README 기술 스택 아이콘
+
+- 루트 README의 '화면 구성' 위에 '기술 스택' 섹션을 넣었습니다.
+  - skillicons 10개: Python, TensorFlow, PyTorch, scikit-learn, Git, GitHub, PyCharm, VS Code, Windows, PowerShell
+  - shields 배지 4묶음:
+    - ML 모델: LightGBM, XGBoost, Random Forest, Linear Regression, LSTM, GRU, SARIMAX, YOLO11, Ensemble
+    - 튜닝·설명: Optuna, TreeSHAP, SMOTE
+    - 데이터·화면: Streamlit, pandas, NumPy, SciPy, PyArrow, Plotly, Altair, Folium
+    - AI·협업: Gemini, Claude, Jupyter, Colab, Google Drive, Confluence
+- 넣은 모델은 코드(`git grep`)에서 실제로 쓰는 것만 골랐습니다.
+  - SHAP은 shap 라이브러리가 아니라 LightGBM·XGBoost에 들어 있는 TreeSHAP입니다.
+  - GRU와 SMOTE는 chs 노트북에서 씁니다.
+- 확인: 배지 주소 27개가 모두 정상 SVG입니다. 로고가 안 나오던 LightGBM은 로고를 뺐고, 괄호가 든 배지 2개는 `%28`/`%29`로 고쳤습니다. GitHub 마크다운 변환에서 이미지 27개가 나왔습니다.

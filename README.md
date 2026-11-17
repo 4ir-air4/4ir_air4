@@ -17,6 +17,50 @@
 
 브랜치는 `develop`에서 작업하고 팀원 PR도 `develop`으로 받습니다. `main`에는 `develop`을 PR로 합칩니다.
 
+## 기술 스택
+
+<p>
+  <img src="https://skillicons.dev/icons?i=py,tensorflow,pytorch,sklearn,git,github,pycharm,vscode,windows,powershell" alt="Python, TensorFlow, PyTorch, scikit-learn, Git, GitHub, PyCharm, VS Code, Windows, PowerShell">
+</p>
+
+**ML 모델**
+
+![LightGBM](https://img.shields.io/badge/LightGBM-02569B?style=flat-square)
+![XGBoost](https://img.shields.io/badge/XGBoost-189FDD?style=flat-square)
+![Random Forest](https://img.shields.io/badge/Random%20Forest-F7931E?style=flat-square&logo=scikitlearn&logoColor=white)
+![Linear Regression](https://img.shields.io/badge/Linear%20Regression-F7931E?style=flat-square&logo=scikitlearn&logoColor=white)
+![LSTM](https://img.shields.io/badge/LSTM-D00000?style=flat-square&logo=keras&logoColor=white)
+![GRU](https://img.shields.io/badge/GRU-D00000?style=flat-square&logo=keras&logoColor=white)
+![SARIMAX](https://img.shields.io/badge/SARIMAX%20%28statsmodels%29-4051B5?style=flat-square)
+![YOLO11](https://img.shields.io/badge/YOLO11%20%28Ultralytics%29-111F68?style=flat-square)
+![Ensemble](https://img.shields.io/badge/Ensemble-6E6E6E?style=flat-square)
+
+**튜닝·설명**
+
+![Optuna](https://img.shields.io/badge/Optuna-1F5E96?style=flat-square)
+![TreeSHAP](https://img.shields.io/badge/TreeSHAP-FF0D57?style=flat-square)
+![SMOTE](https://img.shields.io/badge/SMOTE-6E6E6E?style=flat-square)
+
+**데이터·화면**
+
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
+![pandas](https://img.shields.io/badge/pandas-150458?style=flat-square&logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white)
+![SciPy](https://img.shields.io/badge/SciPy-8CAAE6?style=flat-square&logo=scipy&logoColor=white)
+![Apache Arrow](https://img.shields.io/badge/PyArrow-D22128?style=flat-square&logo=apachearrow&logoColor=white)
+![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=flat-square&logo=plotly&logoColor=white)
+![Altair](https://img.shields.io/badge/Altair-1F77B4?style=flat-square)
+![Folium](https://img.shields.io/badge/Folium-199900?style=flat-square&logo=leaflet&logoColor=white)
+
+**AI·협업**
+
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=flat-square&logo=googlegemini&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude-D97757?style=flat-square&logo=claude&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white)
+![Google Colab](https://img.shields.io/badge/Google%20Colab-F9AB00?style=flat-square&logo=googlecolab&logoColor=white)
+![Google Drive](https://img.shields.io/badge/Google%20Drive-4285F4?style=flat-square&logo=googledrive&logoColor=white)
+![Confluence](https://img.shields.io/badge/Confluence-172B4D?style=flat-square&logo=confluence&logoColor=white)
+
 ## 화면 구성
 
 왼쪽 메뉴는 그룹별로 나뉘어 있고, 화면은 모두 17개입니다. 모든 화면 오른쪽 아래에는 AI 항공 도우미 '에어로'가 있습니다.
