@@ -159,6 +159,6 @@ git에 올라간 파일만으로 모든 화면을 열어 오류, "파일 없음"
 - 미국: BTS(교통통계국) 운항 실적, 공항 기상(ASOS), NTSB 사고 DB
 - 유럽·세계: EUROCONTROL, Eurostat, OpenSky Network, OurAirports, OpenFlights, World Bank
 
-출처별 이용 조건은 [ldh/docs/DATA_SOURCES.md](ldh/docs/DATA_SOURCES.md)에 있습니다.</n>
+출처별 이용 조건은 [ldh/docs/DATA_SOURCES.md](ldh/docs/DATA_SOURCES.md)에 있습니다.<br>
 EUROCONTROL 자료는 비상업 용도로만 쓸 수 있고, OpenSky 자료는 재배포가 제한됩니다.
 
