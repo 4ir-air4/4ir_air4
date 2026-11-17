@@ -6,6 +6,17 @@
 - 저장소만 받아도 모든 화면이 나오도록 화면용 결과와 모델을 git에 함께 올렸습니다.
 - 실시간 지도와 AI 기능(AI 도우미, 계류장 자리 수 추정)만 각자의 키가 필요합니다(아래 [키 넣기](#키-넣기)).
 
+## 팀
+
+| 이름 | 담당 |
+|---|---|
+| 오정현 | 실시간 관제, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미, 통합 앱 구성 |
+| 이동형 | 한국·미국·유럽·안전 분석, 공통 학습 엔진, 인천 예보 |
+| 최효선 | 결항 요인, 국내 여객 수요 분석 |
+| 신정욱 | 국내 공항 여객·기상·운항 수집, 혼잡 예상 자료 |
+
+브랜치는 `develop`에서 작업하고 팀원 PR도 `develop`으로 받습니다. `main`에는 `develop`을 PR로 합칩니다.
+
 ## 기술 스택
 
 <p>
@@ -116,31 +127,31 @@ YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(
 |---|---|---|
 | `OPENSKY_CLIENT_ID`, `OPENSKY_CLIENT_SECRET` | 실시간 지도 | [OpenSky Network](https://opensky-network.org) API 클라이언트 |
 | `GEMINI_API_KEY` | AI 도우미, 계류장 자리 수 추정 | [Google AI Studio](https://aistudio.google.com/apikey) (무료 등급) |
-| `ANTHROPIC_API_KEY` | AI 도우미(Gemini 키가 없을 때) | Anthropic 콘솔 (유료) |
 | `TAVILY_API_KEY`, `SERPAPI_API_KEY` | AI 도우미의 최신 소식·항공권 검색(선택) | Tavily, SerpApi (무료 등급) |
 
-`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요. 키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
+`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요.<br>
+키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
 
 ## 폴더 구조
 
 ```
-app.py                  통합 앱 메뉴(AERO INSIGHT)
-requirements.txt        화면 실행용 패키지 17개
-.streamlit/             밝은 테마 설정, 키 예시 파일
-ojh/                    오정현: 실시간 지도, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미(설명서 README.md)
-  views/                통합 앱에서 여는 화면 래퍼
-  models/               학습 코드(train.py, train2.py)와 저장 모델(saved/)
-ldh/                    이동형: 카테고리 분석·예측
-  categories/           카테고리 8개(폴더 하나가 메뉴 하나, 추가 방법은 categories/README.md)
-  core/                 공통 학습 엔진, 화면(통합 요약, 모델 비교, 인천 예보, 혼잡 예상 등)
-  scripts/              자료 준비, 학습, 평가
-  collect/              인천공항 운항 수집기
-  results/              화면용 결과(요약·지표, 집계, 예측 표본, SHAP)
-  tests/                점검 스크립트
-  docs/                 자료 안내(DATA_GUIDE.md), 출처(DATA_SOURCES.md), 작업 기록(WORK_LOG.md)
-  requirements-train.txt  학습·자료 준비용 패키지(화면용 포함)
-chs/notebooks/          최효선: 결항·지연 예측, 월별 여객 수요 예측 Colab 노트북(설명 chs/README.md)
-sjw/outputs/            신정욱: 국내 공항 여객·기상·운항 수집 결과(정적 내보내기, 설명 sjw/README.md)
+app.py                    통합 앱 메뉴(AERO INSIGHT)
+requirements.txt          화면 실행용 패키지 17개
+.streamlit/               밝은 테마 설정, 키 예시 파일
+ojh/                      오정현 : 실시간 지도, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미(설명서 README.md)
+views/                    통합 앱에서 여는 화면 래퍼
+models/                   학습 코드(train.py, train2.py)와 저장 모델(saved/)
+ldh/                      이동형 : 카테고리 분석·예측
+categories/               카테고리 8개(폴더 하나가 메뉴 하나, 추가 방법은 categories/README.md)
+core/                     공통 학습 엔진, 화면(통합 요약, 모델 비교, 인천 예보, 혼잡 예상 등)
+scripts/                  자료 준비, 학습, 평가
+collect/                  인천공항 운항 수집기
+results/                  화면용 결과(요약·지표, 집계, 예측 표본, SHAP)
+tests/                    점검 스크립트
+docs/                     자료 안내(DATA_GUIDE.md), 출처(DATA_SOURCES.md), 작업 기록(WORK_LOG.md)
+requirements-train.txt    학습·자료 준비용 패키지(화면용 포함)
+chs/notebooks/            최효선 : 결항·지연 예측, 월별 여객 수요 예측 Colab 노트북(설명 chs/README.md)
+sjw/outputs/              신정욱 : 국내 공항 여객·기상·운항 수집 결과(정적 내보내기, 설명 sjw/README.md)
 ```
 
 ## 학습 다시 돌리기
@@ -151,7 +162,8 @@ sjw/outputs/            신정욱: 국내 공항 여객·기상·운항 수집 �
 .venv/Scripts/python.exe -m pip install -r ldh/requirements-train.txt
 ```
 
-원본 자료는 용량과 재배포 제한 때문에 git에 없습니다. 메뉴별로 필요한 자료와 넣을 위치는 [ldh/docs/DATA_GUIDE.md](ldh/docs/DATA_GUIDE.md)에 있습니다. 자료를 넣은 뒤 프로젝트 루트에서 모듈로 실행합니다.
+원본 자료는 용량과 재배포 제한 때문에 git에 없습니다. 메뉴별로 필요한 자료와 넣을 위치는 <br>
+[ldh/docs/DATA_GUIDE.md](ldh/docs/DATA_GUIDE.md)에 있습니다. 자료를 넣은 뒤 프로젝트 루트에서 모듈로 실행합니다.
 
 ```bash
 .venv/Scripts/python.exe -m ldh.scripts.run_models korea_ops:kac_delay_hour
@@ -192,15 +204,6 @@ git에 올라간 파일만으로 모든 화면을 열어 오류, "파일 없음"
 - 미국: BTS(교통통계국) 운항 실적, 공항 기상(ASOS), NTSB 사고 DB
 - 유럽·세계: EUROCONTROL, Eurostat, OpenSky Network, OurAirports, OpenFlights, World Bank
 
-출처별 이용 조건은 [ldh/docs/DATA_SOURCES.md](ldh/docs/DATA_SOURCES.md)에 있습니다. EUROCONTROL 자료는 비상업 용도로만 쓸 수 있고, OpenSky 자료는 재배포가 제한됩니다.
+출처별 이용 조건은 [ldh/docs/DATA_SOURCES.md](ldh/docs/DATA_SOURCES.md)에 있습니다.<br>
+EUROCONTROL 자료는 비상업 용도로만 쓸 수 있고, OpenSky 자료는 재배포가 제한됩니다.
 
-## 팀
-
-| 이름 | 담당 |
-|---|---|
-| 오정현 | 실시간 관제, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미, 통합 앱 구성 |
-| 이동형 | 한국·미국·유럽·안전 분석, 공통 학습 엔진, 인천 예보 |
-| 최효선 | 결항 요인, 국내 여객 수요 분석 |
-| 신정욱 | 국내 공항 여객·기상·운항 수집, 혼잡 예상 자료 |
-
-브랜치는 `develop`에서 작업하고 팀원 PR도 `develop`으로 받습니다. `main`에는 `develop`을 PR로 합칩니다.
