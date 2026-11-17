@@ -68,7 +68,7 @@ YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(
 ## 기술 스택
 
 <p>
-  <img src="https://skillicons.dev/icons?i=py,tensorflow,pytorch,sklearn,git,github,pycharm,vscode,windows,powershell" alt="Python, TensorFlow, PyTorch, scikit-learn, Git, GitHub, PyCharm, VS Code, PowerShell">
+  <img src="https://skillicons.dev/icons?i=py,tensorflow,pytorch,sklearn,git,github,pycharm,vscode,powershell" alt="Python, TensorFlow, PyTorch, scikit-learn, Git, GitHub, PyCharm, VS Code, PowerShell">
 </p>
 
 **ML 모델**
