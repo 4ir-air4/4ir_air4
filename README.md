@@ -85,7 +85,8 @@ YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(
 | `GEMINI_API_KEY` | AI 도우미, 계류장 자리 수 추정 | [Google AI Studio](https://aistudio.google.com/apikey) (무료 등급) |
 | `TAVILY_API_KEY`, `SERPAPI_API_KEY` | AI 도우미의 최신 소식·항공권 검색(선택) | Tavily, SerpApi (무료 등급) |
 
-`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요. 키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
+`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요.
+키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
 
 ## 폴더 구조
 
@@ -158,5 +159,6 @@ git에 올라간 파일만으로 모든 화면을 열어 오류, "파일 없음"
 - 미국: BTS(교통통계국) 운항 실적, 공항 기상(ASOS), NTSB 사고 DB
 - 유럽·세계: EUROCONTROL, Eurostat, OpenSky Network, OurAirports, OpenFlights, World Bank
 
-출처별 이용 조건은 [ldh/docs/DATA_SOURCES.md](ldh/docs/DATA_SOURCES.md)에 있습니다. EUROCONTROL 자료는 비상업 용도로만 쓸 수 있고, OpenSky 자료는 재배포가 제한됩니다.
+출처별 이용 조건은 [ldh/docs/DATA_SOURCES.md](ldh/docs/DATA_SOURCES.md)에 있습니다.
+EUROCONTROL 자료는 비상업 용도로만 쓸 수 있고, OpenSky 자료는 재배포가 제한됩니다.
 
