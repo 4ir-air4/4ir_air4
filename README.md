@@ -85,7 +85,7 @@ YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(
 | `GEMINI_API_KEY` | AI 도우미, 계류장 자리 수 추정 | [Google AI Studio](https://aistudio.google.com/apikey) (무료 등급) |
 | `TAVILY_API_KEY`, `SERPAPI_API_KEY` | AI 도우미의 최신 소식·항공권 검색(선택) | Tavily, SerpApi (무료 등급) |
 
-`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요.
+`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요.<br>
 키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
 
 ## 폴더 구조
@@ -118,7 +118,8 @@ sjw/outputs/              신정욱 : 국내 공항 여객·기상·운항 수�
 .venv/Scripts/python.exe -m pip install -r ldh/requirements-train.txt
 ```
 
-원본 자료는 용량과 재배포 제한 때문에 git에 없습니다. 메뉴별로 필요한 자료와 넣을 위치는 [ldh/docs/DATA_GUIDE.md](ldh/docs/DATA_GUIDE.md)에 있습니다. 자료를 넣은 뒤 프로젝트 루트에서 모듈로 실행합니다.
+원본 자료는 용량과 재배포 제한 때문에 git에 없습니다. 메뉴별로 필요한 자료와 넣을 위치는 <br>
+[ldh/docs/DATA_GUIDE.md](ldh/docs/DATA_GUIDE.md)에 있습니다. 자료를 넣은 뒤 프로젝트 루트에서 모듈로 실행합니다.
 
 ```bash
 .venv/Scripts/python.exe -m ldh.scripts.run_models korea_ops:kac_delay_hour
