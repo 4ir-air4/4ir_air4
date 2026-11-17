@@ -17,6 +17,54 @@
 
 브랜치는 `develop`에서 작업하고 팀원 PR도 `develop`으로 받습니다. `main`에는 `develop`을 PR로 합칩니다.
 
+## 빠른 시작
+
+Python 3.12 기준입니다.
+
+```bash
+git clone https://github.com/4ir-air4/4ir_air4.git
+```
+
+```bash
+cd 4ir_air4
+```
+
+```bash
+python -m venv .venv
+```
+
+```bash
+.venv/Scripts/python.exe -m pip install -r requirements.txt
+```
+
+```bash
+.venv/Scripts/python.exe -m streamlit run app.py
+```
+
+macOS·Linux에서는 `.venv/Scripts/python.exe` 대신 `.venv/bin/python`을 씁니다. 브라우저에서 http://localhost:8501 이 열립니다.
+
+계류장 혼잡도는 PyTorch를 씁니다. GPU가 없으면 위 설치 전에 CPU 판을 먼저 설치하는 편이 가볍습니다.
+
+```bash
+.venv/Scripts/python.exe -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+```
+
+YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(git에는 없음).
+
+### 키 넣기
+
+`.streamlit/secrets.toml.example`을 같은 폴더에 `secrets.toml`로 복사하고 필요한 키만 넣습니다.
+
+| 키 | 쓰는 곳 | 받는 곳 |
+|---|---|---|
+| `OPENSKY_CLIENT_ID`, `OPENSKY_CLIENT_SECRET` | 실시간 지도 | [OpenSky Network](https://opensky-network.org) API 클라이언트 |
+| `GEMINI_API_KEY` | AI 도우미, 계류장 자리 수 추정 | [Google AI Studio](https://aistudio.google.com/apikey) (무료 등급) |
+| `TAVILY_API_KEY`, `SERPAPI_API_KEY` | AI 도우미의 최신 소식·항공권 검색(선택) | Tavily, SerpApi (무료 등급) |
+
+`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요.<br>
+키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
+
+
 ## 기술 스택
 
 <p>
@@ -85,52 +133,6 @@
 | | 모델 비교 | 같은 기준(시간 순 미래 구간)으로 모델 비교, SHAP 설명 |
 | | 2026년 학습 결과 | 2026년 자료로만 학습한 구동 확인 결과 |
 
-## 빠른 시작
-
-Python 3.12 기준입니다.
-
-```bash
-git clone https://github.com/4ir-air4/4ir_air4.git
-```
-
-```bash
-cd 4ir_air4
-```
-
-```bash
-python -m venv .venv
-```
-
-```bash
-.venv/Scripts/python.exe -m pip install -r requirements.txt
-```
-
-```bash
-.venv/Scripts/python.exe -m streamlit run app.py
-```
-
-macOS·Linux에서는 `.venv/Scripts/python.exe` 대신 `.venv/bin/python`을 씁니다. 브라우저에서 http://localhost:8501 이 열립니다.
-
-계류장 혼잡도는 PyTorch를 씁니다. GPU가 없으면 위 설치 전에 CPU 판을 먼저 설치하는 편이 가볍습니다.
-
-```bash
-.venv/Scripts/python.exe -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-```
-
-YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(git에는 없음).
-
-### 키 넣기
-
-`.streamlit/secrets.toml.example`을 같은 폴더에 `secrets.toml`로 복사하고 필요한 키만 넣습니다.
-
-| 키 | 쓰는 곳 | 받는 곳 |
-|---|---|---|
-| `OPENSKY_CLIENT_ID`, `OPENSKY_CLIENT_SECRET` | 실시간 지도 | [OpenSky Network](https://opensky-network.org) API 클라이언트 |
-| `GEMINI_API_KEY` | AI 도우미, 계류장 자리 수 추정 | [Google AI Studio](https://aistudio.google.com/apikey) (무료 등급) |
-| `TAVILY_API_KEY`, `SERPAPI_API_KEY` | AI 도우미의 최신 소식·항공권 검색(선택) | Tavily, SerpApi (무료 등급) |
-
-`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요.<br>
-키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
 
 ## 폴더 구조
 
