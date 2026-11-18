@@ -940,3 +940,11 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
   - 진행 내역에 11/16·11/17을 더했습니다.
   - 남은 일: 인천 수집 검토를 완료로 바꾸고, 배포와 보고서를 더했습니다.
 - 바꾼 곳만 고쳤고, 나머지 내용과 표·날짜 서식은 그대로입니다. 팀 공용 페이지와 팀원 페이지는 건드리지 않았습니다.
+
+## 2026-11-18 학습용 캐시 정리
+
+사용자 요청("캐시 정리를 부탁할께")으로 다시 만들 수 있는 학습용 중간 파일을 지웠습니다. D 드라이브 사용량이 41GB에서 24GB로 줄었습니다.
+- 지운 것: `ldh/datasets/processed/cache`의 `bts_2020`(7.4GB), `us_weather_full`(6.3GB), `opensky_2020`(3.5GB). 원본(`raw/bts_zip`, `processed/bts_parquet`, OpenSky·기상 원본)은 남겼습니다. 유럽·NTSB 캐시(약 20MB)도 남겼습니다.
+- 함께 지운 것: 결과 기록(`model_results`)에 앙상블이 없는 과제의 앙상블 건별 예측 4개(약 292MB). `us_weather`의 `pred_wx_arr_delay`, `pred_wx_dep_del15`, `pred_wx_dep_delay`와 `world_traffic`의 `pred_opensky_duration`(모두 `__ensemble`)입니다. git에 올라간 같은 과제의 `predagg_*__ensemble`(크기 0MB대)은 그대로 두었습니다.
+- 다시 만들기: 학습할 때 `load_task()`가 `build()`를 부르고, `meta.json`이 없으면 원본으로 캐시를 새로 만듭니다. 그래서 `run_models`만 다시 돌리면 됩니다. `bts_2020`의 turnaround 30분 자르기는 `build()`에 들어 있습니다(`MIN_TURNAROUND`). 다시 만드는 데 걸리는 시간은 재 보지 않았습니다.
+- 확인: 지운 파일은 모두 git 제외 대상이라 git 변경은 없습니다. 미국 운항, 미국 기상, 세계 교통량 화면을 AppTest로 열었고 예외나 "파일 없음" 안내가 없었습니다(첫 화면만 확인).
