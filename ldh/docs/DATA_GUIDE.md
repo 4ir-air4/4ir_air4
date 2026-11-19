@@ -19,7 +19,7 @@ icn_live/ (인천 API)         (live_flights 로 학습 기준 지연으로 변�
 | `ldh/datasets/raw/reference/` | 그 외 모든 원본 (아래 2번) | 9.4GB | 대부분 다시 받음 |
 | `ldh/datasets/raw/icn_live/` | 인천공항 API 수집 자료 | 계속 늘어남 | 드라이브 백업에서 복원. **백업 전 1시간 이내 자료는 되찾을 수 없음** |
 | `ldh/datasets/processed/bts_parquet/` | `bts_zip`에서 필요한 열만 뽑은 월별 파일 | 2.2GB | `python -m ldh.scripts.prepare_data`로 다시 만듦 |
-| `ldh/datasets/processed/cache/` | 학습용으로 변환한 파일 | 22.2GB | 다시 만들 수 있지만 오래 걸림 |
+| `ldh/datasets/processed/cache/` | 학습용으로 변환한 파일 | 약 20MB (큰 캐시 3개는 2026-11-18에 지움) | 학습할 때 원본으로 자동으로 다시 만듦. 오래 걸림 |
 | `ldh/results/full/` | 통계, 학습 결과, 저장 모델 | 2.6GB | 다시 학습해야 함 |
 | `ldh/results/2026/` | 2026년 자료만 쓴 학습 결과 | 3MB | 다시 학습해야 함 |
 | `ldh/results/legacy_models/` | 예전 `ldh/scripts/train.py` 모델과 지표. 미국 화면이 읽음 | 56MB | 미국 화면 일부가 비거나 다시 학습해야 함 |
@@ -89,5 +89,6 @@ icn_live/ (인천 API)         (live_flights 로 학습 기준 지연으로 변�
 
 학습 범위가 2020년 이후라서 2026-11-11에 1987~2019년 BTS 자료, 옛 결과 보관본(드라이브에는 남음), 옛 실험 모델(pilot, recent_2023_2025)을 지웠습니다.
 같은 날 OpenSky 옛 캐시 `opensky_full`(4.6GB, `opensky_2020`으로 대체됨)과 2019년 비행 목록 12개(2.1GB)도 지웠습니다. `START_YEAR`를 2019 이하로 낮추려면 OpenSky(Zenodo)에서 2019년 파일을 다시 받아야 합니다.
+2026-11-18에는 더 이상 큰 학습을 하지 않기로 해서 학습용 캐시 `bts_2020`(7.4GB), `us_weather_full`(6.3GB), `opensky_2020`(3.5GB)를 지웠습니다. 화면은 이 캐시를 읽지 않습니다. 다시 학습하면 `load_task()`가 `build()`를 불러 원본으로 새로 만듭니다.
 
 지금 코드가 읽지 않는데 남겨 둔 자료: `ldh/datasets/raw/bts_zip/`(2.1GB). `bts_parquet`에 새 열을 넣을 때 `prepare_data`가 씁니다.
