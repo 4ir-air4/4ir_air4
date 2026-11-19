@@ -23,6 +23,8 @@
 - 데이터 폴더(대부분 git 제외, 화면용 결과만 예외):
   - `ldh/datasets/` 내 입력 자료: `raw/bts_zip`(BTS 원본 zip), `raw/reference`(받은 참고 자료, 재배포 제한 있음), `raw/icn_live`(인천 수집),
     `processed/bts_parquet`(prepare_data 결과, 2020년 이후), `processed/cache`(학습용 캐시)
+    - 큰 캐시 3개(`bts_2020`, `us_weather_full`, `opensky_2020`, 합계 17.2GB)는 2026-11-18에 지웠다. 화면은 이 캐시를 읽지 않는다.
+    - 다시 학습하면 `load_task()`→`build()`가 `meta.json`이 없는 것을 보고 원본으로 다시 만든다(시간·메모리가 많이 든다). 그러니 원본(`raw/bts_zip`, `processed/bts_parquet`, `raw/reference`의 OpenSky·기상)은 지우지 않는다. 유럽·NTSB 작은 캐시는 남아 있다.
   - `ldh/results/` 내 결과: `full`(전체 학습), `2026`(2026년 학습), `legacy_models`(예전 scripts/train.py 모델)
     - 2026-11-16부터 `full`·`2026`의 화면용 결과(요약·지표 JSON, 집계, 다음 기간 예측, 중요도·SHAP, 통계표, 한국·유럽·안전 건별 예측)는 git에 올린다(약 31MB). 팀원은 받기만 하면 ldh 화면이 나온다.
     - 저장 모델(`saved_models`), 원 예측값(`member_preds`), 미국 운항·기상·OpenSky 건별 예측(약 2.7GB, OpenSky 재배포 제한), `legacy_models`의 하위 폴더, 시험 결과 JSON은 계속 git 제외(`legacy_models` 최상위 pkl 11개는 미국 운항 '직접 예측' 보기용으로 압축해 올린다)이고 드라이브로 공유한다. 규칙은 `.gitignore`의 `/ldh/results/` 부분.
