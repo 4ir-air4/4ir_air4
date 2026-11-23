@@ -957,3 +957,22 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
 - 확인: `uv pip compile`로 리눅스·3.12 기준 목록이 풀리고 torch가 CPU 휠로 잡히는 것, 윈도우 기준으로는 기존처럼 일반 torch가 잡히는 것을 봤습니다. 휠 주소 두 개는 내려받기 응답(200)을 확인했습니다. `test_fresh_clone --include-new`로 화면 17개가 모두 정상이었습니다.
 - 확인 못 한 것: 실제 클라우드 배포는 하지 않았습니다. `libgl1`이 꼭 필요한지, 메모리가 충분한지는 배포 로그로 봐야 합니다. 리눅스에서는 xgboost가 `nvidia-nccl-cu13`(GPU 통신 라이브러리)을 함께 설치해 용량이 늘어납니다.
 - 배포 설정: 저장소 `4ir-air4/4ir_air4`, 브랜치 `main`, 파일 `app.py`, Python 3.12, Secrets에 `OPENSKY_CLIENT_ID`·`OPENSKY_CLIENT_SECRET`·`GEMINI_API_KEY`(또는 `ANTHROPIC_API_KEY`).
+
+## 2026-11-23 ojh 화면: OpenSky 오류 안내 문구, use_container_width 교체(사용자 요청)
+
+사용자 요청으로 팀원 오정현(ojh) 파일을 직접 고쳤습니다. 파일을 옮기거나 이름을 바꾸지는 않았습니다.
+- 배경: 배포 환경(Streamlit Cloud)에서는 OpenSky 인증 서버(`auth.opensky-network.org`) 연결이 시간 초과로 실패합니다. 이 PC에서는 0.3초 안에 연결됩니다. OpenSky 문서에 대형 클라우드 IP를 막을 수 있다는 안내가 있어 그 차단으로 추정합니다.
+- `ojh/live_app.py`의 `show_live_map()`
+  - 항공기 데이터를 불러오지 못하면 오류 내용 대신 "현재 Open Sky Api 정보를 취합하지 못하고 있습니다, 근시일내로 문제 해결이 되게 작업 중입니다."를 경고로 보여 줍니다.
+  - 원인은 서버 로그(`[OpenSky] ...`)에 남깁니다. 키가 없을 때도 같은 문구가 나옵니다.
+  - 토큰 요청 timeout은 20초에서 (연결 5초, 읽기 20초)로 바꿨습니다.
+- `use_container_width=True` 29곳(`_2_traffic_tab` 9, `_3_airport_tab` 13, `_4_ai_chat_tab` 2, `_5_apron_tab` 4, `live_app` 1)을 `width="stretch"`로 바꿨습니다. Streamlit 1.66에서 해당 함수가 모두 `width`를 받는 것을 확인했습니다.
+- 확인
+  - 인증·데이터 요청이 시간 초과로 실패하도록 흉내 내 AppTest로 실시간 지도를 열었습니다. 안내 문구 하나만 나오고 예외·오류가 없었습니다.
+  - `test_fresh_clone --include-new`로 전체 화면을 점검했습니다(결과는 아래 줄).
+- 좁은 화면(375px)도 다시 확인했습니다. 메뉴가 처음부터 열려 본문을 덮고, 페이지를 골라도 닫히지 않아 `<<`를 눌러야 본문이 보입니다. 원인은 `app.py`의 `initial_sidebar_state="expanded"`로 보입니다. 아직 고치지 않았습니다.
+- 전체 점검: `test_fresh_clone --include-new`로 화면 17개를 모두 열었고 정상이었습니다. ojh 화면 4개도 정상이었습니다(AI 키가 없다는 안내만 나옴).
+- 좁은 화면 메뉴(사용자 요청으로 수정): `app.py`의 `initial_sidebar_state`를 `"expanded"`에서 `"auto"`로 바꿨습니다.
+  - 휴대폰 크기(375px)에서는 메뉴가 닫힌 채 시작해 본문이 바로 보입니다. 넓은 화면(1280px)에서는 지금처럼 열려 있습니다.
+  - 메뉴를 열고 페이지를 고르면 메뉴는 열린 채 남아 `<<`로 닫아야 합니다.
+  - 페이지가 바뀔 때 설정값을 바꿔 보내는 방법도 시험했지만, Streamlit이 사용자가 직접 연 상태(브라우저 저장값 `stSidebarCollapsed-`)를 우선해 효과가 없었습니다. 그 코드는 되돌렸습니다.

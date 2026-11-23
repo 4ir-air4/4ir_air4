@@ -800,7 +800,7 @@ def _render_flight_tables(steps):
         if made:
             title, df = made
             st.caption(title)
-            st.dataframe(df, hide_index=True, use_container_width=True, height=min(38 + 35 * len(df), 320))
+            st.dataframe(df, hide_index=True, width="stretch", height=min(38 + 35 * len(df), 320))
 
 
 def _render_steps(steps, sources=()):
@@ -874,7 +874,7 @@ def _chat_panel():
     if not ss.ai_display:
         cols = st.columns(2)
         for i, q in enumerate(QUICK):
-            if cols[i % 2].button(q, key=f"ai_quick_{i}", use_container_width=True):
+            if cols[i % 2].button(q, key=f"ai_quick_{i}", width="stretch"):
                 question = q
     sent = st.chat_input("질문하거나 사진을 올려보세요", accept_file=True,
                          file_type=["jpg", "jpeg", "png", "webp"], key="ai_input")

@@ -591,7 +591,7 @@ def render_live_chart_panel(history, forecast):
 
     fig, freq = build_live_figure(history, forecast, start, end)
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     note = (
         f"수집 {len(history):,}개 · {fmt_utc(history['timestamp'].iloc[0])} ~ "
@@ -682,7 +682,7 @@ def render_test_chart(test_predictions):
     )
     fig.update_layout(hovermode="x unified")
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     note = (
         f"학습 샘플의 맨 뒤 일부(기본 15%)만 보여줍니다 ({len(test_predictions):,}개, "
@@ -786,7 +786,7 @@ def render_historical_panel(test_predictions):
 
     fig, freq = build_historical_figure(counts, test_predictions, start, end)
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     note = (
         f"실제값: {fmt_utc(data_min)} ~ {fmt_utc(data_max)} (UTC) 전체 기간. "
@@ -1042,7 +1042,7 @@ def show_model_prediction(dataset_key):
         with st.expander("피처 중요도 보기"):
             st.plotly_chart(
                 fig_importance,
-                use_container_width=True,
+                width="stretch",
             )
 
     st.caption(dataset["caption"])
@@ -1091,7 +1091,7 @@ def show_model_comparison(dataset_key):
 
     st.dataframe(
         comparison_df,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -1122,7 +1122,7 @@ def show_model_comparison(dataset_key):
 
         st.plotly_chart(
             fig_mae,
-            use_container_width=True,
+            width="stretch",
         )
 
     if model_column and mape_column:
@@ -1140,7 +1140,7 @@ def show_model_comparison(dataset_key):
 
         st.plotly_chart(
             fig_mape,
-            use_container_width=True,
+            width="stretch",
         )
 
     # 날씨 포함/제외 비교 (날씨 데이터가 있는 경우에만)
@@ -1177,7 +1177,7 @@ def show_model_comparison(dataset_key):
 
         st.plotly_chart(
             fig_weather,
-            use_container_width=True,
+            width="stretch",
         )
 
         st.caption(
@@ -1201,7 +1201,7 @@ def show_model_comparison(dataset_key):
 
                 st.dataframe(
                     folds_df,
-                    use_container_width=True,
+                    width="stretch",
                     hide_index=True,
                 )
 

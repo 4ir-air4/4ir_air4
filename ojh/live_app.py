@@ -69,7 +69,7 @@ def get_access_token(client_id, client_secret):
             "client_id": client_id,
             "client_secret": client_secret,
         },
-        timeout=20,
+        timeout=(5, 20),  # (연결, 읽기) 초. 연결이 막힌 환경에서 오래 기다리지 않도록 연결은 짧게
     )
 
     response.raise_for_status()
@@ -1203,19 +1203,11 @@ def show_live_map():
 
             api_timestamp, df = load_aircraft_data()
 
-    except requests.exceptions.HTTPError as exc:
-
-        st.error(f"OpenSky API 오류: {exc}")
-        return
-
-    except requests.exceptions.RequestException as exc:
-
-        st.error(f"OpenSky 연결 오류: {exc}")
-        return
-
     except Exception as exc:
 
-        st.error(f"항공기 데이터를 불러오지 못했습니다: {exc}")
+        # 화면에는 안내 문구만 보이고, 원인은 서버 로그에 남긴다 (배포 환경에서는 OpenSky 연결이 막힐 수 있다)
+        print(f"[OpenSky] 항공기 데이터를 불러오지 못함: {type(exc).__name__}: {exc}")
+        st.warning("현재 Open Sky Api 정보를 취합하지 못하고 있습니다, 근시일내로 문제 해결이 되게 작업 중입니다.")
         return
 
     if df.empty:
@@ -1391,7 +1383,7 @@ def show_live_map():
 
         st.dataframe(
             df[display_columns],
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
