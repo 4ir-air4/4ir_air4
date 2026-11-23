@@ -21,3 +21,7 @@ google-genai==3.3.0
 # 계류장 혼잡도(YOLO, ojh/_5_apron_tab.py). torch 는 ultralytics 가 함께 설치한다. GPU 가 없으면 CPU 판이 더 가볍다:
 #   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 ultralytics==8.4.215
+# Streamlit Cloud(리눅스, Python 3.12)에서는 CPU 판 휠을 바로 받는다. GPU 판(수 GB)이 깔리면 설치가 느리고 공간이 모자란다.
+# 윈도우·맥에서는 이 두 줄을 건너뛰고 ultralytics 가 고르는 torch 가 설치된다. 버전은 .venv 와 같다(2.15.0+cpu, 0.29.2+cpu).
+torch @ https://download.pytorch.org/whl/cpu/torch-2.15.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl ; sys_platform == "linux" and python_version == "3.12"
+torchvision @ https://download.pytorch.org/whl/cpu/torchvision-0.29.2%2Bcpu-py3-none-manylinux_2_28_x86_64.whl ; sys_platform == "linux" and python_version == "3.12"
