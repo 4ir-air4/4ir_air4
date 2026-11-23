@@ -378,7 +378,7 @@ def show_apron_congestion():
             ai = st.session_state.get(ai_key)
             if not isinstance(ai, dict):
                 btn_slot = st.empty()
-                if btn_slot.button("🤖 AI로 자리 수·장소 알아보기", key=f"ai_btn_{photo_id}", use_container_width=True,
+                if btn_slot.button("🤖 AI로 자리 수·장소 알아보기", key=f"ai_btn_{photo_id}", width="stretch",
                                    help="Gemini 가 사진에 보이는 주기장(빈자리 포함) 수와 장소를 추정합니다. 20~60초 걸리고, 같은 사진은 저장된 결과를 씁니다."):
                     with st.spinner("Gemini 가 사진을 보고 자리를 세는 중... (20~60초)"):
                         try:
@@ -414,7 +414,7 @@ def show_apron_congestion():
                         "값": f"{value:.0%}" if stands else f"{value:.1f}점", "등급": f"{icon} {name}",
                         "_rank": (OCC_GRADES if stands else GRADES).index(next(g for g in (OCC_GRADES if stands else GRADES) if g[1] == name))})
 
-        left.image(plotted, use_container_width=True)
+        left.image(plotted, width="stretch")
         left.caption(f"{model_name.replace('.pt', '')} · {width}×{height}"
                      + (f" · 조각 {n_tiles}개" if n_tiles else "") + f" · {elapsed:.1f}초")
         with right:
@@ -429,7 +429,7 @@ def show_apron_congestion():
                                    if not (aerial and g == "person")))
             if len(dets):
                 detail = dets.groupby("종류").agg(개수=("신뢰도", "size"), 평균_신뢰도=("신뢰도", "mean")).round(2)
-                st.dataframe(detail.sort_values("개수", ascending=False), use_container_width=True)
+                st.dataframe(detail.sort_values("개수", ascending=False), width="stretch")
             else:
                 st.caption("찾은 대상이 없습니다. 사진 종류가 맞는지 확인하고, 신뢰도 기준을 낮춰보세요.")
         if i < len(files) - 1:
@@ -438,7 +438,7 @@ def show_apron_congestion():
     if len(summary) > 1:
         st.markdown("### 사진별 비교")
         table = pd.DataFrame(summary)
-        st.dataframe(table.drop(columns="_rank"), use_container_width=True, hide_index=True)
+        st.dataframe(table.drop(columns="_rank"), width="stretch", hide_index=True)
         if (table["판단 방식"] == "점유율").all():
             occ = table.set_index("사진")["값"].str.rstrip("%").astype(float).rename("주기장 점유율(%)")
             st.bar_chart(occ, horizontal=True, height=60 + 40 * len(table))

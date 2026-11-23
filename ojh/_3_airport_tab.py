@@ -227,7 +227,7 @@ def render_overview(ctx, comparison):
     )
 
     st.markdown("**지역별 공항 수**")
-    st.dataframe(counts.rename("공항 수").to_frame(), use_container_width=True)
+    st.dataframe(counts.rename("공항 수").to_frame(), width="stretch")
 
     st.caption(
         "⚠️ 미국은 BTS T-100(출발+도착 승객), 유럽은 Eurostat(Passengers carried), 영국은 CAA(Terminal passengers) 기준이라 지표 정의가 조금 다릅니다. "
@@ -246,7 +246,7 @@ def render_comparison(ctx, comparison):
     show = comparison.copy()
     for col in show.columns[1:]:
         show[col] = show[col].astype(float).round(2)
-    st.dataframe(show, use_container_width=True, hide_index=True)
+    st.dataframe(show, width="stretch", hide_index=True)
 
     models_only = comparison[~comparison["Model"].astype(str).str.startswith(BASELINE_PREFIX)]
     fig = go.Figure()
@@ -255,7 +255,7 @@ def render_comparison(ctx, comparison):
         if col in comparison.columns:
             fig.add_bar(x=comparison["Model"], y=comparison[col], name=name)
     fig.update_layout(barmode="group", title=f"모델별 {kind} (%) — 낮을수록 좋음", height=380, yaxis_title=f"{kind} (%)")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     best = ctx["best_model"]
     st.success(f"선정 모델: **{best}** ({ctx.get('selection_metric', 'Validation 12개월 재귀')} 기준). 'Baseline'은 '작년 같은 달 값을 그대로 쓰는' 단순 기준선입니다.")
@@ -287,18 +287,18 @@ def render_comparison(ctx, comparison):
     fig.add_scatter(x=rec["date"], y=rec["predicted"], name="12개월 재귀 예측", mode="lines", line=dict(dash="dash"))
     fig.add_scatter(x=one["date"], y=one["baseline"], name="Baseline(작년 같은 달)", mode="lines", line=dict(dash="dot"))
     fig.update_layout(height=420, yaxis_title="월 이용객 수(명)", title=f"{airport_label(meta, airport)} — Test 구간 예측 비교")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     importance = bundle.get("feature_importance") or {}
     if importance:
         top = list(importance.items())[:10][::-1]
         fig = go.Figure(go.Bar(x=[v for _, v in top], y=[k for k, _ in top], orientation="h"))
         fig.update_layout(height=360, title=f"{model_name} 피처 중요도 (상위 10)", xaxis_title="상대 중요도")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     if TEST_MAPE_FILE.exists():
         with st.expander("공항별 Test MAPE (선정 모델)"):
-            st.dataframe(pd.read_csv(TEST_MAPE_FILE).round(2), use_container_width=True, hide_index=True)
+            st.dataframe(pd.read_csv(TEST_MAPE_FILE).round(2), width="stretch", hide_index=True)
 
 
 # ---------------------------------------------------------
@@ -405,7 +405,7 @@ def render_result(trainer, ctx, result, airports):
         fig.add_scatter(x=scenario.index, y=scenario.values, name="내가 설정한 조건", mode="lines+markers")
         fig.add_scatter(x=[target], y=[pred], name="선택한 월", mode="markers", marker=dict(size=14, symbol="star"))
         fig.update_layout(height=430, yaxis_title="월 이용객 수(명)", title=f"{airport_label(meta, code)} 연간 월별 예상 이용객 곡선")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         st.caption(f"음영은 이 모델의 12개월 재귀 예측 평균 오차(WAPE ±{band:.1f}%)를 곡선에 그대로 얹은 참고용 범위이며, 통계적 신뢰구간은 아닙니다.")
         table = pd.DataFrame({"월": [f"{d:%Y-%m}" for d in scenario.index], "내가 설정한 조건(명)": scenario.round(0).to_numpy(), "기본 전망(명)": baseline.round(0).to_numpy()})
         st.download_button(
@@ -423,7 +423,7 @@ def render_result(trainer, ctx, result, airports):
             fig.add_scatter(x=sens["gdp"], y=sens["month_pred"], mode="lines+markers", name=f"{target:%m}월 예상 이용객")
             fig.add_scatter(x=[result["gdp"]], y=[pred], mode="markers", name="내가 고른 값", marker=dict(size=14, symbol="star"))
             fig.update_layout(height=360, xaxis_title="국가 경제 성장률 (%)", yaxis_title="월 이용객 수(명)", title=f"성장률에 따른 {target:%m}월 예측 변화")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
             low, high = float(sens["month_pred"].iloc[0]), float(sens["month_pred"].iloc[-1])
             change = (high / low - 1) * 100 if low else float("nan")
             if not np.isfinite(change):
@@ -459,8 +459,8 @@ def render_result(trainer, ctx, result, airports):
                 fig.add_scatter(x=curve.index, y=curve.values, mode="lines+markers", name=airport_label(meta, c), line=dict(width=4 if c == code else 2))
             fig.add_hline(y=100, line_dash="dot", annotation_text="최근 12개월 평균 = 100")
             fig.update_layout(height=400, yaxis_title="지수 (최근 12개월 평균 = 100)", title="공항별 향후 12개월 수요 지수 (규모 차이 제거)")
-            st.plotly_chart(fig, use_container_width=True)
-            st.dataframe(table, use_container_width=True, hide_index=True)
+            st.plotly_chart(fig, width="stretch")
+            st.dataframe(table, width="stretch", hide_index=True)
             st.caption("성장률 슬라이더 값을 모든 공항에 똑같이 적용한 비교입니다. 공항마다 실제 국가 성장률이 다르다는 점은 반영하지 않습니다.")
 
     st.caption(
@@ -525,7 +525,7 @@ def render_simulator(ctx, comparison):
 
     with st.expander("🌍 향후 12개월 예상 이용객 TOP 10 공항 (선정 모델)"):
         try:
-            st.dataframe(_top10_table(best, CONTEXT_FILE.stat().st_mtime), use_container_width=True, hide_index=True)
+            st.dataframe(_top10_table(best, CONTEXT_FILE.stat().st_mtime), width="stretch", hide_index=True)
         except Exception as exc:
             st.warning(f"TOP 10 계산 실패: {exc}")
 
@@ -665,7 +665,7 @@ def render_race(ctx):
             steps=[dict(label=f"{f['date']:%Y-%m}", method="animate", args=[[f"{f['date']:%Y-%m}"], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}]) for f in frames],
         )],
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     legend = " · ".join(f"<span style='color:{REGION_COLORS[r]}'>■</span> {REGION_LABELS[r]}" for r in ("US", "Europe", "Korea"))
     st.markdown(legend, unsafe_allow_html=True)
 
@@ -695,7 +695,7 @@ def render_race(ctx):
             for _, r in movers.iterrows():
                 show = st.success if r["변동"].startswith("▲") else st.warning
                 show(f"{r['공항']}: {r[col_now]}위 → {r[col_future]}위 ({r['변동']})")
-        st.dataframe(table, use_container_width=True, hide_index=True)
+        st.dataframe(table, width="stretch", hide_index=True)
 
     st.caption(
         "⚠️ 미국(BTS)·영국(CAA)·유럽(Eurostat)·한국은 집계 기준이 조금씩 달라서 지역 간 순위는 참고용입니다. "

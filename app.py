@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "ojh"))  # ojh 탭 파일들이 같은 폴더 모듈을 이름으로 import 한다
 
 st.set_page_config(page_title="AERO INSIGHT · 항공 통합 대시보드", page_icon="✈️",
-                   layout="wide", initial_sidebar_state="expanded")
+                   layout="wide", initial_sidebar_state="auto")  # 넓은 화면은 열고, 휴대폰은 닫힌 채 시작(열려 있으면 본문을 덮음)
 
 # ---------------------------------------------------------------------------
 # 1. 메뉴 구성
