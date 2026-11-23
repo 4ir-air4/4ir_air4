@@ -948,3 +948,12 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
 - 함께 지운 것: 결과 기록(`model_results`)에 앙상블이 없는 과제의 앙상블 건별 예측 4개(약 292MB). `us_weather`의 `pred_wx_arr_delay`, `pred_wx_dep_del15`, `pred_wx_dep_delay`와 `world_traffic`의 `pred_opensky_duration`(모두 `__ensemble`)입니다. git에 올라간 같은 과제의 `predagg_*__ensemble`(크기 0MB대)은 그대로 두었습니다.
 - 다시 만들기: 학습할 때 `load_task()`가 `build()`를 부르고, `meta.json`이 없으면 원본으로 캐시를 새로 만듭니다. 그래서 `run_models`만 다시 돌리면 됩니다. `bts_2020`의 turnaround 30분 자르기는 `build()`에 들어 있습니다(`MIN_TURNAROUND`). 다시 만드는 데 걸리는 시간은 재 보지 않았습니다.
 - 확인: 지운 파일은 모두 git 제외 대상이라 git 변경은 없습니다. 미국 운항, 미국 기상, 세계 교통량 화면을 AppTest로 열었고 예외나 "파일 없음" 안내가 없었습니다(첫 화면만 확인).
+
+## 2026-11-23 Streamlit Community Cloud 배포 준비
+
+사용자 요청("스트림릿 배포 하고 싶은데 배포 순서를 알려줘" → "준비해 줘")으로 배포에 필요한 파일을 고쳤습니다. 배포 자체는 사용자가 share.streamlit.io에서 합니다.
+- `requirements.txt`: 리눅스·Python 3.12에서만 torch·torchvision CPU 판 휠을 바로 받는 두 줄을 더했습니다(2.15.0+cpu, 0.29.2+cpu, `.venv`와 같은 판). 계류장 YOLO(ultralytics)가 GPU 판 torch(수 GB)를 깔지 않게 하려는 것입니다. 윈도우·맥 설치는 그대로입니다.
+- `packages.txt`(새 파일): `libgl1`. `opencv-python`이 리눅스에서 `libGL.so.1`을 찾기 때문입니다.
+- 확인: `uv pip compile`로 리눅스·3.12 기준 목록이 풀리고 torch가 CPU 휠로 잡히는 것, 윈도우 기준으로는 기존처럼 일반 torch가 잡히는 것을 봤습니다. 휠 주소 두 개는 내려받기 응답(200)을 확인했습니다. `test_fresh_clone --include-new`로 화면 17개가 모두 정상이었습니다.
+- 확인 못 한 것: 실제 클라우드 배포는 하지 않았습니다. `libgl1`이 꼭 필요한지, 메모리가 충분한지는 배포 로그로 봐야 합니다. 리눅스에서는 xgboost가 `nvidia-nccl-cu13`(GPU 통신 라이브러리)을 함께 설치해 용량이 늘어납니다.
+- 배포 설정: 저장소 `4ir-air4/4ir_air4`, 브랜치 `main`, 파일 `app.py`, Python 3.12, Secrets에 `OPENSKY_CLIENT_ID`·`OPENSKY_CLIENT_SECRET`·`GEMINI_API_KEY`(또는 `ANTHROPIC_API_KEY`).
