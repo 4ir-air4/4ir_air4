@@ -991,3 +991,15 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
 - 저장본 갱신: 이 PC에서 실시간 지도를 한 번 연 뒤 `python -m ldh.scripts.save_opensky_snapshot` → `git add -f ojh/data/snapshot/opensky_states.json.gz`(`data/` 폴더는 git 제외 규칙에 걸림).
 - 확인: AppTest로 두 경우를 열었습니다. 배포 모드는 네트워크 요청을 막아 둔 상태에서 저장본으로 지도와 숫자가 나왔고 예외가 없었습니다. 로컬 모드는 OpenSky에서 새로 받아(14:38) 지금과 같이 나왔습니다. 실제 Streamlit Cloud에서는 아직 확인하지 않았습니다.
 - 주의: 저장본은 OpenSky 원자료라 공개 저장소에 올리면 재배포 제한에 걸릴 수 있습니다. 올릴지는 사용자가 정합니다.
+
+## 2026-11-24 배포 앱 계류장 화면: "ultralytics 패키지가 없습니다" 수정(사용자 요청)
+
+- 증상: 배포 앱(Streamlit Cloud)의 계류장 혼잡도 화면에 "ultralytics 패키지가 없습니다"가 나왔습니다. 로컬은 정상입니다.
+- 원인(추정): 패키지는 설치됐지만 `import ultralytics` 안에서 `cv2`가 시스템 라이브러리를 못 찾아 ImportError가 났고, 화면은 이를 모두 "패키지 없음"으로 보여 줬습니다.
+  - 리눅스용 `opencv-python` 5.0의 `cv2.abi3.so`를 WSL에서 `ldd`로 보니 libGL·libgthread·libglib·libxcb 등이 필요했습니다. `packages.txt`의 `libgl1`은 libGL만 채웁니다.
+  - Streamlit 포럼에 따르면 Cloud 이미지(Debian Bullseye)에는 libgthread가 없고, `libglib2.0-0`은 apt 의존성 문제로 설치가 실패합니다.
+- 수정
+  - `requirements.txt`: 리눅스에서만 `ultralytics-opencv-headless==8.4.215`(Ultralytics가 낸 같은 판, import 이름도 `ultralytics`)를 설치합니다. 이 패키지는 `opencv-python-headless`를 씁니다. headless의 `cv2.abi3.so`는 `ldd`로 보니 기본 라이브러리(libc, libstdc++, libz 등) 말고는 필요한 것이 없었습니다. 윈도우·맥은 기존 `ultralytics==8.4.215` 그대로라 `.venv`는 바꾸지 않았습니다.
+  - `ojh/_5_apron_tab.py`: 불러오기에 실패하면 실제 원인을 화면 아래 작은 글씨와 서버 로그에 남깁니다.
+- 확인: `uv pip compile`로 리눅스(3.12·3.14)는 `opencv-python-headless`만, 윈도우는 기존처럼 `opencv-python`이 잡혔습니다. 로컬 계류장 화면은 AppTest로 정상이었습니다. 실제 Cloud 배포 화면은 반영 뒤 확인해야 합니다.
+- 참고: Cloud가 Python 3.14로 설정돼 있으면 torch CPU 판 줄(3.12 전용)이 적용되지 않아 일반 torch가 설치됩니다.
