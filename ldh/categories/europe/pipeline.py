@@ -9,7 +9,7 @@ import openpyxl
 import pandas as pd
 from sklearn.metrics import average_precision_score, roc_auc_score
 
-from ldh.core.data import CACHE, REF, START_YEAR
+from ldh.core.data import CACHE, REF, START_YEAR, kr_count
 from ldh.core.ml import add_lags, binary_result, encode, lag_regression, model_row, self_check
 
 DAILY = ["Airport_Traffic", "Airport_Arrival_ATFM_Delay", "All_Pre-Departure_Delay", "ATC_Pre-Departure_Delay", "En-Route_ATFM_Delay_AUA"]
@@ -164,8 +164,8 @@ def run(store):
     busiest = store.table("traffic_top").iloc[0]
     atfm_rate = atfm[atfm.YEAR == y].DLY_APT_ARR_1.sum() / atfm[atfm.YEAR == y].FLT_ARR_1.sum()
     store.save_summary(
-        headline=f"{y}년 유럽 공항 운항은 {flights / 1e6:,.1f}백만 편(공항별 합계)입니다. 일 단위 지연은 전일 값보다 조금 더 잘 맞히지만, 월 단위 추가 시간은 전월 값과 큰 차이가 없습니다.",
-        kpis=[(f"{y}년 운항 합계", f"{flights / 1e6:,.1f}백만", "공항별 출발+도착 합계라 같은 편이 두 번 집계됩니다"),
+        headline=f"{y}년 유럽 공항 운항은 {kr_count(flights)} 편(공항별 합계)입니다. 일 단위 지연은 전일 값보다 조금 더 잘 맞히지만, 월 단위 추가 시간은 전월 값과 큰 차이가 없습니다.",
+        kpis=[(f"{y}년 운항 합계", f"{kr_count(flights)}", "공항별 출발+도착 합계라 같은 편이 두 번 집계됩니다"),
               ("최다 운항 공항", busiest.APT_ICAO, f"최근 12개월 {busiest.편수:,.0f}편"),
               (f"{y}년 도착 ATFM 지연", f"{atfm_rate:.2f}분/편"), ("자료 끝", f"{last:%Y-%m-%d}")],
         models=models,

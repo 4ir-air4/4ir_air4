@@ -3,7 +3,7 @@ import re
 
 import pandas as pd
 
-from ldh.core.data import REF, START_YEAR, read_csv_any, to_number
+from ldh.core.data import REF, START_YEAR, read_csv_any, to_number, kr_count
 from ldh.core.ml import lag_regression, model_row, self_check
 
 KOREA = REF / "korea"
@@ -105,9 +105,9 @@ def run(store):
     y = int(nat["연도"].max())
     peak = monthly.sort_values("passengers").iloc[-1]
     store.save_summary(
-        headline=f"{y}년 국제선 여객은 {n25.loc['국제', '여객'] / 1e6:,.1f}백만 명, 국내선은 {n25.loc['국내', '여객'] / 1e6:,.1f}백만 명입니다. 월별 수요는 전월·전년 값이 이미 강한 예측값이라 모델 효과는 제한적입니다.",
-        kpis=[(f"{y}년 국제선 여객", f"{n25.loc['국제', '여객'] / 1e6:,.1f}백만"), (f"{y}년 국내선 여객", f"{n25.loc['국내', '여객'] / 1e6:,.1f}백만"),
-              ("인천 최대 월 여객", f"{peak.passengers / 1e6:,.2f}백만", f"{peak.ym}, 유임승객 기준"), ("인천 자료 기간", f"{icn.ym.min()}~{icn.ym.max()}")],
+        headline=f"{y}년 국제선 여객은 {kr_count(n25.loc['국제', '여객'])} 명, 국내선은 {kr_count(n25.loc['국내', '여객'])} 명입니다. 월별 수요는 전월·전년 값이 이미 강한 예측값이라 모델 효과는 제한적입니다.",
+        kpis=[(f"{y}년 국제선 여객", f"{kr_count(n25.loc['국제', '여객'])}"), (f"{y}년 국내선 여객", f"{kr_count(n25.loc['국내', '여객'])}"),
+              ("인천 최대 월 여객", f"{kr_count(peak.passengers)}", f"{peak.ym}, 유임승객 기준"), ("인천 자료 기간", f"{icn.ym.min()}~{icn.ym.max()}")],
         models=models,
         notes=["인천 운송실적은 판이 겹치는 달을 최신 판 한 벌로만 집계했습니다.",
                "기종별 실적은 2025년 판만 사용했습니다. 2021~2023년 판은 공항 4곳뿐이고, 2024년 판은 월 값이 모두 1이라(연간 합계로 보임) 월별로 합칠 수 없습니다.",

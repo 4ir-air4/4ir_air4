@@ -34,6 +34,15 @@ def read_csv_any(path, **kw):
     return read_csv_bytes(Path(path).read_bytes(), **kw)
 
 
+def kr_count(n):
+    """화면 문구용 큰 수: 86_000_000 → '8,600만', 4_300_000_000 → '43억', 5_000 → '5,000'."""
+    if abs(n) >= 1e8:
+        return f"{n / 1e8:,.1f}".removesuffix(".0") + "억"
+    if abs(n) >= 1e4:
+        return f"{n / 1e4:,.0f}만"
+    return f"{n:,.0f}"
+
+
 def to_number(s):
     """'"1,234"' 같은 문자열 숫자를 숫자로 바꾼다."""
     return pd.to_numeric(s.astype("string").str.replace(r'[",\s]', "", regex=True), errors="coerce")

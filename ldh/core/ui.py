@@ -151,6 +151,12 @@ def in_covid(values):
     return t.between(COVID[0].start_time, COVID[1].end_time)
 
 
+# 축 눈금을 만·억 단위로 쓴다 (Vega 기본값은 2M, 4G 같은 SI 접두어라 읽기 어렵다)
+KR_AXIS = altair.Axis(labelExpr="abs(datum.value) >= 1e8 ? format(datum.value / 1e8, ',~r') + '억'"
+                                " : abs(datum.value) >= 1e4 ? format(datum.value / 1e4, ',~r') + '만'"
+                                " : format(datum.value, ',~r')")
+
+
 def time_chart(where, data, x, y, color=None, kind="line", x_label=None, y_label=None, stack=None, height=None, alt=None):
     """st.line_chart·area_chart·bar_chart 대신 쓴다. 코로나 시기가 들어 있으면 그 구간에 회색 띠를 깔고, 없으면 기본 차트 그대로다."""
     covid = in_covid(data[x])
@@ -164,7 +170,7 @@ def time_chart(where, data, x, y, color=None, kind="line", x_label=None, y_label
     scale = altair.Scale(paddingInner=0, paddingOuter=0)  # 띠가 달마다 끊기지 않게
     xenc = altair.X(f"{x}:O", title=title(x_label), scale=scale, axis=altair.Axis(labelOverlap=True))
     yenc = altair.Y(f"{y}:Q", title=title(y_label), stack=altair.Undefined if stack is None else {True: "zero", False: None}.get(stack, stack),
-                    axis=altair.Axis(format="%") if stack == "normalize" else altair.Undefined)
+                    axis=altair.Axis(format="%") if stack == "normalize" else KR_AXIS)
     base = altair.Chart(data).encode(x=xenc, y=yenc, color=altair.Color(f"{color}:N") if color else altair.Undefined,
                                      tooltip=[x, y] + ([color] if color else []))
     marks = {"line": base.mark_line(), "area": base.mark_area(), "bar": base.mark_bar(width=altair.RelativeBandSize(0.8))}
