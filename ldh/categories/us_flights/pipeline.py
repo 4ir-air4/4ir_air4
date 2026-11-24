@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ldh.core.data import REF, START_YEAR
+from ldh.core.data import REF, START_YEAR, kr_count
 from ldh.core.ml import model_row
 
 DATA = Path("ldh/datasets/processed/bts_parquet")
@@ -109,9 +109,9 @@ def run(store):
     best = max((m for m in models if m["title"].startswith("도착 지연 여부") and "roc_auc" in m), key=lambda m: m["roc_auc"], default=None)
     worst_hour = store.table("hour").query("flights > 50000").sort_values("delay_rate").iloc[[0, -1]]
     store.save_summary(
-        headline=f"{START_YEAR}년 이후 {yearly.flights.sum() / 1e6:,.0f}백만 편을 분석했습니다. 2025년 도착 지연률은 {last.delay_rate:.1%}, 결항률은 {last.cancel_rate:.1%}입니다."
+        headline=f"{START_YEAR}년 이후 {kr_count(yearly.flights.sum())} 편을 분석했습니다. 2025년 도착 지연률은 {last.delay_rate:.1%}, 결항률은 {last.cancel_rate:.1%}입니다."
                  + (f" 앞편 지연과 기상을 더한 모델이 ROC-AUC {best['roc_auc']:.3f}로 가장 좋습니다." if best else ""),
-        kpis=[("분석한 운항 편수", f"{yearly.flights.sum() / 1e6:,.0f}백만", f"{START_YEAR}-01~2026-08"),
+        kpis=[("분석한 운항 편수", f"{kr_count(yearly.flights.sum())}", f"{START_YEAR}-01~2026-08"),
               ("2025년 도착 지연률", f"{last.delay_rate:.1%}", "15분 이상 지연, 실제 운항편 기준"),
               ("2025년 결항률", f"{last.cancel_rate:.1%}"),
               ("2025년 평균 도착 지연", f"{last.avg_delay:.1f}분", "조기 도착은 음수로 합산")],
