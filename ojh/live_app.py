@@ -1,6 +1,7 @@
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from html import escape
+import gzip
 import json
 import math
 import re
@@ -33,6 +34,11 @@ from _3_airport_tab import show_airport_demand
 
 ROOT_DIR = Path(__file__).resolve().parent
 STATES_CACHE_PATH = ROOT_DIR / "data" / "cache" / "opensky_states_last.json"
+# 배포용 저장본 (python -m ldh.scripts.save_opensky_snapshot 으로 만든다)
+SNAPSHOT_PATH = ROOT_DIR / "data" / "snapshot" / "opensky_states.json.gz"
+# Streamlit Cloud는 저장소를 /mount/src 아래에 둔다. 그 서버의 클라우드 IP는 OpenSky가 막아서 저장본을 보여 준다
+ON_STREAMLIT_CLOUD = Path("/mount/src").exists()
+KST = timezone(timedelta(hours=9))
 
 OPENSKY_BASE_URL = "https://opensky-network.org/api"
 
@@ -105,8 +111,7 @@ def get_opensky_headers():
 # 3. 실시간 항공기 데이터
 # =========================================================
 
-@st.cache_data(ttl=600, show_spinner=False)
-def load_aircraft_data():
+def fetch_states():
 
     headers = get_opensky_headers()
 
@@ -164,6 +169,18 @@ def load_aircraft_data():
         else:
 
             raise last_error
+
+    return result
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def load_aircraft_data():
+
+    if ON_STREAMLIT_CLOUD:
+        # 배포 서버는 OpenSky에 연결하지 않고 git에 올린 저장본을 읽는다 (없으면 화면에 안내 문구)
+        result = json.loads(gzip.decompress(SNAPSHOT_PATH.read_bytes()))
+    else:
+        result = fetch_states()
 
     api_timestamp = result.get("time")
     states = result.get("states") or []
@@ -1192,7 +1209,8 @@ def show_live_map():
 
     st.subheader("🌍 실시간 항공기 위치")
 
-    if st.button("🔄 데이터 새로고침"):  # 컬럼에 넣으면 좁은 화면에서 글자가 잘려 단독 버튼으로 둔다
+    # 배포 화면은 저장본이라 새로고침해도 같은 자료여서 버튼을 숨긴다
+    if not ON_STREAMLIT_CLOUD and st.button("🔄 데이터 새로고침"):  # 컬럼에 넣으면 좁은 화면에서 글자가 잘려 단독 버튼으로 둔다
         load_aircraft_data.clear()
         get_access_token.clear()
         st.rerun()
@@ -1215,7 +1233,15 @@ def show_live_map():
         st.warning("현재 표시할 항공기 데이터가 없습니다.")
         return
 
-    if api_timestamp:
+    if ON_STREAMLIT_CLOUD and api_timestamp:
+
+        saved_at = datetime.fromtimestamp(api_timestamp, KST).strftime("%Y-%m-%d %H:%M")
+        st.info(
+            f"배포 화면에서는 OpenSky 실시간 연결이 막혀 있어 {saved_at} (한국 시각)에 저장한 항공기 위치를 보여 줍니다. "
+            "비행 궤적은 앱을 직접 실행한 PC에서만 볼 수 있습니다."
+        )
+
+    elif api_timestamp:
 
         data_time = datetime.fromtimestamp(
             api_timestamp
@@ -1346,10 +1372,11 @@ def show_live_map():
     # 실제 이동 궤적(OpenSky tracks)은 브라우저가 이 로컬 프록시(127.0.0.1)를 거쳐 조회한다.
     # 인증 토큰은 프록시(서버)에만 있고 지도 HTML에는 넣지 않는다.
     # 프록시가 127.0.0.1이라 앱을 실행한 PC의 브라우저에서만 궤적이 보인다.
-    start_track_proxy(
-        get_secret("OPENSKY_CLIENT_ID"),
-        get_secret("OPENSKY_CLIENT_SECRET"),
-    )
+    if not ON_STREAMLIT_CLOUD:  # 배포 서버에서는 OpenSky가 막혀 있고 브라우저도 이 프록시에 닿지 못한다
+        start_track_proxy(
+            get_secret("OPENSKY_CLIENT_ID"),
+            get_secret("OPENSKY_CLIENT_SECRET"),
+        )
 
     add_aircraft_markers(
         aircraft_map,
