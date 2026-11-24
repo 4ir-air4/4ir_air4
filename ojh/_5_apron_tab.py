@@ -305,8 +305,11 @@ def score_of(counts, weights):
 def show_apron_congestion():
     try:
         import ultralytics  # noqa: F401
-    except ImportError:
-        st.error("ultralytics 패키지가 없습니다. 저장소 최상위에서 `pip install -r requirements.txt` 를 실행해주세요.")
+    except ImportError as e:
+        # 패키지가 없을 때뿐 아니라 cv2 가 시스템 라이브러리(libGL 등)를 못 찾을 때도 ImportError 라 원인을 함께 보인다
+        print(f"[계류장] ultralytics 불러오기 실패: {e}")
+        st.error("ultralytics 를 불러오지 못했습니다. 저장소 최상위에서 `pip install -r requirements.txt` 를 실행해주세요.")
+        st.caption(f"원인: {e}")
         return
 
     st.caption("공항 계류장·활주로 사진을 올리면 YOLO 가 비행기·차량·사람을 찾아 셉니다. "
