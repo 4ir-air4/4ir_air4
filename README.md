@@ -214,6 +214,26 @@ git에 올라간 파일만으로 모든 화면을 열어 오류, "파일 없음"
 
 재학습한 모델은 `joblib.dump(..., compress=("zlib", 6))`로 저장해야 GitHub 100MB 한도를 넘지 않습니다.
 
+## 프로젝트 진행 하면서 느낀점.
+<table>
+  <tr>
+    <td align="center"><b>이동형</b></td>
+    <td align="center">여기에 내용을 입력하세요.</td>
+  </tr>
+  <tr>
+    <td align="center"><b>오정현</b></td>
+    <td align="center">여기에 내용을 입력하세요.</td>
+  </tr>
+  <tr>
+    <td align="center"><b>신정욱</b></td>
+    <td align="center">여기에 내용을 입력하세요.</td>
+  </tr>
+  <tr>
+    <td align="center"><b>최효선</b></td>
+    <td align="center">여기에 내용을 입력하세요.</td>
+  </tr>  
+</table>
+
 ## 자료 출처
 
 - 한국: 공공데이터포털(인천국제공항공사, 한국공항공사, 국토교통부), KOSIS, 공항 기상(ASOS), 기상청 공항 기상(AMOS)
