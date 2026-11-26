@@ -426,12 +426,48 @@ def vehicle_model_info():
                    "확신 50% 이상인 차량(60%)만 보면 83.7%, 후보 2개 안에 정답이 있는 비율은 82.4%예요.")
 
 
-def vehicle_types_section(data, dets, photo_id):
-    """YOLO 가 찾은 차량마다 13종류 중 무엇인지 맞힌다 (ojh/models/veh_classify.py). 모델 파일이 없으면 안내만."""
+VT_AUTO_MAX = 20   # 차량이 이 이하이면 버튼 없이 '빠르게'로 자동으로 맞힌다 (약 6초 × 20대 = 2분 안쪽)
+
+
+def _vt_key(photo_id, mode, veh):
+    # 탐지 모델·신뢰도를 바꾸면 차량 상자가 달라지므로 상자 목록까지 키에 넣는다 (옛 결과를 잘못 보여 주지 않게)
+    return f"vt_{photo_id}_{mode}_{hashlib.md5(veh[BOX_COLS].round(1).to_numpy().tobytes()).hexdigest()[:8]}"
+
+
+def _vt_run(data, veh, mode):
+    """[(차량 사진, 종류, 확신도)] — veh 순서와 같다."""
     import io
 
     from PIL import Image
 
+    vc = _vtype_module()
+    image = Image.open(io.BytesIO(data)).convert("RGB")
+    s = image.width / _shrink(image).width   # 탐지 상자는 줄인 사진 기준 → 원본 크기로 되돌려 선명하게 자른다
+    pairs = [vc.cut(image, [v * s for v in r[BOX_COLS].tolist()]) for _, r in veh.iterrows()]
+    model = _vtype_model(mode)
+    with st.spinner(f"차량 {len(pairs)}대 종류 맞히는 중..."):
+        P = model.proba(pairs)
+    return [(pairs[k][0], model.classes[int(p.argmax())], float(p.max())) for k, p in enumerate(P)]
+
+
+def vt_current(data, dets, photo_id):
+    """지금 고른 방식의 차량 종류 결과(없으면 None). 차량이 VT_AUTO_MAX 대 이하이고 '빠르게'면 버튼 없이 바로 계산한다."""
+    vc = _vtype_module()
+    ok = vc.available()
+    veh = dets[dets["묶음"] == "vehicle"].reset_index(drop=True)
+    if not ok["fast"] or not len(veh):
+        return None
+    modes = [k for k, v in VTYPE_MODES.items() if ok[v]]
+    pick = st.session_state.get(f"vt_mode_{photo_id}")
+    mode = VTYPE_MODES[pick if pick in modes else modes[0]]
+    key = _vt_key(photo_id, mode, veh)
+    if key not in st.session_state and mode == "fast" and len(veh) <= VT_AUTO_MAX:
+        st.session_state[key] = _vt_run(data, veh, mode)
+    return st.session_state.get(key)
+
+
+def vehicle_types_section(data, dets, photo_id):
+    """YOLO 가 찾은 차량마다 13종류 중 무엇인지 맞힌다 (ojh/models/veh_classify.py). 모델 파일이 없으면 안내만."""
     vc = _vtype_module()
     ok = vc.available()
     veh = dets[dets["묶음"] == "vehicle"].reset_index(drop=True)
@@ -447,22 +483,20 @@ def vehicle_types_section(data, dets, photo_id):
                                          "정확하게: 코랩에서 학습한 EVA02-L CLIP 과 빠른 모델을 8:2로 섞음 (5겹 채점 70.6%). "
                                          "CPU 에서 차량 1대 약 20초라 느립니다.")
         mode = VTYPE_MODES[pick]
-        # 탐지 모델·신뢰도를 바꾸면 차량 상자가 달라지므로 상자 목록까지 키에 넣는다 (옛 결과를 잘못 보여 주지 않게)
-        key = f"vt_{photo_id}_{mode}_{hashlib.md5(veh[BOX_COLS].round(1).to_numpy().tobytes()).hexdigest()[:8]}"
+        key = _vt_key(photo_id, mode, veh)
         if key not in st.session_state:
             c2.caption(f"예상 약 {max(1, round(len(veh) * VTYPE_SEC[mode] / 60))}분 (차량 {len(veh)}대)")
             if not c1.button("차량 종류 맞히기", key=f"vt_btn_{key}", type="primary"):
                 if not ok["accurate"]:
                     st.caption("정확하게(70%)는 코랩 최종 모델 파일(veh_eva02l_final.pt, 607MB)과 timm 이 있어야 나옵니다.")
                 return
-            image = Image.open(io.BytesIO(data)).convert("RGB")
-            s = image.width / _shrink(image).width   # 탐지 상자는 줄인 사진 기준 → 원본 크기로 되돌려 선명하게 자른다
-            pairs = [vc.cut(image, [v * s for v in r[BOX_COLS].tolist()]) for _, r in veh.iterrows()]
-            model = _vtype_model(mode)
-            with st.spinner(f"차량 {len(pairs)}대 종류 맞히는 중..."):
-                P = model.proba(pairs)
-            st.session_state[key] = [(pairs[k][0], model.classes[int(p.argmax())], float(p.max())) for k, p in enumerate(P)]
+            st.session_state[key] = _vt_run(data, veh, mode)
+            st.rerun()   # 위쪽 탐지 표도 13종류로 다시 그리게
         res = st.session_state[key]
+        if mode == "fast" and len(veh) <= VT_AUTO_MAX:
+            st.caption(f"차량 {VT_AUTO_MAX}대 이하라 '빠르게'로 자동으로 맞혔어요. 위 탐지 표의 차량도 이 결과로 나눠 보여 줘요.")
+        else:
+            st.caption("위 탐지 표의 차량도 이 결과로 나눠 보여 줘요.")
         cnt = pd.Series([vc.NAMES.get(t, t) for _, t, _ in res]).value_counts().rename("대수")
         st.dataframe(cnt, width="stretch")
         cols = st.columns(6)
@@ -574,6 +608,8 @@ def show_apron_congestion():
         ai_key = f"ai_stands_{photo_id}"
 
         st.markdown(f"#### {f.name}")
+        # 차량 종류 결과(있으면, 차량이 적으면 자동 계산) → 오른쪽 탐지 표의 차량을 13종류로 나눠 보여 준다
+        vt_res = vt_current(f.getvalue(), dets, photo_id) if not aerial and counts["vehicle"] else None
         left, right = st.columns([3, 2])
         with right:
             ai = st.session_state.get(ai_key)
@@ -641,8 +677,18 @@ def show_apron_congestion():
             st.markdown("  \n".join(f"{GROUP_LABELS[g]} **{counts[g]}**{'명' if g == 'person' else '대'}" for g in GROUP_LABELS
                                    if not (aerial and g == "person")))
             if len(dets):
-                detail = dets.groupby("종류").agg(개수=("신뢰도", "size"), 평균_신뢰도=("신뢰도", "mean")).round(2)
+                shown = dets
+                if vt_res:   # 차량 줄의 '종류'를 차량 종류 맞히기 결과로 바꾼다 (veh 와 같은 순서)
+                    shown = dets.copy()
+                    vidx = shown.index[shown["묶음"] == "vehicle"]
+                    if len(vidx) == len(vt_res):
+                        shown.loc[vidx, "종류"] = ["🚚 " + _vtype_module().NAMES.get(t, t) for _, t, _ in vt_res]
+                detail = shown.groupby("종류").agg(개수=("신뢰도", "size"), 평균_신뢰도=("신뢰도", "mean")).round(2)
                 st.dataframe(detail.sort_values("개수", ascending=False), width="stretch")
+                if vt_res:
+                    st.caption("🚚 표시는 차량 종류 맞히기 결과예요 (평균_신뢰도는 탐지 신뢰도).")
+                elif counts["vehicle"] and not aerial:
+                    st.caption("차량 13종류는 아래 '🚚 차량 종류 맞히기'에서 볼 수 있어요.")
             else:
                 st.caption("찾은 대상이 없습니다. 사진 종류가 맞는지 확인하고, 신뢰도 기준을 낮춰보세요.")
         if not aerial and counts["vehicle"]:
