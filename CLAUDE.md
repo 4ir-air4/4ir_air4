@@ -8,7 +8,7 @@
 - 내 작업은 모두 `ldh/` 안에 둔다(팀원 파일과 섞지 않는다). `core/`, `categories/`, `scripts/`(학습·평가·전처리),
   `collect/`(인천 수집기), `tests/`, `docs/`, `notebooks/`, `config/`(tuned_params.json), `datasets/`·`results/`·`logs/`(아래. `results`는 화면용 가벼운 결과만 git에 올리고 나머지는 git 제외).
   프로젝트 루트에서 모듈로 실행한다(예: `python -m ldh.scripts.run_models korea_ops:kac_delay_hour`, `python -m ldh.tests.test_collect_icn`).
-- 루트에는 `app.py`(메뉴), `requirements.txt`(화면 실행용 18개, 배포용), `README.md`(프로젝트 안내, ojh 상세는 `ojh/README.md`), `.gitattributes`(sjw 결과 줄바꿈 변환 금지, 해시 보존), `CLAUDE.md`, `.streamlit/config.toml`(밝은 테마, PR #9), `.streamlit/secrets.toml.example`(실시간 지도용 OpenSky 키 이름, 값 없음)과 사람별 폴더(`ldh/`, `ojh/`, `chs/`, `sjw/`)만 둔다.
+- 루트에는 `app.py`(메뉴), `requirements.txt`(화면 실행용 18개, 배포용. 리눅스·3.12에서는 torch·torchvision CPU 휠을 직접 받는다), `packages.txt`(Streamlit Cloud 시스템 패키지, OpenCV용 `libgl1`), `README.md`(프로젝트 안내, ojh 상세는 `ojh/README.md`), `.gitattributes`(sjw 결과 줄바꿈 변환 금지, 해시 보존), `CLAUDE.md`, `.streamlit/config.toml`(밝은 테마, PR #9), `.streamlit/secrets.toml.example`(실시간 지도용 OpenSky 키 이름, 값 없음), `AERO_INSIGHT_서비스기획_발표.pdf`(서비스 기획 발표 자료, 사용자 요청으로 2026-11-24 커밋. 원본은 바탕화면이라 고치면 다시 복사해 올린다)와 사람별 폴더(`ldh/`, `ojh/`, `chs/`, `sjw/`)만 둔다.
 - 팀원 chs(최효선) 작업(2026-11-17): `chs/notebooks/`에 드라이브 `4ir\chs\4ir_air4`의 본인 작성 노트북(Untitled6~10, `untitled9 (1).py`)만 원래 이름으로 둔다. 저장소 사본·가상환경은 넣지 않았고, `.py`의 Colab 주소 한 줄만 지웠다. 화면은 읽지 않는다. `ldh/core/chs_review.py`(드라이브를 읽는 검토 화면)는 계속 커밋하지 않는다.
 - 팀원 sjw 결과(2026-11-17): `sjw/outputs/airport_guidance/<생성번호>/`에 sjw가 내보낸 정적 결과(여객 예상·혼잡 Y/N, 기상, 운항, manifest 해시)를 그대로 둔다.
   - 화면은 `ldh/core/airport_guidance.py`(메뉴 "국내 공항 혼잡 예상")가 이 결과만 읽는다. 해시를 확인하고 시각은 KST로 바꾼다.
@@ -23,6 +23,8 @@
 - 데이터 폴더(대부분 git 제외, 화면용 결과만 예외):
   - `ldh/datasets/` 내 입력 자료: `raw/bts_zip`(BTS 원본 zip), `raw/reference`(받은 참고 자료, 재배포 제한 있음), `raw/icn_live`(인천 수집),
     `processed/bts_parquet`(prepare_data 결과, 2020년 이후), `processed/cache`(학습용 캐시)
+    - 큰 캐시 3개(`bts_2020`, `us_weather_full`, `opensky_2020`, 합계 17.2GB)는 2026-11-18에 지웠다. 화면은 이 캐시를 읽지 않는다.
+    - 다시 학습하면 `load_task()`→`build()`가 `meta.json`이 없는 것을 보고 원본으로 다시 만든다(시간·메모리가 많이 든다). 그러니 원본(`raw/bts_zip`, `processed/bts_parquet`, `raw/reference`의 OpenSky·기상)은 지우지 않는다. 유럽·NTSB 작은 캐시는 남아 있다.
   - `ldh/results/` 내 결과: `full`(전체 학습), `2026`(2026년 학습), `legacy_models`(예전 scripts/train.py 모델)
     - 2026-11-16부터 `full`·`2026`의 화면용 결과(요약·지표 JSON, 집계, 다음 기간 예측, 중요도·SHAP, 통계표, 한국·유럽·안전 건별 예측)는 git에 올린다(약 31MB). 팀원은 받기만 하면 ldh 화면이 나온다.
     - 저장 모델(`saved_models`), 원 예측값(`member_preds`), 미국 운항·기상·OpenSky 건별 예측(약 2.7GB, OpenSky 재배포 제한), `legacy_models`의 하위 폴더, 시험 결과 JSON은 계속 git 제외(`legacy_models` 최상위 pkl 11개는 미국 운항 '직접 예측' 보기용으로 압축해 올린다)이고 드라이브로 공유한다. 규칙은 `.gitignore`의 `/ldh/results/` 부분.

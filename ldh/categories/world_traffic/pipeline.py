@@ -9,11 +9,11 @@ from concurrent.futures import ProcessPoolExecutor
 import numpy as np
 import pandas as pd
 
-from ldh.core.data import REF, START_YEAR
+from ldh.core.data import REF, START_YEAR, kr_count
 from ldh.core.ml import encode, model_row, regression_result
 
 SAMPLE_PER_MONTH = 50_000
-WB = {"IS.AIR.PSGR": "여객(명)", "IS.AIR.DPRT": "운항(편)", "IS.AIR.GOOD.MT.K1": "화물(백만 톤-km)"}
+WB = {"IS.AIR.PSGR": "여객(명)", "IS.AIR.DPRT": "운항(편)", "IS.AIR.GOOD.MT.K1": "화물(톤-km)"}
 WB_COUNTRIES = {"WLD": "세계", "USA": "미국", "CHN": "중국", "KOR": "한국", "JPN": "일본", "DEU": "독일"}
 AIRPORT_TYPES = {"large_airport": "대형", "medium_airport": "중형", "small_airport": "소형", "heliport": "헬기장", "seaplane_base": "수상기", "closed": "폐쇄", "balloonport": "기구장"}
 
@@ -53,7 +53,7 @@ def duration_model(sample):
     tr, te = sample[sample.period < "202201"], sample[sample.period >= "202201"]
     X_tr, X_te = encode(tr, [te], ["origin", "destination", "typecode"], ["hour", "dow", "distance_km"])
     return model_row("관측 비행 시간(분)", regression_result(X_tr, tr.y.to_numpy(float), X_te, te.y.to_numpy(float)),
-                     f"{START_YEAR}-01~2021-12 (월 {SAMPLE_PER_MONTH // 1000}천 편)", f"2022-01~12 (월 {SAMPLE_PER_MONTH // 1000}천 편)", "공항, 기종, 거리, 시각",
+                     f"{START_YEAR}-01~2021-12 (월 {kr_count(SAMPLE_PER_MONTH)} 편)", f"2022-01~12 (월 {kr_count(SAMPLE_PER_MONTH)} 편)", "공항, 기종, 거리, 시각",
                      "ADS-B 첫·마지막 관측 사이 시간이며 예정 시각이 없어 지연 예측은 아닙니다")
 
 
@@ -68,6 +68,7 @@ def worldbank():
         long = d.melt(id_vars="Country Code", value_vars=years, var_name="연도", value_name="값").dropna()
         rows.append(long.assign(지표=name, 국가=long["Country Code"].map(WB_COUNTRIES), 연도=long.연도.astype(int)).drop(columns="Country Code"))
     wb = pd.concat(rows, ignore_index=True)
+    wb.loc[wb.지표 == "화물(톤-km)", "값"] *= 1e6  # 원자료 단위는 백만 톤-km
     return wb[wb.연도 >= START_YEAR].reset_index(drop=True)
 
 
@@ -109,10 +110,10 @@ def run(store, paths=None):
     y2022 = monthly[monthly.월.str.startswith("2022")]["관측 편수"].sum()
     world = wb[(wb.국가 == "세계") & (wb.지표 == "여객(명)")].sort_values("연도")
     store.save_summary(
-        headline=f"OpenSky 관측 항공편은 2020년 {y2020 / 1e6:,.0f}백만 편에서 2022년 {y2022 / 1e6:,.0f}백만 편으로 {y2022 / y2020 - 1:.0%} 늘었습니다. 세계 항공 여객은 {int(world.연도.iloc[-1])}년 {world.값.iloc[-1] / 1e9:,.1f}십억 명입니다.",
-        kpis=[("OpenSky 전체 관측", f"{monthly['관측 편수'].sum() / 1e6:,.0f}백만 편", f"{START_YEAR}-01~2022-12"),
-              ("2020년 관측", f"{y2020 / 1e6:,.0f}백만 편", "코로나19로 항공 수요가 크게 줄어든 해입니다"),
-              ("2022년 관측", f"{y2022 / 1e6:,.0f}백만 편", f"2020년 대비 {y2022 / y2020 - 1:+.0%}, 수신망 변화도 반영됨"),
+        headline=f"OpenSky 관측 항공편은 2020년 {kr_count(y2020)} 편에서 2022년 {kr_count(y2022)} 편으로 {y2022 / y2020 - 1:.0%} 늘었습니다. 세계 항공 여객은 {int(world.연도.iloc[-1])}년 {kr_count(world.값.iloc[-1])} 명입니다.",
+        kpis=[("OpenSky 전체 관측", f"{kr_count(monthly['관측 편수'].sum())} 편", f"{START_YEAR}-01~2022-12"),
+              ("2020년 관측", f"{kr_count(y2020)} 편", "코로나19로 항공 수요가 크게 줄어든 해입니다"),
+              ("2022년 관측", f"{kr_count(y2022)} 편", f"2020년 대비 {y2022 / y2020 - 1:+.0%}, 수신망 변화도 반영됨"),
               ("공항 수 (OurAirports)", f"{len(ap):,}", "소형·헬기장·폐쇄 포함")],
         models=models,
         notes=["OpenSky는 ADS-B 수신망에 잡힌 편만 포함합니다. 수신망 확대 효과가 섞여 있어 실제 교통량 증감과 다를 수 있습니다.",

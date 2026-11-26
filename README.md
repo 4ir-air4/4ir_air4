@@ -8,19 +8,81 @@
 
 ## 팀
 
-| 이름 | 담당 |
-|---|---|
-| 오정현 | 실시간 관제, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미, 통합 앱 구성 |
-| 이동형 | 한국·미국·유럽·안전 분석, 공통 학습 엔진, 인천 예보 |
-| 최효선 | 결항 요인, 국내 여객 수요 분석 |
-| 신정욱 | 국내 공항 여객·기상·운항 수집, 혼잡 예상 자료 |
+<table>
+  <tr>
+    <td align="center" width="25%"><img src="ldh/docs/img/team_male.png" width="120" alt="이동형 캐릭터"></td>
+    <td align="center" width="25%"><img src="https://github.com/user-attachments/assets/07bed60f-1430-4a04-b302-a0f21698b94f" width="120" alt="오정현 캐릭터"></td>
+    <td align="center" width="25%"><img src="https://github.com/user-attachments/assets/f3b5dea4-ce18-4db0-ba03-35590f22bda4" width="120" alt="신정욱 캐릭터"></td>
+    <td align="center" width="25%"><img src="ldh/docs/img/team_female.png" width="120" alt="최효선 캐릭터"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>이동형</b></td>
+    <td align="center"><b>오정현</b></td>
+    <td align="center"><b>신정욱</b></td>
+    <td align="center"><b>최효선</b></td>
+  </tr>
+  <tr>
+    <td align="center">한국·미국·유럽·안전 분석,<br>공통 학습 엔진, 인천 예보</td>
+    <td align="center">실시간 관제, 교통량·공항 수요 예측,<br>계류장 혼잡도, AI 도우미, 통합 앱 구성</td>
+    <td align="center">국내 공항 여객·기상·운항 수집,<br>혼잡 예상 자료</td>
+    <td align="center">결항 요인,<br>국내 여객 수요 분석</td>
+  </tr>
+</table>
 
 브랜치는 `develop`에서 작업하고 팀원 PR도 `develop`으로 받습니다. `main`에는 `develop`을 PR로 합칩니다.
+
+## 빠른 시작
+
+Python 3.12 기준입니다.
+
+```bash
+git clone https://github.com/4ir-air4/4ir_air4.git
+```
+
+```bash
+cd 4ir_air4
+```
+
+```bash
+python -m venv .venv
+```
+
+```bash
+.venv/Scripts/python.exe -m pip install -r requirements.txt
+```
+
+```bash
+.venv/Scripts/python.exe -m streamlit run app.py
+```
+
+macOS·Linux에서는 `.venv/Scripts/python.exe` 대신 `.venv/bin/python`을 씁니다. 브라우저에서 http://localhost:8501 이 열립니다.
+
+계류장 혼잡도는 PyTorch를 씁니다. GPU가 없으면 위 설치 전에 CPU 판을 먼저 설치하는 편이 가볍습니다.
+
+```bash
+.venv/Scripts/python.exe -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+```
+
+YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(git에는 없음).
+
+### 키 넣기
+
+`.streamlit/secrets.toml.example`을 같은 폴더에 `secrets.toml`로 복사하고 필요한 키만 넣습니다.
+
+| 키 | 쓰는 곳 | 받는 곳 |
+|---|---|---|
+| `OPENSKY_CLIENT_ID`, `OPENSKY_CLIENT_SECRET` | 실시간 지도 | [OpenSky Network](https://opensky-network.org) API 클라이언트 |
+| `GEMINI_API_KEY` | AI 도우미, 계류장 자리 수 추정 | [Google AI Studio](https://aistudio.google.com/apikey) (무료 등급) |
+| `TAVILY_API_KEY`, `SERPAPI_API_KEY` | AI 도우미의 최신 소식·항공권 검색(선택) | Tavily, SerpApi (무료 등급) |
+
+`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요.<br>
+키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
+
 
 ## 기술 스택
 
 <p>
-  <img src="https://skillicons.dev/icons?i=py,tensorflow,pytorch,sklearn,git,github,pycharm,vscode,windows,powershell" alt="Python, TensorFlow, PyTorch, scikit-learn, Git, GitHub, PyCharm, VS Code, Windows, PowerShell">
+  <img src="https://skillicons.dev/icons?i=py,tensorflow,pytorch,sklearn,git,github,pycharm,vscode,powershell" alt="Python, TensorFlow, PyTorch, scikit-learn, Git, GitHub, PyCharm, VS Code, PowerShell">
 </p>
 
 **ML 모델**
@@ -85,73 +147,27 @@
 | | 모델 비교 | 같은 기준(시간 순 미래 구간)으로 모델 비교, SHAP 설명 |
 | | 2026년 학습 결과 | 2026년 자료로만 학습한 구동 확인 결과 |
 
-## 빠른 시작
-
-Python 3.12 기준입니다.
-
-```bash
-git clone https://github.com/4ir-air4/4ir_air4.git
-```
-
-```bash
-cd 4ir_air4
-```
-
-```bash
-python -m venv .venv
-```
-
-```bash
-.venv/Scripts/python.exe -m pip install -r requirements.txt
-```
-
-```bash
-.venv/Scripts/python.exe -m streamlit run app.py
-```
-
-macOS·Linux에서는 `.venv/Scripts/python.exe` 대신 `.venv/bin/python`을 씁니다. 브라우저에서 http://localhost:8501 이 열립니다.
-
-계류장 혼잡도는 PyTorch를 씁니다. GPU가 없으면 위 설치 전에 CPU 판을 먼저 설치하는 편이 가볍습니다.
-
-```bash
-.venv/Scripts/python.exe -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-```
-
-YOLO 가중치는 처음 쓸 때 `ojh/models/saved/yolo/`로 내려받습니다(git에는 없음).
-
-### 키 넣기
-
-`.streamlit/secrets.toml.example`을 같은 폴더에 `secrets.toml`로 복사하고 필요한 키만 넣습니다.
-
-| 키 | 쓰는 곳 | 받는 곳 |
-|---|---|---|
-| `OPENSKY_CLIENT_ID`, `OPENSKY_CLIENT_SECRET` | 실시간 지도 | [OpenSky Network](https://opensky-network.org) API 클라이언트 |
-| `GEMINI_API_KEY` | AI 도우미, 계류장 자리 수 추정 | [Google AI Studio](https://aistudio.google.com/apikey) (무료 등급) |
-| `TAVILY_API_KEY`, `SERPAPI_API_KEY` | AI 도우미의 최신 소식·항공권 검색(선택) | Tavily, SerpApi (무료 등급) |
-
-`secrets.toml`은 `.gitignore`에 들어 있습니다. 키를 커밋하지 마세요.<br>
-키가 없으면 해당 기능에만 안내 문구가 나오고 다른 화면은 그대로 동작합니다. 자세한 사용법은 [ojh/README.md](ojh/README.md)에 있습니다.
 
 ## 폴더 구조
 
 ```
-app.py                    통합 앱 메뉴(AERO INSIGHT)
-requirements.txt          화면 실행용 패키지 17개
-.streamlit/               밝은 테마 설정, 키 예시 파일
-ojh/                      오정현 : 실시간 지도, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미(설명서 README.md)
-views/                    통합 앱에서 여는 화면 래퍼
-models/                   학습 코드(train.py, train2.py)와 저장 모델(saved/)
-ldh/                      이동형 : 카테고리 분석·예측
-categories/               카테고리 8개(폴더 하나가 메뉴 하나, 추가 방법은 categories/README.md)
-core/                     공통 학습 엔진, 화면(통합 요약, 모델 비교, 인천 예보, 혼잡 예상 등)
-scripts/                  자료 준비, 학습, 평가
-collect/                  인천공항 운항 수집기
-results/                  화면용 결과(요약·지표, 집계, 예측 표본, SHAP)
-tests/                    점검 스크립트
-docs/                     자료 안내(DATA_GUIDE.md), 출처(DATA_SOURCES.md), 작업 기록(WORK_LOG.md)
-requirements-train.txt    학습·자료 준비용 패키지(화면용 포함)
-chs/notebooks/            최효선 : 결항·지연 예측, 월별 여객 수요 예측 Colab 노트북(설명 chs/README.md)
-sjw/outputs/              신정욱 : 국내 공항 여객·기상·운항 수집 결과(정적 내보내기, 설명 sjw/README.md)
+app.py                    | 통합 앱 메뉴(AERO INSIGHT)
+requirements.txt          | 화면 실행용 패키지 17개
+.streamlit/               | 밝은 테마 설정, 키 예시 파일
+ojh/                      | 오정현 : 실시간 지도, 교통량·공항 수요 예측, 계류장 혼잡도, AI 도우미(설명서 README.md)
+views/                    | 통합 앱에서 여는 화면 래퍼
+models/                   | 학습 코드(train.py, train2.py)와 저장 모델(saved/)
+ldh/                      | 이동형 : 카테고리 분석·예측
+categories/               | 카테고리 8개(폴더 하나가 메뉴 하나, 추가 방법은 categories/README.md)
+core/                     | 공통 학습 엔진, 화면(통합 요약, 모델 비교, 인천 예보, 혼잡 예상 등)
+scripts/                  | 자료 준비, 학습, 평가
+collect/                  | 인천공항 운항 수집기
+results/                  | 화면용 결과(요약·지표, 집계, 예측 표본, SHAP)
+tests/                    | 점검 스크립트
+docs/                     | 자료 안내(DATA_GUIDE.md), 출처(DATA_SOURCES.md), 작업 기록(WORK_LOG.md)
+requirements-train.txt    | 학습·자료 준비용 패키지(화면용 포함)
+chs/notebooks/            | 최효선 : 결항·지연 예측, 월별 여객 수요 예측 Colab 노트북(설명 chs/README.md)
+sjw/outputs/              | 신정욱 : 국내 공항 여객·기상·운항 수집 결과(정적 내보내기, 설명 sjw/README.md)
 ```
 
 ## 학습 다시 돌리기
@@ -197,6 +213,36 @@ git에 올라간 파일만으로 모든 화면을 열어 오류, "파일 없음"
 | `.streamlit/secrets.toml`, `.env` | 개인 키 | 각자 만듦 |
 
 재학습한 모델은 `joblib.dump(..., compress=("zlib", 6))`로 저장해야 GitHub 100MB 한도를 넘지 않습니다.
+
+## 프로젝트 진행 하면서 느낀점.
+<table>
+  <tr>
+    <td align="center"><b>이동형</b></td>
+    <td align="left">전체적으로 자료를 수집 하는데 있어 여러 API 제공 업체 및 자료를 찾는 재미가 있었고, <br>
+                     전체적인 작업 진행은 비록 Ai를 이용해 Ai협업 형식으로 진행을 했지만<br>
+                     진행을 함에 있어서 구상이나 진행 방향을 직접적으로 수정 및 정리를 하면서 하는<br>
+                     방식으로 사용을 함에 있어서 다른 의미로 진행함에 유종의 미를 거두게 되었습니다,<br>
+                     한편으로는 대부분의 작업을 진행 함에 있어, 그리고 모델을 학습하는 과정에 있어<br>
+                     실제적으로는 비는 시간들이 많아 그 시간에 팀원들과 좀 더 소통을 하는 방향을 이루었으면<br>
+                     좋았을 텐데 그러지 못한 부분이 아쉬움으로 남아 있습니다.<br>
+                     그럼에도 팀원 분들께서 자발적으로 상황 공유 및 추가 변경 사항에 대해 말씀을 해주셔서<br>
+                     진행을 함에 있어 보다 편안하게 진행을 했습니다, 다들 감사합니다.
+    <br></td>
+  </tr>
+  <tr>
+    <td align="center"><b>오정현</b></td>
+    <td align="left">여기에 내용을 입력하세요.</td>
+  </tr>
+  <tr>
+    <td align="center"><b>신정욱</b></td>
+    <td align="left">여기에 내용을 입력하세요.</td>
+  </tr>
+  <tr>
+    <td align="center"><b>최효선</b></td>
+    <td align="left">팀원들이 모두다 각자도생이네요..기술좋은 ai덕분에 ai가 다해줘서 프로젝트 하는느낌도 안났네요..<br>자료 좀더 찾을수 있었으면 도움이 좀 더 됐을꺼같은데..새로만난 팀원분들 모두 좋으신분들 같네요<br>얘기는 많이 안해봤지만 각자 장점이 많으신분들 같아요..고생하신 팀원들 남은 기간도 더 열심히 하세요.
+    </td>
+  </tr>  
+</table>
 
 ## 자료 출처
 

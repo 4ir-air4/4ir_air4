@@ -416,7 +416,7 @@ def vehicle_model_info():
             "- **이어 학습 확인**: 정답 1,201개 모델이 처음 본 어려운 새 정답에서 39.6% → 새 정답 일부로 이어 학습하니 51.8% (+12.2%p)")
         st.dataframe(pd.DataFrame([{"구분": a, "AERO에서 쓰기": "✅ 고를 수 있음" if "(AERO)" in a else "비교 실험 기록",
                                     "모델·방법": b, "정확도(%)": c, "비고": d} for a, b, c, d in VTYPE_SCORES]),
-                     hide_index=True, use_container_width=True,
+                     hide_index=True, width="stretch",
                      column_config={"정확도(%)": st.column_config.ProgressColumn("정확도(%)", min_value=0, max_value=100, format="%.1f")})
         st.caption("AERO 에서는 ⚡빠르게·🏆정확하게 두 가지를 고를 수 있어요. 나머지는 코랩에서 같은 정답·같은 채점으로 비교한 기록이에요 "
                    "(최종 모델 파일을 만들지 않았고, CPU 에서 큰 모델 여러 개는 차량 1대에 1분 가까이 걸려 앱에 넣지 않음).")
@@ -464,10 +464,10 @@ def vehicle_types_section(data, dets, photo_id):
             st.session_state[key] = [(pairs[k][0], model.classes[int(p.argmax())], float(p.max())) for k, p in enumerate(P)]
         res = st.session_state[key]
         cnt = pd.Series([vc.NAMES.get(t, t) for _, t, _ in res]).value_counts().rename("대수")
-        st.dataframe(cnt, use_container_width=True)
+        st.dataframe(cnt, width="stretch")
         cols = st.columns(6)
         for k, (crop, t, p) in enumerate(res[:36]):
-            cols[k % 6].image(crop, caption=f"{vc.NAMES.get(t, t)} {p:.0%}", use_container_width=True)
+            cols[k % 6].image(crop, caption=f"{vc.NAMES.get(t, t)} {p:.0%}", width="stretch")
         if len(res) > 36:
             st.caption(f"사진은 처음 36대만 보여 줍니다 (전체 {len(res)}대는 위 표에 셈).")
 
@@ -475,8 +475,11 @@ def vehicle_types_section(data, dets, photo_id):
 def show_apron_congestion():
     try:
         import ultralytics  # noqa: F401
-    except ImportError:
-        st.error("ultralytics 패키지가 없습니다. 저장소 최상위에서 `pip install -r requirements.txt` 를 실행해주세요.")
+    except ImportError as e:
+        # 패키지가 없을 때뿐 아니라 cv2 가 시스템 라이브러리(libGL 등)를 못 찾을 때도 ImportError 라 원인을 함께 보인다
+        print(f"[계류장] ultralytics 불러오기 실패: {e}")
+        st.error("ultralytics 를 불러오지 못했습니다. 저장소 최상위에서 `pip install -r requirements.txt` 를 실행해주세요.")
+        st.caption(f"원인: {e}")
         return
 
     st.caption("공항 계류장·활주로 사진을 올리면 YOLO 가 비행기·차량·사람을 찾아 셉니다. "
@@ -576,7 +579,7 @@ def show_apron_congestion():
             ai = st.session_state.get(ai_key)
             if not isinstance(ai, dict):
                 btn_slot = st.empty()
-                if btn_slot.button("🤖 AI로 자리 수·장소 알아보기", key=f"ai_btn_{photo_id}", use_container_width=True,
+                if btn_slot.button("🤖 AI로 자리 수·장소 알아보기", key=f"ai_btn_{photo_id}", width="stretch",
                                    help="Gemini 가 사진에 보이는 주기장(빈자리 포함) 수와 장소를 추정합니다. 20~60초 걸리고, 같은 사진은 저장된 결과를 씁니다."):
                     with st.spinner("Gemini 가 사진을 보고 자리를 세는 중... (20~60초)"):
                         try:
@@ -624,7 +627,7 @@ def show_apron_congestion():
                         "값": f"{value:.0%}" if stands else f"{value:.1f}점", "등급": f"{icon} {name}",
                         "_rank": (OCC_GRADES if stands else GRADES).index(next(g for g in (OCC_GRADES if stands else GRADES) if g[1] == name))})
 
-        left.image(plotted, use_container_width=True)
+        left.image(plotted, width="stretch")
         left.caption(f"{model_name.replace('.pt', '')} · {width}×{height}"
                      + (f" · 조각 {n_tiles}개" if n_tiles else "") + f" · {elapsed:.1f}초")
         with right:
@@ -639,7 +642,7 @@ def show_apron_congestion():
                                    if not (aerial and g == "person")))
             if len(dets):
                 detail = dets.groupby("종류").agg(개수=("신뢰도", "size"), 평균_신뢰도=("신뢰도", "mean")).round(2)
-                st.dataframe(detail.sort_values("개수", ascending=False), use_container_width=True)
+                st.dataframe(detail.sort_values("개수", ascending=False), width="stretch")
             else:
                 st.caption("찾은 대상이 없습니다. 사진 종류가 맞는지 확인하고, 신뢰도 기준을 낮춰보세요.")
         if not aerial and counts["vehicle"]:
@@ -653,7 +656,7 @@ def show_apron_congestion():
     if len(summary) > 1:
         st.markdown("### 사진별 비교")
         table = pd.DataFrame(summary)
-        st.dataframe(table.drop(columns="_rank"), use_container_width=True, hide_index=True)
+        st.dataframe(table.drop(columns="_rank"), width="stretch", hide_index=True)
         if (table["판단 방식"] == "점유율").all():
             occ = table.set_index("사진")["값"].str.rstrip("%").astype(float).rename("주기장 점유율(%)")
             st.bar_chart(occ, horizontal=True, height=60 + 40 * len(table))

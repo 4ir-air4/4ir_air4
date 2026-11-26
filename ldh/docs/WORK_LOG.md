@@ -930,3 +930,98 @@ robocopy "G:\내 드라이브\4ir\outputs" outputs "pred_*" "predagg_*" "forecas
   - SHAP은 shap 라이브러리가 아니라 LightGBM·XGBoost에 들어 있는 TreeSHAP입니다.
   - GRU와 SMOTE는 chs 노트북에서 씁니다.
 - 확인: 배지 주소 27개가 모두 정상 SVG입니다. 로고가 안 나오던 LightGBM은 로고를 뺐고, 괄호가 든 배지 2개는 `%28`/`%29`로 고쳤습니다. GitHub 마크다운 변환에서 이미지 27개가 나왔습니다.
+
+## 2026-11-17 컨플루언스 정리 페이지 갱신
+
+- '이동형 작업 정리' 페이지(5996547)를 11/17 기준으로 고쳤습니다(5판). 사용자 확인을 받은 간결한 초안 그대로입니다.
+  - 기준일과 제목을 바꾸고, 코드 위치(사람별 폴더, 화면 17개)를 고쳤습니다.
+  - UC-11(국내 공항 혼잡 예상)을 추가했습니다.
+  - 결과 표: 인천 월 여객을 14% 개선(변화량 LightGBM)으로 고치고, 인천 실전 10일 채점 줄을 더했습니다.
+  - 진행 내역에 11/16·11/17을 더했습니다.
+  - 남은 일: 인천 수집 검토를 완료로 바꾸고, 배포와 보고서를 더했습니다.
+- 바꾼 곳만 고쳤고, 나머지 내용과 표·날짜 서식은 그대로입니다. 팀 공용 페이지와 팀원 페이지는 건드리지 않았습니다.
+
+## 2026-11-18 학습용 캐시 정리
+
+사용자 요청("캐시 정리를 부탁할께")으로 다시 만들 수 있는 학습용 중간 파일을 지웠습니다. D 드라이브 사용량이 41GB에서 24GB로 줄었습니다.
+- 지운 것: `ldh/datasets/processed/cache`의 `bts_2020`(7.4GB), `us_weather_full`(6.3GB), `opensky_2020`(3.5GB). 원본(`raw/bts_zip`, `processed/bts_parquet`, OpenSky·기상 원본)은 남겼습니다. 유럽·NTSB 캐시(약 20MB)도 남겼습니다.
+- 함께 지운 것: 결과 기록(`model_results`)에 앙상블이 없는 과제의 앙상블 건별 예측 4개(약 292MB). `us_weather`의 `pred_wx_arr_delay`, `pred_wx_dep_del15`, `pred_wx_dep_delay`와 `world_traffic`의 `pred_opensky_duration`(모두 `__ensemble`)입니다. git에 올라간 같은 과제의 `predagg_*__ensemble`(크기 0MB대)은 그대로 두었습니다.
+- 다시 만들기: 학습할 때 `load_task()`가 `build()`를 부르고, `meta.json`이 없으면 원본으로 캐시를 새로 만듭니다. 그래서 `run_models`만 다시 돌리면 됩니다. `bts_2020`의 turnaround 30분 자르기는 `build()`에 들어 있습니다(`MIN_TURNAROUND`). 다시 만드는 데 걸리는 시간은 재 보지 않았습니다.
+- 확인: 지운 파일은 모두 git 제외 대상이라 git 변경은 없습니다. 미국 운항, 미국 기상, 세계 교통량 화면을 AppTest로 열었고 예외나 "파일 없음" 안내가 없었습니다(첫 화면만 확인).
+
+## 2026-11-23 Streamlit Community Cloud 배포 준비
+
+사용자 요청("스트림릿 배포 하고 싶은데 배포 순서를 알려줘" → "준비해 줘")으로 배포에 필요한 파일을 고쳤습니다. 배포 자체는 사용자가 share.streamlit.io에서 합니다.
+- `requirements.txt`: 리눅스·Python 3.12에서만 torch·torchvision CPU 판 휠을 바로 받는 두 줄을 더했습니다(2.15.0+cpu, 0.29.2+cpu, `.venv`와 같은 판). 계류장 YOLO(ultralytics)가 GPU 판 torch(수 GB)를 깔지 않게 하려는 것입니다. 윈도우·맥 설치는 그대로입니다.
+- `packages.txt`(새 파일): `libgl1`. `opencv-python`이 리눅스에서 `libGL.so.1`을 찾기 때문입니다.
+- 확인: `uv pip compile`로 리눅스·3.12 기준 목록이 풀리고 torch가 CPU 휠로 잡히는 것, 윈도우 기준으로는 기존처럼 일반 torch가 잡히는 것을 봤습니다. 휠 주소 두 개는 내려받기 응답(200)을 확인했습니다. `test_fresh_clone --include-new`로 화면 17개가 모두 정상이었습니다.
+- 확인 못 한 것: 실제 클라우드 배포는 하지 않았습니다. `libgl1`이 꼭 필요한지, 메모리가 충분한지는 배포 로그로 봐야 합니다. 리눅스에서는 xgboost가 `nvidia-nccl-cu13`(GPU 통신 라이브러리)을 함께 설치해 용량이 늘어납니다.
+- 배포 설정: 저장소 `4ir-air4/4ir_air4`, 브랜치 `main`, 파일 `app.py`, Python 3.12, Secrets에 `OPENSKY_CLIENT_ID`·`OPENSKY_CLIENT_SECRET`·`GEMINI_API_KEY`(또는 `ANTHROPIC_API_KEY`).
+
+## 2026-11-23 ojh 화면: OpenSky 오류 안내 문구, use_container_width 교체(사용자 요청)
+
+사용자 요청으로 팀원 오정현(ojh) 파일을 직접 고쳤습니다. 파일을 옮기거나 이름을 바꾸지는 않았습니다.
+- 배경: 배포 환경(Streamlit Cloud)에서는 OpenSky 인증 서버(`auth.opensky-network.org`) 연결이 시간 초과로 실패합니다. 이 PC에서는 0.3초 안에 연결됩니다. OpenSky 문서에 대형 클라우드 IP를 막을 수 있다는 안내가 있어 그 차단으로 추정합니다.
+- `ojh/live_app.py`의 `show_live_map()`
+  - 항공기 데이터를 불러오지 못하면 오류 내용 대신 "현재 Open Sky Api 정보를 취합하지 못하고 있습니다, 근시일내로 문제 해결이 되게 작업 중입니다."를 경고로 보여 줍니다.
+  - 원인은 서버 로그(`[OpenSky] ...`)에 남깁니다. 키가 없을 때도 같은 문구가 나옵니다.
+  - 토큰 요청 timeout은 20초에서 (연결 5초, 읽기 20초)로 바꿨습니다.
+- `use_container_width=True` 29곳(`_2_traffic_tab` 9, `_3_airport_tab` 13, `_4_ai_chat_tab` 2, `_5_apron_tab` 4, `live_app` 1)을 `width="stretch"`로 바꿨습니다. Streamlit 1.66에서 해당 함수가 모두 `width`를 받는 것을 확인했습니다.
+- 확인
+  - 인증·데이터 요청이 시간 초과로 실패하도록 흉내 내 AppTest로 실시간 지도를 열었습니다. 안내 문구 하나만 나오고 예외·오류가 없었습니다.
+  - `test_fresh_clone --include-new`로 전체 화면을 점검했습니다(결과는 아래 줄).
+- 좁은 화면(375px)도 다시 확인했습니다. 메뉴가 처음부터 열려 본문을 덮고, 페이지를 골라도 닫히지 않아 `<<`를 눌러야 본문이 보입니다. 원인은 `app.py`의 `initial_sidebar_state="expanded"`로 보입니다. 아직 고치지 않았습니다.
+- 전체 점검: `test_fresh_clone --include-new`로 화면 17개를 모두 열었고 정상이었습니다. ojh 화면 4개도 정상이었습니다(AI 키가 없다는 안내만 나옴).
+- 좁은 화면 메뉴(사용자 요청으로 수정): `app.py`의 `initial_sidebar_state`를 `"expanded"`에서 `"auto"`로 바꿨습니다.
+  - 휴대폰 크기(375px)에서는 메뉴가 닫힌 채 시작해 본문이 바로 보입니다. 넓은 화면(1280px)에서는 지금처럼 열려 있습니다.
+  - 메뉴를 열고 페이지를 고르면 메뉴는 열린 채 남아 `<<`로 닫아야 합니다.
+  - 페이지가 바뀔 때 설정값을 바꿔 보내는 방법도 시험했지만, Streamlit이 사용자가 직접 연 상태(브라우저 저장값 `stSidebarCollapsed-`)를 우선해 효과가 없었습니다. 그 코드는 되돌렸습니다.
+
+## 2026-11-24 실시간 지도: Streamlit 배포에서만 OpenSky 저장본 보여 주기(사용자 요청)
+
+사용자 요청("기존 원본 배포는 냅두고 streamlit 배포만 따로 변경")으로, 실행 환경에 따라 실시간 지도를 둘로 나눴습니다.
+- 배경: Streamlit Cloud 서버(클라우드 IP)는 OpenSky가 막아 실시간 지도가 나오지 않습니다. Docker로 바꿔도 클라우드에서 돌리면 똑같이 막혀서, 저장본을 보여 주는 쪽을 골랐습니다.
+- 구분 기준: `ojh/live_app.py`의 `ON_STREAMLIT_CLOUD`(Streamlit Cloud가 저장소를 두는 `/mount/src` 폴더가 있으면 배포로 봄). 윈도우 PC나 다른 서버는 그 폴더가 없어 지금과 같이 동작합니다.
+- 배포 화면
+  - OpenSky에 연결하지 않고 `ojh/data/snapshot/opensky_states.json.gz`를 읽습니다(223KB, 11-24 14:27 KST 기준 항공기 5,774대).
+  - "○○ (한국 시각)에 저장한 항공기 위치" 안내를 보여 주고, 새로고침 버튼과 궤적 중계 서버는 쓰지 않습니다.
+  - 저장본 파일이 없으면 기존 안내 문구("현재 Open Sky Api 정보를 …")가 나옵니다.
+  - 마커, 고도 색, 팝업(기종·사진·노선)은 그대로입니다. 비행 궤적은 원래부터 앱을 실행한 PC에서만 보이는 구조(`127.0.0.1:8765`)라 배포 화면에서는 나오지 않습니다.
+- 그 밖의 환경: 바뀐 것 없음. 기존 함수의 네트워크 부분만 `fetch_states()`로 떼어 냈습니다.
+- 저장본 갱신: 이 PC에서 실시간 지도를 한 번 연 뒤 `python -m ldh.scripts.save_opensky_snapshot` → `git add -f ojh/data/snapshot/opensky_states.json.gz`(`data/` 폴더는 git 제외 규칙에 걸림).
+- 확인: AppTest로 두 경우를 열었습니다. 배포 모드는 네트워크 요청을 막아 둔 상태에서 저장본으로 지도와 숫자가 나왔고 예외가 없었습니다. 로컬 모드는 OpenSky에서 새로 받아(14:38) 지금과 같이 나왔습니다. 실제 Streamlit Cloud에서는 아직 확인하지 않았습니다.
+- 주의: 저장본은 OpenSky 원자료라 공개 저장소에 올리면 재배포 제한에 걸릴 수 있습니다. 올릴지는 사용자가 정합니다.
+
+## 2026-11-24 배포 앱 계류장 화면: "ultralytics 패키지가 없습니다" 수정(사용자 요청)
+
+- 증상: 배포 앱(Streamlit Cloud)의 계류장 혼잡도 화면에 "ultralytics 패키지가 없습니다"가 나왔습니다. 로컬은 정상입니다.
+- 원인(추정): 패키지는 설치됐지만 `import ultralytics` 안에서 `cv2`가 시스템 라이브러리를 못 찾아 ImportError가 났고, 화면은 이를 모두 "패키지 없음"으로 보여 줬습니다.
+  - 리눅스용 `opencv-python` 5.0의 `cv2.abi3.so`를 WSL에서 `ldd`로 보니 libGL·libgthread·libglib·libxcb 등이 필요했습니다. `packages.txt`의 `libgl1`은 libGL만 채웁니다.
+  - Streamlit 포럼에 따르면 Cloud 이미지(Debian Bullseye)에는 libgthread가 없고, `libglib2.0-0`은 apt 의존성 문제로 설치가 실패합니다.
+- 수정
+  - `requirements.txt`: 리눅스에서만 `ultralytics-opencv-headless==8.4.215`(Ultralytics가 낸 같은 판, import 이름도 `ultralytics`)를 설치합니다. 이 패키지는 `opencv-python-headless`를 씁니다. headless의 `cv2.abi3.so`는 `ldd`로 보니 기본 라이브러리(libc, libstdc++, libz 등) 말고는 필요한 것이 없었습니다. 윈도우·맥은 기존 `ultralytics==8.4.215` 그대로라 `.venv`는 바꾸지 않았습니다.
+  - `ojh/_5_apron_tab.py`: 불러오기에 실패하면 실제 원인을 화면 아래 작은 글씨와 서버 로그에 남깁니다.
+- 확인: `uv pip compile`로 리눅스(3.12·3.14)는 `opencv-python-headless`만, 윈도우는 기존처럼 `opencv-python`이 잡혔습니다. 로컬 계류장 화면은 AppTest로 정상이었습니다. 실제 Cloud 배포 화면은 반영 뒤 확인해야 합니다.
+- 참고: Cloud가 Python 3.14로 설정돼 있으면 torch CPU 판 줄(3.12 전용)이 적용되지 않아 일반 torch가 설치됩니다.
+
+## 2026-11-24 숫자 단위를 만·억으로(사용자 요청)
+
+"전 세계 항공" 화면의 "86백만 편" 같은 표기를 한국식 만·억 단위로 바꿨습니다. 같은 문구를 만드는 다른 카테고리도 함께 바꿨습니다.
+- `ldh/core/data.py` `kr_count()`: 86,040,000 → "8,604만", 4,268,984,000 → "42.7억", 1만 미만은 쉼표만 넣습니다.
+- 파이프라인 4개(world_traffic, europe, korea_demand, us_flights)의 요약·KPI 문구가 `kr_count()`를 씁니다. "월 50천 편"은 "월 5만 편"이 됐습니다.
+- 저장된 결과는 다시 학습하지 않고 고쳤습니다.
+  - world_traffic `summary.json`: 저장된 `monthly`·`worldbank` 표로 다시 계산했습니다(8,604만, 2,249만, 3,490만 편, 42.7억 명).
+  - 나머지 3개 `summary.json`: 반올림된 문구를 변환했습니다(1,760만, 9,450만, 3,020만, 628만, 4,300만).
+- 그래프 축: `ldh/core/ui.py`에 `KR_AXIS`를 추가했습니다. `time_chart()`의 Altair 경로(코로나 구간이 들어간 차트)가 기본 표기(2M, 4G) 대신 "350만", "45억"으로 그립니다. 기종별 막대도 Altair로 바꿔 같은 축을 씁니다.
+- 세계은행 화물: 원자료 단위가 백만 톤-km라 값에 100만을 곱하고 지표 이름을 "화물(톤-km)"로 바꿨습니다(축 "2,200억"). 파이프라인과 저장된 `worldbank.parquet`를 모두 고쳤습니다.
+- 표: 전 세계 항공 화면의 표 6개에 천 단위 쉼표를 넣었습니다(연도 열 제외).
+- 확인: 브라우저에서 KPI, 월별·기종별·세계은행(여객, 화물) 축과 표를 직접 봤습니다. `test_fresh_clone --include-new`로 화면 17개가 모두 정상이었습니다.
+- 남은 것: 코로나 구간이 없는 차트는 `st.line_chart`를 그대로 써서 축 표기가 바뀌지 않습니다. ojh 화면(공항 수요의 "M", "백만 명")은 오정현님 파일이라 손대지 않았습니다.
+
+## 2026-11-25 kr_count() 반올림 수정(사용자 요청)
+
+- 문제: 1만~100만 값을 만 단위 정수로 줄여 오차가 컸고(23,456 → "2만"), 1억 바로 아래는 "10,000만"으로 나왔습니다. 당시 화면 문구에는 이런 값이 없었습니다.
+- 수정(`ldh/core/data.py`): 100만 미만은 소수 한 자리(23,456 → "2.3만"), 만 단위로 반올림해 10,000만이 되는 값(99,995,000)부터 억, 10,000으로 반올림되는 값(9,999.5)부터 만으로 씁니다.
+- 시험: `python -m ldh.tests.test_kr_count`(14개 값). 고치기 전 코드에서는 4개가 틀렸고 고친 뒤 통과했습니다.
+- 확인: 저장된 화면 문구의 숫자는 고친 함수로 다시 계산해도 그대로라 결과 파일은 바꾸지 않았습니다.
+- 정정(11-24 계류장 항목): 원인은 배포 로그를 보지 않은 추정이고, libgthread 설명의 근거는 Streamlit 포럼 글입니다. headless `cv2`는 5.0.0.93을 `ldd`로 다시 확인했지만 Cloud에 설치될 5.1.0.95와 리눅스에서의 실제 import는 확인하지 않았습니다.
