@@ -101,8 +101,18 @@ datasets/
 ojh/models/*
 !ojh/models/train.py
 !ojh/models/train2.py
+!ojh/models/train_apron_yolo.ipynb
+!ojh/models/autolabel_apron.ipynb
+!ojh/models/consensus_apron.ipynb
+# 계류장 화면의 차량 종류 맞히기 코드 (2026-11-26). 모델 파일·학습 데이터(saved/yolo/veh_types)는 계속 제외
+!ojh/models/veh_classify.py
+!ojh/models/veh_final.py
+!ojh/models/veh_backbones.py
+!ojh/models/veh_report.py
 # 화면용 학습 모델(2026-11-16, 압축 저장해 약 86MB). 재학습하면 joblib compress 로 저장해야 GitHub 100MB 한도를 넘지 않는다
 !ojh/models/saved/
+# YOLO 가중치(약 100MB)는 계류장 화면이 처음 실행할 때 내려받는다
+ojh/models/saved/yolo/
 ojh/data/airport_demand/input/
 ojh/data/cache/*
 ojh/data/raw/

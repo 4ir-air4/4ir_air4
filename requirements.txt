@@ -21,3 +21,5 @@ google-genai==3.3.0
 # 계류장 혼잡도(YOLO, ojh/_5_apron_tab.py). torch 는 ultralytics 가 함께 설치한다. GPU 가 없으면 CPU 판이 더 가볍다:
 #   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 ultralytics==8.4.215
+# 계류장 차량 종류 맞히기 '정확하게'(ojh/models/veh_classify.py → veh_final.py, EVA02-L CLIP). 모델 파일이 있을 때만 쓴다
+timm==1.0.15
