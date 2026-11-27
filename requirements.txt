@@ -15,8 +15,7 @@ lightgbm==4.7.0
 folium==0.20.0
 streamlit-folium==0.27.4
 requests==2.34.2
-# AI 도우미(ojh/_4_ai_chat_tab.py, PR #13). 키는 .streamlit/secrets.toml 의 GEMINI_API_KEY 또는 ANTHROPIC_API_KEY
-anthropic==2.8.0
+# AI 도우미(ojh/_4_ai_chat_tab.py, PR #13). 키는 .streamlit/secrets.toml 의 GEMINI_API_KEY (무료 등급)
 google-genai==3.3.0
 # 계류장 혼잡도(YOLO, ojh/_5_apron_tab.py). torch 는 ultralytics 가 함께 설치한다. GPU 가 없으면 CPU 판이 더 가볍다:
 #   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu

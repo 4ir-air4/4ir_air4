@@ -1,11 +1,9 @@
 import io
-import sys
 import zipfile
 import time
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import requests
 
