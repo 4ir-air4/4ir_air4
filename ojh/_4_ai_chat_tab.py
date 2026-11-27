@@ -1,18 +1,16 @@
 """AI 항공 도우미 '에어로': 모든 페이지 오른쪽 아래에 떠 있는 채팅 버튼 (app.py 에서 floating_chat() 호출).
 
-AI 는 secrets.toml 에 있는 키에 따라 고른다 (둘 다 있으면 Gemini):
-  - GEMINI_API_KEY    : Google Gemini (gemini-3.1-flash-lite, 무료 등급 사용 가능)
-                        + TAVILY_API_KEY 가 있으면 Tavily 무료 검색(월 1,000회)으로 최신 소식을 찾는다
-  - SERPAPI_API_KEY   : (두 AI 공통) 날짜·노선을 넣어 Google 항공권 검색 결과를 조회한다 (무료 월 250회)
-  - ANTHROPIC_API_KEY : Claude (유료, 웹 검색으로 항공권 가격·시간표 조회 가능)
+AI 는 무료 등급으로 쓸 수 있는 Google Gemini(gemini-3.1-flash-lite) 하나만 쓴다 (2026-11-27 유료 Claude 경로는 뺐다).
+  - GEMINI_API_KEY    : Gemini (필수). 사진도 Gemini 가 직접 본다
+  - TAVILY_API_KEY    : (선택) Tavily 무료 검색(월 1,000회)으로 최신 소식을 찾는다
+  - SERPAPI_API_KEY   : (선택) 날짜·노선을 넣어 Google 항공권 검색 결과를 조회한다 (무료 월 250회)
 
 대시보드 데이터는 아래 '도구'로만 본다 (임의 코드 실행 없음, 읽기 전용).
-항공권 가격·시간표 같은 최신 정보는 Anthropic 서버의 웹 검색 도구로 찾고, 사진은 Claude 가 직접 본다.
   - list_tables      : 조회할 수 있는 표와 칸 목록
   - query_table      : 표 하나를 조건·그룹·정렬해서 최대 50행 돌려줌
   - get_ldh_summary  : 팀원(ldh) 카테고리별 결과 요약(summary.json)
 
-API 키: 저장소 최상위 .streamlit/secrets.toml 에 ANTHROPIC_API_KEY = "sk-ant-..." 를 넣는다 (또는 같은 이름의 환경변수).
+API 키: 저장소 최상위 .streamlit/secrets.toml 에 GEMINI_API_KEY = "..." 를 넣는다 (또는 같은 이름의 환경변수).
 """
 import json
 import re
@@ -29,7 +27,6 @@ LIVE_CSV = ROOT_DIR / "data" / "raw" / "aircraftlive_counts.csv"
 AIRPORT_MODEL_DIR = ROOT_DIR / "models" / "saved" / "airport"
 LDH_RESULTS = REPO_DIR / "ldh" / "results" / "full"
 
-MODEL = "claude-opus-5-5"
 GEMINI_MODEL = "gemini-3.1-flash-lite"
 MAX_ROWS = 50          # 도구 결과 한 번에 돌려줄 최대 행 수 (토큰 절약)
 MAX_TOOL_ROUNDS = 8    # 한 질문에서 도구를 부를 수 있는 최대 횟수
@@ -473,9 +470,6 @@ TOOLS = [
     },
 ]
 
-# 서버에서 Anthropic 이 실행하는 웹 검색 도구 (항공권 가격·운항 시간표처럼 우리 데이터에 없는 최신 정보용)
-WEB_SEARCH_TOOL = {"type": "web_search_20260209", "name": "web_search", "max_uses": 3}
-
 SYSTEM = """너는 'AERO INSIGHT' 항공 대시보드의 AI 도우미 '에어로'다. 사용자는 한국어로 묻고, 너는 친절한 한국어로 답한다.
 
 답할 수 있는 범위:
@@ -514,7 +508,7 @@ def run_tool(name, args):
 
 
 # ---------------------------------------------------------
-# 3. Claude 호출
+# 3. 키 찾기, Gemini 호출
 # ---------------------------------------------------------
 SECRETS_FILE = REPO_DIR / ".streamlit" / "secrets.toml"
 
@@ -541,91 +535,10 @@ def _secret(name):
     return key or os.environ.get(name)
 
 
-def _api_key():
-    return _secret("ANTHROPIC_API_KEY")
-
-
 def _provider():
-    """('gemini' | 'claude', 키) 또는 (None, None). 둘 다 있으면 무료로 쓸 수 있는 Gemini 를 쓴다."""
+    """('gemini', 키) 또는 (None, None)."""
     gemini = _secret("GEMINI_API_KEY") or _secret("GOOGLE_API_KEY")
-    if gemini:
-        return "gemini", gemini
-    claude = _api_key()
-    return ("claude", claude) if claude else (None, None)
-
-
-@st.cache_resource(show_spinner=False)
-def _client(key):
-    import anthropic
-    return anthropic.Anthropic(api_key=key)
-
-
-def _sources(content):
-    """웹 검색 결과 블록에서 (제목, 주소) 목록을 뽑는다"""
-    out = []
-    for b in content:
-        if b.type == "web_search_tool_result" and isinstance(b.content, list):
-            out += [(r.title, r.url) for r in b.content if getattr(r, "url", None)]
-    return out
-
-
-def ask_claude(api_messages, on_tool):
-    """도구를 부르며 답이 끝날 때까지 반복한다. api_messages 에 이번 턴의 assistant/tool 결과가 덧붙는다.
-    반환: (최종 답 텍스트, 웹 출처 목록, 오류 메시지 또는 None)"""
-    import anthropic
-
-    client = _client(_api_key())
-    sources = []
-    extra_tools, extra_rule = _extra_tools_and_rule()
-    for _ in range(MAX_TOOL_ROUNDS + 1):
-        try:
-            resp = client.beta.messages.create(
-                model=MODEL,
-                max_tokens=16000,
-                system=SYSTEM + extra_rule,
-                tools=TOOLS + extra_tools + [WEB_SEARCH_TOOL],
-                messages=api_messages,
-                output_config={"effort": "medium"},
-                cache_control={"type": "ephemeral"},          # 같은 system·tools 를 매번 다시 읽지 않게 캐시
-                betas=["server-side-fallback-2026-07-01"],
-                fallbacks="default",                          # 안전 필터에 막히면 서버가 다른 모델로 다시 시도
-            )
-        except anthropic.AuthenticationError:
-            return "", [], "API 키가 올바르지 않습니다. secrets.toml 의 ANTHROPIC_API_KEY 를 확인해주세요."
-        except anthropic.RateLimitError:
-            return "", [], "요청이 너무 많습니다. 잠시 뒤 다시 시도해주세요."
-        except anthropic.BadRequestError as e:
-            return "", [], f"요청 오류: {e.message}"
-        except anthropic.APIStatusError as e:
-            return "", [], f"API 오류 ({e.status_code}): {e.message}"
-        except anthropic.APIConnectionError:
-            return "", [], "Claude API 에 연결할 수 없습니다. 인터넷 연결을 확인해주세요."
-
-        # thinking·검색 결과 블록도 다음 요청에 그대로 돌려줘야 하므로 응답 전체를 저장한다
-        api_messages.append({"role": "assistant", "content": [b.to_dict() for b in resp.content]})
-        sources += _sources(resp.content)
-        for b in resp.content:
-            if b.type == "server_tool_use" and b.name == "web_search":
-                on_tool("web_search", b.input or {}, "", False)
-        text = "\n".join(b.text for b in resp.content if b.type == "text").strip()
-
-        if resp.stop_reason == "refusal":
-            return text, sources, "이 질문에는 답할 수 없습니다. 질문을 바꿔서 다시 시도해주세요."
-        if resp.stop_reason == "pause_turn":       # 서버 도구(웹 검색)가 길어져 잠시 멈춘 경우: 그대로 이어서 요청
-            continue
-        tool_uses = [b for b in resp.content if b.type == "tool_use"]
-        if resp.stop_reason != "tool_use" or not tool_uses:
-            if resp.stop_reason == "max_tokens":
-                text += "\n\n_(답이 길어 중간에 잘렸습니다.)_"
-            return text, sources, None
-
-        results = []
-        for tu in tool_uses:
-            out, is_err = run_tool(tu.name, tu.input)
-            on_tool(tu.name, tu.input, out, is_err)
-            results.append({"type": "tool_result", "tool_use_id": tu.id, "content": out, "is_error": is_err})
-        api_messages.append({"role": "user", "content": results})
-    return "", sources, f"도구 호출이 {MAX_TOOL_ROUNDS}번을 넘어 멈췄습니다. 질문을 더 구체적으로 해주세요."
+    return ("gemini", gemini) if gemini else (None, None)
 
 
 @st.cache_resource(show_spinner=False)
@@ -659,7 +572,7 @@ def ask_gemini(history, parts, on_tool, force_flights=False):
              for t in tools]
     sources = []
     config = types.GenerateContentConfig(
-        system_instruction=(SYSTEM if searchable else SYSTEM_GEMINI) + extra_rule,   # 검색이 되면 Claude 와 같은 안내문(web_search 사용)
+        system_instruction=(SYSTEM if searchable else SYSTEM_GEMINI) + extra_rule,   # 검색이 되면 web_search 를 쓰는 안내문
         tools=[types.Tool(function_declarations=decls)],
         automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),   # 도구 실행은 직접 해서 화면에 보여준다
     )
@@ -700,9 +613,8 @@ def ask_gemini(history, parts, on_tool, force_flights=False):
     return "", history, [], f"도구 호출이 {MAX_TOOL_ROUNDS}번을 넘어 멈췄습니다. 질문을 더 구체적으로 해주세요."
 
 
-def _image_block(file):
-    """올린 사진을 긴 변 1568px 이하 JPEG 로 줄여 Claude 이미지 블록으로 만든다 (토큰 절약)"""
-    import base64
+def _image_jpeg(file):
+    """올린 사진을 긴 변 1568px 이하 JPEG 바이트로 줄인다 (토큰 절약)"""
     import io
 
     from PIL import Image
@@ -712,8 +624,7 @@ def _image_block(file):
     img.thumbnail((1568, 1568))
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=85)
-    data = base64.standard_b64encode(buf.getvalue()).decode("utf-8")
-    return {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": data}}, buf.getvalue()
+    return buf.getvalue()
 
 
 # ---------------------------------------------------------
@@ -839,14 +750,13 @@ def _tool_caption(name, args):
 def _chat_panel():
     """채팅 창 내용. fragment 라서 질문을 보내도 뒤의 페이지 전체가 다시 그려지지 않는다."""
     ss = st.session_state
-    ss.setdefault("ai_api_messages", [])   # Claude 에 보내는 전체 대화 (도구 결과 포함)
     ss.setdefault("ai_gemini_history", [])  # Gemini 에 보내는 전체 대화
     ss.setdefault("ai_display", [])        # 화면에 보여줄 대화
 
     head = st.columns([5, 1], vertical_alignment="center")
     head[0].markdown('<div class="ai-chat-head">✈️ 에어로 <span>AI 항공 도우미</span></div>', unsafe_allow_html=True)
     if head[1].button("", icon=":material/delete:", key="ai_clear", help="대화 지우기", disabled=not ss.ai_display):
-        ss.ai_api_messages, ss.ai_gemini_history, ss.ai_display = [], [], []
+        ss.ai_gemini_history, ss.ai_display = [], []
         st.rerun(scope="fragment")
 
     provider, _ = _provider()
@@ -855,8 +765,7 @@ def _chat_panel():
                    "저장소 최상위 `.streamlit/secrets.toml` 에 `GEMINI_API_KEY = \"...\"` 를 추가한 뒤 새로고침하세요. "
                    "(secrets.toml 은 git 에 올라가지 않습니다)", icon=":material/key:")
         return
-    st.caption(f"{'Gemini · ' + GEMINI_MODEL if provider == 'gemini' else 'Claude · ' + MODEL}"
-               + (" · 무료 등급은 입력 내용이 Google 제품 개선에 쓰일 수 있어요" if provider == "gemini" else ""))
+    st.caption(f"Gemini · {GEMINI_MODEL} · 무료 등급은 입력 내용이 Google 제품 개선에 쓰일 수 있어요")
 
     box = st.container(height=400, border=False)
     with box:
@@ -885,18 +794,14 @@ def _chat_panel():
     if not question:
         return
 
-    content, shown = [], []
+    shown = []
     for f in files[:3]:
         try:
-            block, jpeg = _image_block(f)
-            content.append(block)
-            shown.append(jpeg)
+            shown.append(_image_jpeg(f))
         except Exception:
             st.toast(f"{f.name} 사진을 읽지 못했습니다.", icon="⚠️")
-    content.append({"type": "text", "text": question})
-    if provider == "gemini":
-        from google.genai import types
-        gemini_parts = [types.Part.from_bytes(data=j, mime_type="image/jpeg") for j in shown] + [types.Part.from_text(text=question)]
+    from google.genai import types
+    gemini_parts = [types.Part.from_bytes(data=j, mime_type="image/jpeg") for j in shown] + [types.Part.from_text(text=question)]
 
     ss.ai_display.append({"role": "user", "text": question, "images": shown})
     with box:
@@ -905,9 +810,6 @@ def _chat_panel():
                 st.image(img, width=220)
             st.markdown(question)
 
-    start = len(ss.ai_api_messages)   # 실패하면 이번 질문을 대화에서 뺀다
-    if provider == "claude":
-        ss.ai_api_messages.append({"role": "user", "content": content})
     steps = []
     with box:
         with st.chat_message("assistant", avatar="✈️"):
@@ -915,16 +817,12 @@ def _chat_panel():
                 def on_tool(name, args, out, is_err):
                     steps.append({"name": name, "caption": _tool_caption(name, args), "result": out, "error": is_err})
                     status.update(label=f"{TOOL_LABELS.get(name, name)}: {_tool_caption(name, args)}"[:80])
-                if provider == "gemini":
-                    answer, new_history, sources, error = ask_gemini(ss.ai_gemini_history, gemini_parts, on_tool,
-                                                                    force_flights=is_flight_question(question))
-                    if not error:
-                        ss.ai_gemini_history = new_history
-                else:
-                    answer, sources, error = ask_claude(ss.ai_api_messages, on_tool)
+                answer, new_history, sources, error = ask_gemini(ss.ai_gemini_history, gemini_parts, on_tool,
+                                                                force_flights=is_flight_question(question))
+                if not error:
+                    ss.ai_gemini_history = new_history
                 status.update(label="완료" if not error else "멈춤", state="complete" if not error else "error")
             if error:
-                del ss.ai_api_messages[start:]
                 ss.ai_display.pop()
                 st.error(error)
                 return

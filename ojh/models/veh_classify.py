@@ -8,7 +8,7 @@ YOLO 가 찾은 차량 상자 → 차량 사진(상자 30% 넓혀 자름) + 주�
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import ImageDraw
 
 DIR = Path(__file__).resolve().parent / "saved" / "yolo" / "veh_types"
 COMBO = DIR / "combo_model.joblib"
